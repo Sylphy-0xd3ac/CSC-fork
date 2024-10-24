@@ -1,0 +1,18 @@
+{
+  "projectName": "Crosst-Chat",
+  "port": 2764,
+  "baseDir": "",
+  "hazel": {
+    "debuggingMode": true,
+    "moduleDirs": {
+      "initsDir": "/init",
+      "functionsDir": "/src",
+      "staticDir": "/boot.js"
+    }
+  },
+  "logDir": "./logs",
+  "behindReverseProxy": false,
+  "wsHeartbeatInterval": 16000,
+  "appConfigDir": "/config/config.json",
+  "allowCIDRlistDir": "/config/allow.txt"
+}
