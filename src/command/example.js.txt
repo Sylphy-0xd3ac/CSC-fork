@@ -1,0 +1,7 @@
+export async function run(hazel, core, hold, socket, data) {}
+export async function execByChat(hazel, core, hold, socket, line) {}
+
+export const name = '';
+export const requiredLevel = 0;
+export const requiredData = [];
+export const moduleType = 'ws-command';
