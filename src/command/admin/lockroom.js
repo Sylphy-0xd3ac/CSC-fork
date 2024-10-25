@@ -30,7 +30,7 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 向房间内所有成员广播锁定消息
   core.broadcastInfo(
-    'CHANNEL_ARE_LOCKED', '已锁定本聊天室',
+    'CHANNEL_LOCKED', '已锁定本聊天室',
     core.findSocketByLevel(2, hold.channel.get(targetChannel).socketList)
   );
 
