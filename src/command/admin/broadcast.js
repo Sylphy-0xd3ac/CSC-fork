@@ -15,6 +15,12 @@ export async function run(hazel, core, hold, socket, data) {
 export async function execByChat(hazel, core, hold, socket, line) {
   let text = core.splitArgs(line)[1].trim();
 
+  // 如果没有输入消息内容
+  if (text.length == 0) {
+    core.replyMalformedCommand(socket);
+    return;
+  }
+  
   await run(hazel, core, hold, socket, { text, level });
 }
 
