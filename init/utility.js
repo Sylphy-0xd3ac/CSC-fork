@@ -67,7 +67,7 @@ export async function run(hazel, core, hold) {
     }
   }
 
-  // 拆分字符串中的参数
+  // 拆分字符串中以空格分段的参数
   core.splitArgs = function (line) {
     let args = [];
     line.split(' ').forEach((arg) => {

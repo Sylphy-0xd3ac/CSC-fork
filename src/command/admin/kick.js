@@ -35,7 +35,7 @@ export async function run(hazel, core, hold, socket, data) {
 
 // 用户通过 /kick nick 的方式执行命令
 export async function execByChat(hazel, core, hold, socket, line) {
-  let targetNick = core.splitArgs(line)[1];
+  let targetNick = core.splitArgs(line)[1].trim();
 
   // 验证输入的昵称
   if (!core.verifyNickname(targetNick)) {
