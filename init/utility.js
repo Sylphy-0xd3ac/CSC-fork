@@ -53,7 +53,7 @@ export async function run(hazel, core, hold) {
     const key = pbkdf2Sync(password, salt, iterations, 32, 'sha256');
     const hmac = createHmac('sha256', key);
     hmac.update(password + salt);
-    return hmac.digest('base64').slice(0, 32);
+    return hmac.digest('base64').slice(0, 6);
   }
 
   // 从数组中删除指定元素
