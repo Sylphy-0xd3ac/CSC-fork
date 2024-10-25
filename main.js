@@ -3,6 +3,10 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
+/*
+(✧ω✧)~ (≧▽≦)~
+*/
+
 let mainConfig = {};
 
 try {
