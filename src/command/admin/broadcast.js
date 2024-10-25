@@ -13,15 +13,9 @@ export async function run(hazel, core, hold, socket, data) {
 
 // 用户使用 /broadcast xxxxxx 广播消息
 export async function execByChat(hazel, core, hold, socket, line) {
-  let text = line.slice(10).trim();
+  let text = core.splitArgs(line)[1].trim();
 
-  // 如果没有输入消息内容
-  if (text.length == 0) {
-    core.replyMalformedCommand(socket);
-    return;
-  }
-
-  await run(hazel, core, hold, socket, { text });
+  await run(hazel, core, hold, socket, { text, level });
 }
 
 export const name = 'broadcast';
