@@ -30,7 +30,6 @@ export default class Hazel extends EventEmitter {
           }
         });
     } else {
-      
       process.exit();
     }
 
