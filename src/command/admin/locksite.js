@@ -29,7 +29,7 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 向所有成员广播锁定消息
   core.broadcastInfo(
-    'SITE_ARE_LOCKED', '全部聊天室已锁定',
+    'SITE_LOCKED', '全部聊天室已锁定',
     core.findSocketByLevel(2)
   );
 
