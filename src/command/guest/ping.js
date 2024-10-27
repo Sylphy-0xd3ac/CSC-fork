@@ -10,4 +10,4 @@ export async function run(hazel, core, hold, socket, data) {
 export const name = 'ping';
 export const requiredLevel = 0;
 export const requiredData = [];
-export const moduleType = 'ws-command';
+export const moduleType = 'ws-command-client';
