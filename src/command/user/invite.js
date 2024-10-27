@@ -56,4 +56,4 @@ export async function run(hazel, core, hold, socket, data) {
 export const name = 'invite';
 export const requiredLevel = 1;
 export const requiredData = ['nick'];
-export const moduleType = 'ws-command';
+export const moduleType = 'ws-command-client';

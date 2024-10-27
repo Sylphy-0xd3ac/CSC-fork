@@ -61,22 +61,13 @@ export async function execByChat(hazel, core, hold, socket, line) {
   }
 
   // 在聊天室广播消息
-  if (typeof socket.trip == 'string') {
-    core.broadcast({
-      cmd: 'info',
-      code: 'EMOTE',
-      nick: socket.nick,
-      trip: socket.trip,
-      text: '@' + socket.nick + ' ' + line
-    }, hold.channel.get(socket.channel).socketList);
-  } else {
-    core.broadcast({
-      cmd: 'info',
-      code: 'EMOTE',
-      nick: socket.nick,
-      text: '@' + socket.nick + ' ' + line
-    }, hold.channel.get(socket.channel).socketList);
-  }
+  core.broadcast({
+    cmd: 'info',
+    code: 'EMOTE',
+    nick: socket.nick,
+    trip: '/EMOTE/',
+    text: '@' + socket.nick + ' ' + line
+  }, hold.channel.get(socket.channel).socketList);
 
   // 记录 stats
   core.increaseState('messages-sent');
