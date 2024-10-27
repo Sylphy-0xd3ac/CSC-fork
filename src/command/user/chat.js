@@ -109,4 +109,4 @@ export async function run(hazel, core, hold, socket, data) {
 export const name = 'chat';
 export const requiredLevel = 1;
 export const requiredData = ['text'];
-export const moduleType = 'ws-command';
+export const moduleType = 'ws-command-client';
