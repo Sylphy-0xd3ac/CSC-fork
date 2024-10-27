@@ -4,7 +4,7 @@ export async function run(hazel, core, hold, socket, data) {
   hazel.loadedFunctions.forEach((command) => {
     if (command.requiredLevel <= socket.level) {
       if (command.moduleType === 'ws-command') {
-        commandList.push(command.name + ' - [' + (command.requiredData.length > 0 ? command.requiredData.join(', ') : 'None') + ']');
+        commandList.push(command.name + ' [' + (command.requiredData.length > 0 ? command.requiredData.join(', ') : 'None') + ']');
       }
     }
   });
