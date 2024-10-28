@@ -87,3 +87,4 @@ export const name = 'kickme';
 export const requiredLevel = 1;
 export const requiredData = ['nick'];
 export const moduleType = 'ws-command';
+export const description = '踢出自己';

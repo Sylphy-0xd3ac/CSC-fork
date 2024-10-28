@@ -49,3 +49,4 @@ export const name = 'stats';
 export const requiredLevel = 2;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = '查看服务器状态';

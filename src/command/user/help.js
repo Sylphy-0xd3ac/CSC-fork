@@ -4,11 +4,11 @@ export async function run(hazel, core, hold, socket, data) {
   hazel.loadedFunctions.forEach((command) => {
     if (command.requiredLevel <= socket.level) {
       if (command.moduleType === 'ws-command') {
-        commandList.push(command.name + ' [' + (command.requiredData.length > 0 ? command.requiredData.join(', ') : 'None') + ']');
+        commandList.push(command.name + (command.requiredData.length > 0 ? ' [' + command.requiredData.join(', ') + ']' : '') + ' - ' + command.description);
       }
     }
   });
-  commandList = commandList.filter((command) => command !== 'help' && command !== 'elevate');
+  commandList = commandList.filter(command => !command.startsWith('elevate') && !command.startsWith('help'));
   commandList.sort((a, b) => b.localeCompare(a));
   core.replyInfo('HELP_COMMAND_LIST', commandList.join('\n'), socket);
 }
@@ -21,3 +21,4 @@ export const name = 'help';
 export const requiredLevel = 1;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = '查看当前可用的指令';

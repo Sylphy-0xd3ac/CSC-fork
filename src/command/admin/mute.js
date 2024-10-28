@@ -69,3 +69,4 @@ export const name = 'mute';
 export const requiredLevel = 4;
 export const requiredData = ['nick', 'mins'];
 export const moduleType = 'ws-command';
+export const description = '禁言聊天室中某人';

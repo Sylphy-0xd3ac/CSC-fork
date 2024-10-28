@@ -20,7 +20,7 @@ export async function execByChat(hazel, core, hold, socket, line) {
     core.replyMalformedCommand(socket);
     return;
   }
-  
+
   await run(hazel, core, hold, socket, { text, level });
 }
 
@@ -28,3 +28,4 @@ export const name = 'broadcast';
 export const requiredLevel = 4;
 export const requiredData = ['text'];
 export const moduleType = 'ws-command';
+export const description = '向在线的所有用户广播消息';

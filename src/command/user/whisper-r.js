@@ -29,3 +29,4 @@ export const name = 'r';
 export const requiredLevel = 1;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = '回复私聊消息';

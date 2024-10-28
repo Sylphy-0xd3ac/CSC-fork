@@ -28,3 +28,4 @@ export const name = 'unlocksite';
 export const requiredLevel = 4;
 export const requiredData = ['type'];
 export const moduleType = 'ws-command';
+export const description = '解锁全站';

@@ -33,3 +33,4 @@ export const name = 'unban';
 export const requiredLevel = 4;
 export const requiredData = ['address'];
 export const moduleType = 'ws-command';
+export const description = '解封某个 IP 地址';
