@@ -9,7 +9,7 @@ export async function run(hazel, core, hold, socket, data) {
   });
   commandList = commandList.filter(command => !command.startsWith('elevate') && !command.startsWith('help'));
   commandList.sort((a, b) => b.localeCompare(a));
-  core.replyInfo('HELP_COMMAND', '当前可用的指令有:\n' + '```' + commandList.join('\n') + '```', socket);
+  core.replyInfo('HELP_COMMAND', '当前可用的指令有:\n' + commandList.join('\n'), socket);
 }
 
 export async function execByChat(hazel, core, hold, socket, line) {
