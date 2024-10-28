@@ -53,3 +53,4 @@ export const name = 'locksite';
 export const requiredLevel = 4;
 export const requiredData = ['type'];
 export const moduleType = 'ws-command';
+export const description = '锁定全站，禁止非成员进入';

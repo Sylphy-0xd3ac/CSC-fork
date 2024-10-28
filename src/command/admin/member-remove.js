@@ -66,3 +66,4 @@ export const name = 'delmem';
 export const requiredLevel = 4;
 export const requiredData = ['trip'];
 export const moduleType = 'ws-command';
+export const description = '删除成员';

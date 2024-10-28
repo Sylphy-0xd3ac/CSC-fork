@@ -66,3 +66,4 @@ export const name = 'addmem';
 export const requiredLevel = 4;
 export const requiredData = ['trip'];
 export const moduleType = 'ws-command';
+export const description = '添加成员';

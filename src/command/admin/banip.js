@@ -43,3 +43,4 @@ export const name = 'banip';
 export const requiredLevel = 4;
 export const requiredData = ['ip'];
 export const moduleType = 'ws-command';
+export const description = '封禁某个 IP';

@@ -53,3 +53,4 @@ export const name = 'ban';
 export const requiredLevel = 4;
 export const requiredData = ['nick'];
 export const moduleType = 'ws-command';
+export const description = '封禁聊天室中某人的 IP';

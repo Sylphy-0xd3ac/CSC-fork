@@ -54,3 +54,4 @@ export const name = 'lockroom';
 export const requiredLevel = 4;
 export const requiredData = ['type'];
 export const moduleType = 'ws-command';
+export const description = '锁定聊天室, 禁止非成员进入';
