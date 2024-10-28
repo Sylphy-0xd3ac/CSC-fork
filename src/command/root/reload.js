@@ -23,3 +23,4 @@ export const name = 'reload';
 export const requiredLevel = 10;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = '重载十字街';

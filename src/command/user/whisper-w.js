@@ -32,3 +32,4 @@ export const name = 'w';
 export const requiredLevel = 1;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = '发送私聊消息';

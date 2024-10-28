@@ -80,3 +80,4 @@ export const name = 'me';
 export const requiredLevel = 1;
 export const requiredData = ['text'];
 export const moduleType = 'ws-command';
+export const description = '发送状态消息';

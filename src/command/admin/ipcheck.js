@@ -52,3 +52,4 @@ export const name = 'ipcheck';
 export const requiredLevel = 4;
 export const requiredData = ['rule', 'type'];
 export const moduleType = 'ws-command';
+export const description = '设置全站或频道的 CIDR 检查规则';

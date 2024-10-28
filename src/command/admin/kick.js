@@ -51,3 +51,4 @@ export const name = 'kick';
 export const requiredLevel = 4;
 export const requiredData = ['nick'];
 export const moduleType = 'ws-command';
+export const description = '踢出聊天室中某人';
