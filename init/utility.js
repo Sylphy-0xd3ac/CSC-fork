@@ -16,12 +16,28 @@ export async function run(hazel, core, hold) {
 
   // 获取内存使用情况
   core.getMemoryUsage = function () {
-    return (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
+    return (100 * os.freemem() / os.totalmem()).toFixed(2);
   }
 
   // CPU占用率
   core.getCpuUsage = function () {
-    return 100 - Math.round(100 * os.cpus().map(cpu => cpu.times.idle).reduce((a, b) => a + b) / os.cpus().map(cpu => Object.values(cpu.times).reduce((a, b) => a + b)).reduce((a, b) => a + b));
+    const cpus = os.cpus();
+
+    let totalIdle = 0, totalTick = 0;
+
+    cpus.forEach((cpu) => {
+      for (let type in cpu.times) {
+        totalTick += cpu.times[type];
+      }
+      totalIdle += cpu.times.idle;
+    });
+
+    const idle = totalIdle / cpus.length;
+    const total = totalTick / cpus.length;
+
+    const usage = 100 - 100 * idle / total;
+
+    return usage.toFixed(2);
   }
 
   // 格式化时间
