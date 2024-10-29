@@ -24,15 +24,13 @@ Since this website is mainly aimed at Chinese users, only Chinese is used in thi
 
 3. 运行 `node main.js` 启动十字街后端。
 
-4. 测试十字街后端是否正常运行：to-do
+4. 测试十字街后端是否正常运行：访问client文件夹的index.html
 
 ## 部署和配置
-
-to-do
+访问client文件夹的index.html
 
 ## 贡献
 
-to-do
 
 ## 开源协议
 
