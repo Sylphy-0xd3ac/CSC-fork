@@ -28,7 +28,7 @@ export async function run(hazel, core, hold, socket, data) {
     targetSockets.forEach(targetSocket => {
       if (targetSocket.remoteAddress === socket.remoteAddress) {
         core.replyInfo('KICKED_BY_SELF', '您已经被您自己断开连接，如果不是您自己执行的操作，请重新加入并通知管理员。', targetSocket);
-        core.replyInfo('KICKED', '已将 ' + targetSocket.nick + ' 断开连接。', socket, { nick: socket.nick });
+        core.replyInfo('KICKED_SUCCESS', '已将 ' + targetSocket.nick + ' 断开连接。', socket, { nick: socket.nick });
         targetSocket.close();
       }
       else {
@@ -62,7 +62,7 @@ export async function run(hazel, core, hold, socket, data) {
     })()) {
       // 踢自己卡住的 socket 出去
       core.replyInfo('KICKED_BY_SELF', '您已经被您自己断开连接，如果不是您自己执行的操作，请重新加入并通知管理员。', targetSocket);
-      core.replyInfo('KICKED', '已将 ' + targetSocket.nick + ' 断开连接。', socket, { nick: socket.nick });
+      core.replyInfo('KICKED_SUCCESS', '已将 ' + targetSocket.nick + ' 断开连接。', socket, { nick: socket.nick });
       targetSocket.close();
     }
     else {
