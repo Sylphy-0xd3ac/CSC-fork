@@ -17,8 +17,8 @@ class CSCWebSocket extends WebSocket {
 
   nick;
   trip;
-  permission = 'GUEST';
-  level = 0;
+  permission = 'USER';
+  level = 1;
   channel;
   isInvisible = false;
   lastWhisperFrom;

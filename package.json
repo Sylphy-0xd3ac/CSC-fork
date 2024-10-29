@@ -1,10 +1,10 @@
 {
-  "name": "crosst-chat-main",
+  "name": "crosst-chat-fork",
   "description": "A minimal, distraction-free chat application based on Hazel Core and hack.chat.",
   "version": "2.0.0-beta",
   "author": {
-    "name": "Henrize",
-    "email": "mail@henrize.kim"
+    "name": "Lystudio",
+    "email": "lystudio@240829.xyz"
   },
   "scripts": {
     "start": "node main.js"
