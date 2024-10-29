@@ -6,8 +6,7 @@
     "admin": 4,
     "bot": 3,
     "member": 2,
-    "user": 1,
-    "guest": 0
+    "user": 1
   },
   "adminList": [
     "f7ZtZf",
