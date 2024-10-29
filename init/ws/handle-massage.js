@@ -55,26 +55,44 @@ export async function run(hazel, core, hold) {
       core.replyMalformedCommand(socket);
       return;
     }
-
-    if (!command.moduleType === 'ws-command') {
+ 
+    if (typeof command.moduleType !== 'undefined') {
+      if (command.moduleType !== 'ws-command-client') {
+        core.replyMalformedCommand(socket);
+        return;
+      }
+    }
+    else {
       core.replyMalformedCommand(socket);
       return;
     }
 
     // 检查该客户端是否有权限运行该命令
-    if (command.requiredLevel > socket.level) {
+    if (typeof command.requiredLevel !== 'undefined') {
+      if (command.requiredLevel > socket.level) {
+        core.replyMalformedCommand(socket);
+        return;
+      }
+    }
+    else {
       core.replyMalformedCommand(socket);
       return;
     }
 
     // 检查命令的参数是否齐全
-    if (command.requiredData.length > 0) {
-      for (let attr of command.requiredData) {
-        if (typeof data[attr] == 'undefined') {
-          core.replyMalformedCommand(socket);
-          return;
+    if (typeof command.requiredData !== 'undefined') {
+      if (command.requiredData.length > 0) {
+        for (let attr of command.requiredData) {
+          if (typeof data[attr] == 'undefined') {
+            core.replyMalformedCommand(socket);
+            return;
+          }
         }
       }
+    }
+    else {
+      core.replyMalformedCommand(socket);
+      return;
     }
 
     // 运行命令

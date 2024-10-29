@@ -5,3 +5,4 @@ export const name = '';
 export const requiredLevel = 0;
 export const requiredData = [];
 export const moduleType = 'ws-command';
+export const description = ''; 

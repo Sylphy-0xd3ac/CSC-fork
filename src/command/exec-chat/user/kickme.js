@@ -85,6 +85,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'kickme';
 export const requiredLevel = 1;
-export const requiredData = ['nick'];
+export const requiredData = [];
 export const moduleType = 'ws-command';
 export const description = '踢出自己';
