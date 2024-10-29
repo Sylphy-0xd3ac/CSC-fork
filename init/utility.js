@@ -53,7 +53,7 @@ export async function run(hazel, core, hold) {
     return days.padStart(2, '0') + ':' + hours.padStart(2, '0') + ':' + minutes.padStart(2, '0') + ':' + seconds.padStart(2, '0') + '.' + time.toString().padStart(3, '0');
   }
 
-  // 生成key及trip
+  // 生成key
   core.generateKeys = function (clientName) {
     const salt = core.config.salts.client;
     const iterations = 1000; // 增加迭代次数以提高安全性
@@ -62,7 +62,7 @@ export async function run(hazel, core, hold) {
     hmac.update(clientName + salt);
     return hmac.digest('base64').slice(0, 32);
   }
-
+  // 生成trip
   core.generateTrips = function (password) {
     const salt = core.config.salts.auth;
     const iterations = 1000; // 增加迭代次数以提高安全性

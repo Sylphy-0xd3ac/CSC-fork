@@ -17,7 +17,10 @@ export async function run(hazel, core, hold, socket, data) {
     }
     // 过滤掉自己
     targetSockets = targetSockets.filter(targetSocket => targetSocket.connectionID !== socket.connectionID);
-  
+    if (targetSockets.length < 1) {
+      core.replyWarn('USER_NOT_FOUND', '在这个聊天室找不到其他用户。', socket);
+      return;
+    }
     // 告知用户共有多少个目标
     core.replyInfo('KICKED_INFO', '共有 ' + targetSockets.length + ' 个目标。', socket, { nick: socket.nick });
   
