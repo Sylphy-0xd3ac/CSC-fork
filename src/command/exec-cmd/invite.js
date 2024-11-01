@@ -57,4 +57,3 @@ export const name = 'invite';
 export const requiredLevel = 1;
 export const requiredData = ['nick'];
 export const moduleType = 'ws-command-client';
-export const noChannel = false;
