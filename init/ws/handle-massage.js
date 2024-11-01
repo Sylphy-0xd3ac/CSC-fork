@@ -56,10 +56,6 @@ export async function run(hazel, core, hold) {
       return;
     }
 
-    if (typeof socket.channel == 'undefined' && !command.noChannel) {
-      return;
-    }
-
     // 检查命令是否为公开命令
     if (typeof command.moduleType !== 'undefined') {
       if (command.moduleType !== 'ws-command-client') {

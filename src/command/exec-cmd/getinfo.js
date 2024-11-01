@@ -26,4 +26,3 @@ export const name = 'getinfo';
 export const requiredLevel = 0;
 export const requiredData = [];
 export const moduleType = 'ws-command-client';
-export const noChannel = true;
