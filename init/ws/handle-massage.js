@@ -50,12 +50,17 @@ export async function run(hazel, core, hold) {
     // 直接从 hazel 中拿命令
     let command = hazel.loadedFunctions.get(data.cmd);
 
-    // 如果命令不存在，或者不公开，提示命令不存在
+    // 如果命令不存在，或者不公开，提示命令不存在,以及为加入任何聊天室
     if (typeof command == 'undefined') {
       core.replyMalformedCommand(socket);
       return;
     }
- 
+
+    if (typeof socket.channel == 'undefined' && !command.noChannel) {
+      return;
+    }
+
+    // 检查命令是否为公开命令
     if (typeof command.moduleType !== 'undefined') {
       if (command.moduleType !== 'ws-command-client') {
         core.replyMalformedCommand(socket);

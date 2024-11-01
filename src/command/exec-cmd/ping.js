@@ -11,3 +11,4 @@ export const name = 'ping';
 export const requiredLevel = 0;
 export const requiredData = [];
 export const moduleType = 'ws-command-client';
+export const noChannel = false;

@@ -1,7 +1,7 @@
 import loadModule from './module-loader.js';
-import EventEmitter from 'events';
+import EventEmitter2 from 'events';
 
-export default class Hazel extends EventEmitter {
+export default class Hazel extends EventEmitter2 {
   constructor( mainConfig ) {
     super();
     this.mainConfig = mainConfig;

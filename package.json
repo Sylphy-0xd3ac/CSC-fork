@@ -18,6 +18,8 @@
   "main": "./main.js",
   "type": "module",
   "dependencies": {
+    "cordis": "^3.18.1",
+    "openai": "^4.69.0",
     "ws": "^8.12.0"
   },
   "engines": {
