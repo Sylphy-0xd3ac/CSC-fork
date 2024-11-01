@@ -9,4 +9,7 @@ package-lock.json
 .vscode
 .idea
 
+# Bot
+bot.js
+
 # Security

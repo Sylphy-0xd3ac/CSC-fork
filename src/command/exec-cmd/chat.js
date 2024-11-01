@@ -110,3 +110,4 @@ export const name = 'chat';
 export const requiredLevel = 1;
 export const requiredData = ['text'];
 export const moduleType = 'ws-command-client';
+export const noChannel = false;
