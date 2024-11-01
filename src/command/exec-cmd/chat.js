@@ -61,42 +61,43 @@ export async function run(hazel, core, hold, socket, data) {
   // Markdown 引擎会把三个以上的换行符处理掉，这里就不用处理了
   // data.text = data.text.replace(/\n{3,}/g, '\n\n');
   // data.text = data.text.replace(/\r\n{3,}/g, '\r\n\r\n');
+  if (typeof socket.channel == 'undefined') {
+    // 如果该聊天室三分钟前未发送过消息，发送时间
+    let timeNow = Date.now();
+    if ((hold.channel.get(socket.channel).lastActive + 180000) < timeNow) {
+      core.broadcast({
+        cmd: 'info',
+        code: 'CHAT_TIME',
+        trip: '/Time/',
+        text: getChatTimeStr()
+      }, hold.channel.get(socket.channel).socketList);
+    }
+    // 更新最后活跃时间
+    hold.channel.get(socket.channel).lastActive = timeNow;
 
-  // 如果该聊天室三分钟前未发送过消息，发送时间
-  let timeNow = Date.now();
-  if ((hold.channel.get(socket.channel).lastActive + 180000) < timeNow) {
-    core.broadcast({
-      cmd: 'info',
-      code: 'CHAT_TIME',
-      trip: '/Time/',
-      text: getChatTimeStr()
-    }, hold.channel.get(socket.channel).socketList);
-  }
-  // 更新最后活跃时间
-  hold.channel.get(socket.channel).lastActive = timeNow;
-
-  // 在聊天室广播消息
-  if (typeof socket.trip == 'string') {
-    core.broadcast({
-      cmd: 'chat',
-      type: 'chat',
-      nick: socket.nick,
-      trip: socket.trip,
-      level: socket.level,
-      utype: socket.permission,
-      member: (socket.level >= core.config.level.member),
-      admin: (socket.level >= core.config.level.admin),
-      text: data.text
-    }, hold.channel.get(socket.channel).socketList);
-  } else {
-    core.broadcast({
-      cmd: 'chat',
-      type: 'chat',
-      nick: socket.nick,
-      level: socket.level,
-      utype: socket.permission,
-      text: data.text
-    }, hold.channel.get(socket.channel).socketList);
+    // 在聊天室广播消息
+    if (typeof socket.trip == 'string') {
+      core.broadcast({
+        cmd: 'chat',
+        type: 'chat',
+        nick: socket.nick,
+        trip: socket.trip,
+        level: socket.level,
+        utype: socket.permission,
+        member: (socket.level >= core.config.level.member),
+        admin: (socket.level >= core.config.level.admin),
+        text: data.text
+      }, hold.channel.get(socket.channel).socketList);
+    } else {
+      core.broadcast({
+        cmd: 'chat',
+        type: 'chat',
+        nick: socket.nick,
+        level: socket.level,
+        utype: socket.permission,
+        text: data.text
+      }, hold.channel.get(socket.channel).socketList);
+    }
   }
 
   // 记录 stats
@@ -110,4 +111,3 @@ export const name = 'chat';
 export const requiredLevel = 1;
 export const requiredData = ['text'];
 export const moduleType = 'ws-command-client';
-export const noChannel = false;

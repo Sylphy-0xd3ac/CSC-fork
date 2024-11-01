@@ -39,10 +39,14 @@ function notify(args) {
 function getHomepage() {
   
   ws = new WebSocket( wsAddress );
+  
 
   ws.onerror = function () {
     pushMessage({ text: "# dx_xb\n连接聊天室服务器失败，请稍候重试。\n**如果这个问题持续出现，请立刻联系 mail@henrize.kim 感谢您的理解和支持**", nick: '!'});
   }
+
+  
+
 
   var reqSent = false;
 
@@ -260,6 +264,7 @@ function send(data) {
     ws.send(JSON.stringify(data));
   }
 }
+
 
 /* main */
 
