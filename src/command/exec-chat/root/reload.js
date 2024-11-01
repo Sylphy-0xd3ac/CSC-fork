@@ -7,6 +7,9 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 记录重载时间
   hold.lastReloadTime = Date.now();
+
+  // 发送重载完成消息
+  core.replyInfo('ROOT', '重载完成。', socket);
 }
 
 // 使用 /reload 重载十字街

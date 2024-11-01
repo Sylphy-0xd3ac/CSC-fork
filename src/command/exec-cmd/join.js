@@ -223,3 +223,4 @@ export const name = 'join';
 export const requiredLevel = 0;
 export const requiredData = ['channel', 'nick'];
 export const moduleType = 'ws-command-client';
+export const noChannel = true;
