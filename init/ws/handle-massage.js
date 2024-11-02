@@ -50,7 +50,7 @@ export async function run(hazel, core, hold) {
     // 直接从 hazel 中拿命令
     let command = hazel.loadedFunctions.get(data.cmd);
 
-    // 如果命令不存在，或者不公开，提示命令不存在,以及为加入任何聊天室
+    // 如果命令不存在，或者不公开，提示命令不存在
     if (typeof command == 'undefined') {
       core.replyMalformedCommand(socket);
       return;
