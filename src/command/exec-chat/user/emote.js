@@ -3,11 +3,6 @@ export async function run(hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 2);
 
-  // 检查用户是否可以发送消息
-  if (!core.canSpeak(socket)) {
-    return;
-  }
-
   // 如果是超长消息，进行频率限制
   if (data.text.length > 32) {
     core.checkAddress(socket.remoteAddress, 12);
@@ -48,32 +43,7 @@ export async function run(hazel, core, hold, socket, data) {
 export async function execByChat(hazel, core, hold, socket, line) {
   // 从用户的输入中提取出消息内容
   line = line.slice(4).trim();
-
-  // 如果是超长消息，进行频率限制
-  if (line.length > 128) {
-    core.checkAddress(socket.remoteAddress, 12);
-  }
-
-  // 如果是空消息，返回命令格式错误
-  if (line.length == 0) {
-    core.replyMalformedCommand(socket);
-    return;
-  }
-
-  // 在聊天室广播消息
-  core.broadcast({
-    cmd: 'info',
-    code: 'EMOTE',
-    nick: socket.nick,
-    trip: '/EMOTE/',
-    text: '@' + socket.nick + ' ' + line
-  }, hold.channel.get(socket.channel).socketList);
-
-  // 记录 stats
-  core.increaseState('messages-sent');
-
-  // 写入存档
-  core.archive('EMO', socket, line);
+  await run(hazel, core, hold, socket, {text: line}) 
 }
 
 export const name = 'me';
