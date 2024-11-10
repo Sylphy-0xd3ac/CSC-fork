@@ -1,4 +1,4 @@
-import recursiveReadDir from './recursive-readdir.ts';
+import recursiveReadDir from './recursive-readdir';
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";

@@ -1,4 +1,4 @@
-import HazelCore from './hazel/hazel-core.ts';
+import HazelCore from './hazel/hazel-core';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
