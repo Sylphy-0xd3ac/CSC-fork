@@ -19,3 +19,5 @@ jobs:
               run: yarn
             - name: Build
               run: yarn build
+            - name: Test
+              run: yarn start
