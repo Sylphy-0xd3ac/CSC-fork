@@ -1,6 +1,6 @@
 {
   "name": "crosst-chat-fork",
-  "description": "A minimal, distraction-free chat application based on Hazel Core and hack.chat.",
+  "description": "A minimal, distraction-free chat TypeScript application based on Hazel Core TypeScript and hack.chat.",
   "version": "2.0.0-beta",
   "author": {
     "name": "Lystudio",
