@@ -35,5 +35,8 @@ jobs:
       # - name: Verify formatting
       #   run: deno fmt --check
       
+      - name: Env
+        run: export RUST_BACKTRACE=1
+
       - name: Run tests
-        run: export RUST_BACKTRACE=1 & deno run --allow-read --allow-env --allow-write --allow-net main.ts
+        run: deno run --allow-read --allow-env --allow-write --allow-net main.ts
