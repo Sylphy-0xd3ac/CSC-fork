@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node main.js",
-    "dev": "deno run --allow-read --allow-env --allow-write --allow-net main.ts"
+    "dev": "deno run --allow-net --allow-read --unstable-sloppy-imports --allow-write --allow-env main.ts",
+    "bdev": "bun run main.ts"
   },
   "contributors": [],
   "license": "GNU General Public License v3.0",
@@ -20,6 +21,7 @@
   "main": "./main.ts",
   "type": "module",
   "dependencies": {
+    "bun": "^1.1.34",
     "cordis": "^3.18.1",
     "deno": "^0.1.1",
     "undici": "^6.20.1",
