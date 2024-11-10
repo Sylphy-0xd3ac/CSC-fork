@@ -15,11 +15,6 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 20
-            - name: Restore Lockfile
-              uses: actions/cache@v3
-              with:
-                  path: yarn.lock
-                  key: yarn-lock-${{ github.sha }}
             - name: Install
               run: yarn
             - name: Build
