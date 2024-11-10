@@ -27,7 +27,5 @@ jobs:
                   key: yarn-cache-${{ github.sha }}-node-18
             - name: Install
               run: yarn
-            - name: Build Clean
-              run: yarn build --clean
             - name: Build
               run: yarn build
