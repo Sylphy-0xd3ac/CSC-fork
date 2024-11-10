@@ -7,7 +7,9 @@
     "email": "lystudio@240829.xyz"
   },
   "scripts": {
-    "start": "node main.js"
+    "build": "tsc",
+    "start": "node main.js",
+    "dev": "deno run --allow-read --allow-env --allow-write --allow-net main.ts"
   },
   "contributors": [],
   "license": "GNU General Public License v3.0",
@@ -15,10 +17,11 @@
     "type": "git",
     "url": "git@github.com:CrosSt-Chat/CSC-main.git"
   },
-  "main": "./main.js",
+  "main": "./main.ts",
   "type": "module",
   "dependencies": {
     "cordis": "^3.18.1",
+    "deno": "^0.1.1",
     "ws": "^8.12.0"
   },
   "engines": {

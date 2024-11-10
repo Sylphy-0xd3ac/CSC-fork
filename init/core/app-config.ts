@@ -1,7 +1,7 @@
 // 用于管理 /config/config.json 文件，一个可能需要经常修改的配置文件
 
-import { readFileSync, watch, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, watch, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 export async function run(hazel, core, hold) {
   // 配置文件的路径

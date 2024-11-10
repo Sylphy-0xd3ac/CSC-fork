@@ -7,7 +7,7 @@
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
-      "staticDir": "/boot.js"
+      "staticDir": "/boot.ts"
     }
   },
   "logDir": "./logs",

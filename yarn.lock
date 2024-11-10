@@ -71,6 +71,22 @@ cosmokit@^1.5.2, cosmokit@^1.6.2, cosmokit@^1.6.3:
   resolved "https://registry.yarnpkg.com/cosmokit/-/cosmokit-1.6.3.tgz#7f6462bb446cd04104c9a234b2f22fda83a3b34e"
   integrity sha512-GBGi7YnwfV7wGnpfeuCPaZ0lqQH82i/1qmzrjMP/uuLlVQc+gc8cqj0YdYbV1ihbSjeeams7DYFSryH0Ju6q9g==
 
+dafo@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/dafo/-/dafo-0.1.1.tgz#dad59de0ceac606f73f86cbaae893412ffb1d836"
+  integrity sha512-18XhtDt5qQ5pAfWzo1t3mRXQPanY8diFQFjCxh+/0mko5QHztCv6oLgPL9kKxB8aeYutp8lWC7BqjGzC8GWX1w==
+  dependencies:
+    noda "^0.1.2"
+
+deno@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/deno/-/deno-0.1.1.tgz#b35da9ad0938ee064ba963b06caee60e55e5522c"
+  integrity sha512-vdXCOZOXXgRUFPIV2HbyBBT+u1TjKmDueCEJuk9Q+ADLS7jmVfdfGxp0vI5o/gOjbA1OwOYMVfg249+9vjYa7w==
+  dependencies:
+    dafo "^0.1.1"
+    noda "^0.6.0"
+    qir "^0.1.0"
+
 dotenv@^16.4.5:
   version "16.4.5"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
@@ -93,10 +109,27 @@ kleur@^4.1.5:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
 
+noda@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/noda/-/noda-0.1.2.tgz#6c3afd6072c40aacf22dbf54150ded149995b6ca"
+  integrity sha512-oP5xzQsC4dujsuRlshsnb2R+0BWJmPRJx8MXQlTgbrSSqi5Szeu67Lr8Od1/lkc+8evLPRDmHl9L0xeVJYRGaw==
+
+noda@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/noda/-/noda-0.6.0.tgz#cf8e0cd9542eec38f1762ff43eb28e3446f5d080"
+  integrity sha512-Zj3eTQ1cL83zGvorxbGmeqNnt/h+2nH3jT/XLI2oXHL9LH6IKoPvFh6feT1e/yFhRRByP3Q+waM+2dcXIdZkqg==
+
 object-inspect@^1.13.1:
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.13.2.tgz#dea0088467fb991e67af4058147a24824a3043ff"
   integrity sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==
+
+qir@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/qir/-/qir-0.1.0.tgz#fce4fd28a4ebf538b015e8a3feff1959361a3455"
+  integrity sha512-LJUKDMyPsaog5uDarzqterz+SfdyA3mfvq45kSLV0X5IOSPy/nlueKvLg8nClOSKp57c1E0bU/BFHwHFUoVhcw==
+  dependencies:
+    noda "^0.6.0"
 
 reggol@^1.7.0:
   version "1.7.1"

@@ -1,9 +1,9 @@
-import recursiveReadDir from './recursive-readdir.js';
+import recursiveReadDir from './recursive-readdir.ts';
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-export default async function loadDir(hazel, dirName, loadType) {
+export default async function loadDir(hazel: any, dirName: string, loadType: string) {
   let existError = false;
 
   let tempFolder = '';
@@ -32,11 +32,11 @@ export default async function loadDir(hazel, dirName, loadType) {
   }
 
   for (const filePath of recursiveReadDir(dirName)) {
-    if (!filePath.includes('/_') && (filePath.endsWith('.js') || filePath.endsWith('.mjs'))) {
+    if (!filePath.includes('/_') && (filePath.endsWith('.js') || filePath.endsWith('.mjs') || filePath.endsWith('.ts')) || filePath.endsWith('.cjs')) {
       console.log('* Initializing ' + filePath + ' ...');
       let currentModule;
       try {
-        currentModule = await import(pathToFileURL(filePath));
+        currentModule = await import(pathToFileURL(filePath).toString());
       } catch (error) {
         hazel.emit('error', error);
         console.error(error);

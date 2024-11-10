@@ -1,5 +1,5 @@
 // 日志记录器
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 
 export async function run(hazel, core, hold) {
   // 日志级别

@@ -1,8 +1,11 @@
-import loadModule from './module-loader.js';
-import EventEmitter2 from 'events';
+import loadModule from './module-loader.ts';
+import EventEmitter2 from 'node:events';
 
 export default class Hazel extends EventEmitter2 {
-  constructor( mainConfig ) {
+  mainConfig: any;
+  loadedFunctions: Map<string, any>;
+
+  constructor( mainConfig: any ) {
     super();
     this.mainConfig = mainConfig;
     this.loadedFunctions = new Map();
@@ -68,8 +71,10 @@ export default class Hazel extends EventEmitter2 {
     return result;
   }
 
-  async loadModules( forceLoad ) {
-    let { moduleList: loadedInits, existError: initsExistError } = await loadModule( this, this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir, 'init');
+  async loadModules( forceLoad: boolean ) {
+    
+    let result = await loadModule( this, this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir, 'init') as { moduleList: any; existError: boolean; };
+    let { moduleList: loadedInits, existError: initsExistError } = result;
     if ( !forceLoad && initsExistError ) {
       return false;
     }
@@ -89,16 +94,16 @@ export default class Hazel extends EventEmitter2 {
         });
     });
 
-    console.log('√ Initialize inits complete!\n');
+    console.log(`√ Initialize inits complete!\n`);
 
-    let { moduleList: loadedFunctions, existError: functionExistError } = await loadModule( this, this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir, 'function');
+    let { moduleList: loadedFunctions, existError: functionExistError } = await loadModule( this, this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir, 'function') as { moduleList: any; existError: boolean; };
     if ( !forceLoad && functionExistError ) {
       return false;
     }
 
     this.loadedFunctions = loadedFunctions;
 
-    console.log('√ Initialize functions complete!\n');
+    console.log(`√ Initialize functions ${this.loadedFunctions.size} complete!\n`);
 
     return !( initsExistError || functionExistError );
   }

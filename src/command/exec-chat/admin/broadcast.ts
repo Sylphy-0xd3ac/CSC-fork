@@ -21,7 +21,7 @@ export async function execByChat(hazel, core, hold, socket, line) {
     return;
   }
 
-  await run(hazel, core, hold, socket, { text, level });
+  await run(hazel, core, hold, socket, { text, level: core.config.level.user });
 }
 
 export const name = 'broadcast';
