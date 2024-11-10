@@ -9,9 +9,9 @@
   "scripts": {
     "build": "tsc",
     "ebuild": "node ebuild.cjs",
-    "start": "node main.js",
     "ddev": "deno run --allow-net --allow-read --unstable-sloppy-imports --allow-write --allow-env main.ts",
-    "bdev": "bun run main.ts"
+    "bdev": "bun run main.ts",
+    "start": "node main.js"
   },
   "contributors": [],
   "license": "GNU General Public License v3.0",
