@@ -31,13 +31,17 @@ jobs:
       - name: Compile TypeScript
         run: npx tsc
 
-      # Step 5: 配置 Git 用户信息
+      # Step 5: 删除所有 `.ts` 文件
+      - name: Delete TypeScript files
+        run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
+
+      # Step 6: 配置 Git 用户信息
       - name: Setup Git config
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Step 6: 创建新分支并提交编译产物
+      # Step 7: 创建新分支并提交编译产物
       - name: Commit and Push compiled files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
