@@ -1,23 +1,41 @@
-name: Build
+name: TypeScript Compile and Push
 
 on:
-    push:
-    pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        
-        steps:
-            - name: Check out
-              uses: actions/checkout@v3
-            - name: Set up Node
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 20
-            - name: Install
-              run: yarn
-            - name: Build
-              run: yarn build
-            - name: Test
-              run: yarn start
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: 设置 Node.js 版本
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # 你可以根据需要调整 Node.js 版本
+
+      # Step 3: 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: 运行 TypeScript 编译
+      - name: Compile TypeScript
+        run: npx tsc
+
+      # Step 5: 配置 Git 用户（用于推送代码）
+      - name: Setup Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 6: 添加编译后的 .js 文件并推送到 master 分支
+      - name: Commit and Push compiled files
+        run: |
+          git add .
+          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || echo "No
