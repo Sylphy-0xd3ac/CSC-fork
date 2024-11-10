@@ -38,4 +38,4 @@ jobs:
       - name: Commit and Push compiled files
         run: |
           git add .
-          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || echo "No
+          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || echo "No changes to commit"
