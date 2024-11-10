@@ -1,14 +1,12 @@
 {
     "compilerOptions": {
-      "target": "esnext",
-      "module": "nodenext", 
-      "sourceMap": true,
-      "esModuleInterop": true,
-      "noEmit": true, 
-      "allowImportingTsExtensions": true
+      "moduleResolution": "node",
+      "target": "ES6",
+      "module": "ESNext",
+      "allowSyntheticDefaultImports": true,
+      "sourceMap": true
     },
     "ts-node": { 
       "transpileOnly": true
     }
 }
-  
