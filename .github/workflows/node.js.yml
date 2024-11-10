@@ -1,7 +1,10 @@
-name: TypeScript Compile and Push
+name: Compile and Push
 
 on:
   push:
+    branches:
+      - main  # 你也可以根据需要改成任何你想监控的分支
+  pull_request:
     branches:
       - main
 
@@ -10,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: 检出仓库代码
+      # Step 1: 检出代码
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -18,27 +21,35 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # 你可以根据需要调整 Node.js 版本
+          node-version: '16' # 可根据需要选择 Node.js 版本
 
       # Step 3: 安装依赖
       - name: Install dependencies
         run: npm install
 
-      # Step 4: 运行 TypeScript 编译
+      # Step 4: 编译代码
       - name: Compile TypeScript
         run: npx tsc
 
-      # Step 5: 配置 Git 用户（用于推送代码）
+      # Step 5: 配置 Git 用户信息
       - name: Setup Git config
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Step 6: 添加编译后的 .js 文件并推送到 main 分支
+      # Step 6: 创建新分支并提交编译产物
       - name: Commit and Push compiled files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # 创建一个新的分支（这里我们使用 `compiled-output` 分支）
+          git checkout -b compiled-output
+
+          # 添加编译后的文件
           git add .
+
+          # 提交更改
           git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || exit 0
-          git push -u origin master
+
+          # 推送到远程的 `compiled-output` 分支
+          git push -u origin compiled-output --force
