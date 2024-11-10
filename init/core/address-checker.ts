@@ -1,7 +1,7 @@
 // 用于检查一个 IPv4 地址是否在指定的 CIDR 范围内
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 // 检查 IPv4 地址是否在允许的 CIDR 列表中
 function isInList(ipFirst, ipBinary, CIDRlist) {

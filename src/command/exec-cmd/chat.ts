@@ -31,7 +31,7 @@ export async function run(hazel, core, hold, socket, data) {
       return;
     }
 
-    if ((!command.moduleType === 'ws-command') || typeof command.execByChat != 'function') {
+    if ((command.moduleType !== 'ws-command') || (typeof command.execByChat != 'function')) {
       core.replyMalformedCommand(socket);
       return;
     }

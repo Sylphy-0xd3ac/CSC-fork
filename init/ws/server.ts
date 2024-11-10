@@ -14,8 +14,8 @@ export async function run(hazel, core, hold) {
   core.extendedFindSockets = function (filter, sockets) {
     const filterAttrs = Object.keys(filter);
     const reqCount = filterAttrs.length;
-    let matches = [];
-    let socketList = sockets || hold.wsServer.clients;
+    let matches : any = [];
+    let socketList : any = sockets || hold.wsServer.clients;
     
     socketList.forEach((socket) => {
       let curMatch = 0;
@@ -77,8 +77,8 @@ export async function run(hazel, core, hold) {
     const filterAttrs = Object.keys(filter);
     const reqCount = filterAttrs.length;
     let curMatch = 0;
-    let matches = [];
-    let socketList = sockets || hold.wsServer.clients;
+    let matches :any = [];
+    let socketList : any = hold.wsServer.clients
     socketList.forEach((socket) => {
       curMatch = 0;
       for (let loop = 0; loop < reqCount; loop += 1) {
@@ -131,7 +131,7 @@ export async function run(hazel, core, hold) {
     }
     let attrCount = Object.keys(filter).length;
     let curMatch = 0;
-    let matches = [];
+    let matches :any = [];
     let socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       curMatch = 0;
@@ -150,8 +150,8 @@ export async function run(hazel, core, hold) {
 
   // 使用一个属性作为过滤条件查找 socket
   core.findSocketTiny = function (attr, value) {
-    let matches = [];
-    hold.wsServer.clients.forEach((socket) => {
+    let matches : any = [];
+    hold.wsServer.clients.forEach((socket : any) => {
       if (socket[attr] === value) {
         matches.push(socket);
       }
@@ -161,7 +161,7 @@ export async function run(hazel, core, hold) {
 
   // 根据给定的用户等级查找 socket
   core.findSocketByLevel = function (level, sockets) {
-    let matches = [];
+    let matches : any = [];
     let socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       if (socket.level >= level) {
@@ -172,7 +172,7 @@ export async function run(hazel, core, hold) {
   }
 
   core.findSocketByLevelDown = function (level, sockets) {
-    let matches = [];
+    let matches :any = [];
     let socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       if (socket.level <= level) {

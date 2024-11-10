@@ -28,7 +28,7 @@ export async function run(hazel, core, hold, socket, data) {
 
 // 通过 /roomlist 命令返回房间以及房间内的用户列表
 export async function execByChat(hazel, core, hold, socket, line) {
-  await run(hazel, core, hold, socket);
+  await run(hazel, core, hold, socket, line);
 }
 
 export const name = 'roomlist';
