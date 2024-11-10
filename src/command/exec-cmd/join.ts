@@ -8,7 +8,7 @@ export async function run(hazel, core, hold, socket, data) {
   if (typeof socket.channel == 'string') { return; }
 
   // 如果用户提供了 key，则必须提供 trip，反之亦然
-  if ((typeof data.trip == 'string') ^ (typeof data.key == 'string')) { return; }
+  if ((typeof data.trip == 'string') !== (typeof data.key == 'string')) { return; }
 
   // 检查聊天室名称是否合法
   if (!core.verifyChannel(data.channel)) {
@@ -147,8 +147,8 @@ export async function run(hazel, core, hold, socket, data) {
   }
 
   // 生成用户列表
-  let channelNicks = [];
-  hold.channel.get(data.channel).socketList.forEach((item) => {
+  let channelNicks: any[] = [];
+  hold.channel.get(data.channel).socketList.forEach((item: any) => {
     if(!item.isInvisible) {
       channelNicks.push(item.nick);
     }
@@ -156,7 +156,7 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 检查用户昵称是否和其他用户重复
   let nickDuplicate = false;
-  channelNicks.forEach((item) => {
+  channelNicks.forEach((item: any) => {
     if (item.toLowerCase() === data.nick.toLowerCase()) {
       nickDuplicate = true;
     }

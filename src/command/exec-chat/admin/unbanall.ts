@@ -1,5 +1,5 @@
 // 解封全部 IP 地址
-export async function run(hazel, core, hold, socket, data) {
+export async function run(hazel, core, hold, socket, line) {
   // 清空封禁列表
   hold.bannedIPlist = [];
 
@@ -17,7 +17,7 @@ export async function run(hazel, core, hold, socket, data) {
 
 // 通过 /unbanall 命令解封全部 IP 地址
 export async function execByChat(hazel, core, hold, socket, line) {
-  await run(hazel, core, hold, socket);
+  await run(hazel, core, hold, socket, line);
 }
 
 export const name = 'unbanall';

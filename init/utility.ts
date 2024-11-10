@@ -1,6 +1,6 @@
 // 各种不知道在哪能用到的工具函数
-import os from 'os';
-import { pbkdf2Sync, createHmac } from 'crypto';
+import os from 'node:os';
+import { pbkdf2Sync, createHmac } from 'node:crypto';
 
 export async function run(hazel, core, hold) {
   // 净化对象以防止原型链污染
@@ -42,15 +42,15 @@ export async function run(hazel, core, hold) {
 
   // 格式化时间
   core.formatTime = function (time) {
-    let days = Math.floor(time / 86400000).toString();
+    let days = Math.floor(time / 86400000);
     time -= days * 86400000;
-    let hours = Math.floor(time / 3600000).toString();
+    let hours = Math.floor(time / 3600000);
     time -= hours * 3600000;
-    let minutes = Math.floor(time / 60000).toString();
+    let minutes = Math.floor(time / 60000);
     time -= minutes * 60000;
-    let seconds = Math.floor(time / 1000).toString();
-    time -= (seconds * 1000).toString();
-    return days.padStart(2, '0') + ':' + hours.padStart(2, '0') + ':' + minutes.padStart(2, '0') + ':' + seconds.padStart(2, '0') + '.' + time.toString().padStart(3, '0');
+    let seconds = Math.floor(time / 1000);
+    time -= seconds * 1000;
+    return days.toString().padStart(2, '0') + ':' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0') + '.' + time.toString().padStart(3, '0');
   }
 
   // 生成key
@@ -85,7 +85,7 @@ export async function run(hazel, core, hold) {
 
   // 拆分字符串中以空格分段的参数
   core.splitArgs = function (line) {
-    let args = [];
+    let args: any[] = [];
     line.split(' ').forEach((arg) => {
       if (arg != '') args.push(arg);
     });
@@ -95,12 +95,15 @@ export async function run(hazel, core, hold) {
   // 获取就像 [20:42:13] 一样的时间字符串
   core.getTimeString = function () {
     let timeNow = new Date();
-    let hour = timeNow.getHours();
-    let min = timeNow.getMinutes();
-    let sec = timeNow.getSeconds();
-    if (hour < 10) { hour = '0' + hour; }
-    if (min < 10) { min = '0' + min; }
-    if (sec < 10) { sec = '0' + sec; }
+    let hour = timeNow.getHours().toString();
+    let min = timeNow.getMinutes().toString();
+    let sec = timeNow.getSeconds().toString();
+    let hourNum = parseInt(hour);
+    let minNum = parseInt(min);
+    let secNum = parseInt(sec);
+    if (hourNum < 10) { hour = '0' + hour; }
+    if (minNum < 10) { min = '0' + min; }
+    if (secNum < 10) { sec = '0' + sec; }
     return '[' + hour + ':' + min + ':' + sec + ']';
   }
 
