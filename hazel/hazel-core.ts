@@ -1,5 +1,6 @@
 import loadModule from './module-loader.ts';
 import EventEmitter2 from 'node:events';
+import process from 'node:process';
 
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
