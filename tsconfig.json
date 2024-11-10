@@ -2,11 +2,11 @@
     "compilerOptions": {
       "target": "esnext",
       "module": "nodenext", 
-      "outDir": "./dist", 
       "sourceMap": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "noEmit": true, 
+      "allowImportingTsExtensions": true
     },
-    "include": ["**/*.ts"], 
     "ts-node": { 
       "transpileOnly": true
     }
