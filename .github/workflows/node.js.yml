@@ -34,10 +34,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Step 6: 添加编译后的 .js 文件并推送到 master 分支
+      # Step 6: 添加编译后的 .js 文件并推送到 main 分支
       - name: Commit and Push compiled files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add .
-          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || echo "No changes to commit"
-          git push origin master
-
+          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || exit 0
+          git push -u origin master
