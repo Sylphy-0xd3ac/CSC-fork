@@ -2,6 +2,7 @@ import HazelCore from './hazel/hazel-core.ts';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import process from 'node:process';
 
 /*
 (✧ω✧)~ (≧▽≦)~
