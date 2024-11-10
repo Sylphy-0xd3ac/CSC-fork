@@ -1,4 +1,4 @@
-import loadModule from './module-loader.ts';
+import loadModule from './module-loader';
 import EventEmitter2 from 'node:events';
 import process from 'node:process';
 
