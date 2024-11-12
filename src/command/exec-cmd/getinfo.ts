@@ -8,7 +8,7 @@ export async function run(hazel, core, hold, socket, data) {
   core.reply({
     cmd: 'setinfo',
     ver: core.config.version,
-    online: hold.wsServer._server._connections,
+    online: hold.wsServer.clients.size,
   }, socket);
 
   // 之后断开连接
