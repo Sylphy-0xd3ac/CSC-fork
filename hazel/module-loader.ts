@@ -33,6 +33,7 @@ export default async function loadDir(hazel: any, dirName: string, loadType: str
 
   for (const filePath of recursiveReadDir(dirName)) {
     if (!filePath.includes('/_') && (filePath.endsWith('.js') || filePath.endsWith('.mjs') || filePath.endsWith('.ts')) || filePath.endsWith('.cjs')) {
+    //if (!filePath.includes('/_') && (filePath.endsWith('.ts'))) {
       console.log('* Initializing ' + filePath + ' ...');
       let currentModule;
       try {

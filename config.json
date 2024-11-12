@@ -1,5 +1,5 @@
 {
-  "projectName": "Crosst-Chat-Fork",
+  "projectName": "Crosst-Chat-TypeScript",
   "port": 52764,
   "baseDir": "",
   "hazel": {
@@ -7,12 +7,14 @@
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
-      "staticDir": "/boot.ts"
+      "staticDir": "/boot.ts,/boot_ws.ts,/boot_http.ts"   
     }
   },
   "logDir": "./logs",
   "behindReverseProxy": false,
   "wsHeartbeatInterval": 16000,
   "appConfigDir": "/config/config.json",
+  "signPath": "/config/sign.txt",
+  "htmlsignDir": "/config/HTMLSign.txt",
   "allowCIDRlistDir": "/config/allow.txt"
 }

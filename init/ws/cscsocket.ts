@@ -1,7 +1,7 @@
 // 修改 ws 包中原有的 WebSocket 对象以更好的支持十字街
 import { WebSocket } from 'ws';
 
-class CSCWebSocket extends WebSocket {
+export class CSCWebSocket extends WebSocket {
   constructor(...args: [string]) {
     super(...args);
 
@@ -26,10 +26,10 @@ class CSCWebSocket extends WebSocket {
 
 export async function run(hazel, core, hold) {
   // 在服务器初始化完毕后，替换 ws 包中的 WebSocket 对象
-  hazel.on('initialized', () => {
+  hazel.on('ws_initialized', () => {
     hold.wsServer.options.WebSocket = CSCWebSocket;
   });
-
+  
   // 服务器代码重载后，替换 ws 包中的 WebSocket 对象
   hazel.on('reloaded-complete', () => {
     hold.wsServer.options.WebSocket = CSCWebSocket;
