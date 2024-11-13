@@ -1,5 +1,6 @@
 // 提权至 root 权限
 export async function run(hazel, core, hold, socket, data) {
+
   // 验证输入的 root 密码
   if (data.passcode !== core.config.rootPasscode) {
     // 进行严格的频率限制
