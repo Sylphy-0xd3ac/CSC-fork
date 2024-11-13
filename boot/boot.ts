@@ -35,6 +35,9 @@ export default async function (hazel, core, hold) {
   // 禁言时间列表
   hold.muteUntil = new Map();
 
+  // 报错个数
+  hold.errorCount = 0;
+
   // 读取服务器sign
   hold.serverSign = fs.readFileSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.signPath), 'utf8').trim();
 

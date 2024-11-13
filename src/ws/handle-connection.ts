@@ -1,13 +1,13 @@
 // 用于处理新的 WebSocket 连接
-export async function run( hazel, core, hold, ws_socket, request, socket ) {
+export async function run( hazel, core, hold, ws_socket, request) {
   /* 前置检查 */
   // 获取客户端地址
   if (hazel.mainConfig.behindReverseProxy) {
-    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || socket.remoteAddress;
+    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     // 十字街现在不用 CDN 所以不用这个玩意
-    // socket.remoteAddress = request.headers['x-forwarded-for'].split(',').pop().trim() || socket.remoteAddress;
+    // socket.remoteAddress = request.headers['x-forwarded-for'].split(',').pop().trim() || request.socket.remoteAddress;
   } else {
-    ws_socket.remoteAddress = socket.remoteAddress;
+    ws_socket.remoteAddress = request.socket.remoteAddress;
   }
 
   // 检查该地址是否请求频率过高

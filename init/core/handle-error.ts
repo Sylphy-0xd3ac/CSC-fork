@@ -38,6 +38,8 @@ export async function run(hazel, core, hold) {
       console.error('----------\nERROR HANDLER ERROR CATCHED AT ' + new Date().toTimeString());
       console.error(error.stack.split('\n').slice(0, 4).join('\n'));
     }
+
+    hold.errorCount++;
   });
 }
 
