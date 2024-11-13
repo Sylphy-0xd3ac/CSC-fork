@@ -21,7 +21,7 @@ body {
 </style>
 <div class="art">${data}
 
-Server running...
+Server running...${errorCount}
 </div>
 <head>
 <html>
