@@ -23,6 +23,7 @@
   "type": "module",
   "dependencies": {
     "bun": "^1.1.34",
+    "color": "^4.2.3",
     "cookies": "^0.9.1",
     "cordis": "^3.18.1",
     "deno": "^0.1.1",

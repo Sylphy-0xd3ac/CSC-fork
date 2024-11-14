@@ -24,7 +24,7 @@ export default class Hazel extends EventEmitter2 {
     console.log('Initializing ' + this.mainConfig.projectName + '...\n');
 
     if (( await this.loadModules( forceInit )) || forceInit ) {
-      this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.staticDir.split(",").forEach(async ( staticDir ) => {
+      await this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.staticDir.split(",").forEach(async ( staticDir ) => {
       (await import('file:///' + this.mainConfig.baseDir + staticDir)).default( this, this.#core, this.#hold )
         .then()
         .catch(( error ) => {
@@ -35,13 +35,13 @@ export default class Hazel extends EventEmitter2 {
           }
         }
       );
-      console.log(`√ Static function ${staticDir} executed. `);
+      await console.log(`√ Static function ${staticDir} executed. `);
       });
     } else {
       process.exit();
     }
     this.emit('initialized');
-    console.log('==' + this.mainConfig.projectName + ' Initialize Complete==\n');
+    await console.log('==' + this.mainConfig.projectName + ' Initialize Complete==\n');
   }
 
   async reloadModules( forceReload ) {

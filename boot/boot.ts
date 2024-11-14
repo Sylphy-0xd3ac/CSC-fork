@@ -35,15 +35,18 @@ export default async function (hazel, core, hold) {
   // 禁言时间列表
   hold.muteUntil = new Map();
 
-  // 报错个数
+  // 错误和警告个数
   hold.errorCount = 0;
+  hold.warningCount = 0;
 
   // 读取服务器sign
   hold.serverSign = fs.readFileSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.signPath), 'utf8').trim();
 
+  // 日志
+  hold.logs = '';
+
   // 写日志，保存服务器启动时间，上次重读时间
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
-  core.log(core.LOG_LEVEL.LOG, 'Server initialized');
-  console.log(hold.serverSign+'\n');
+  core.log(core.LOG_LEVEL.LOG, 'Server initialized', 'BOOT');
 };

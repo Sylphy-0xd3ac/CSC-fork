@@ -19,9 +19,13 @@ body {
     font-family: monospace; /* 使用等宽字体 */
 }
 </style>
-<div class="art">${data}
+<div class="art">
+${data}
 
-Server running...${errorCount}
+Server running...
+${errorAndWarningCount}Logs:
+
+${logs}
 </div>
 <head>
 <html>
