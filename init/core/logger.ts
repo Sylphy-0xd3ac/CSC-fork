@@ -1,7 +1,6 @@
 // 日志记录器
 import { writeFileSync } from 'node:fs';
 import chalk from 'chalk';
-import { isContinueStatement } from 'typescript';
 
 export async function run(hazel, core, hold) {
   // 日志级别
