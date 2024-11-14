@@ -2,7 +2,6 @@ import { WebSocketServer } from 'ws';
 
 export default async function (hazel, core, hold) {
   // 尽可能简单地创建一个无头 WebSocket 服务器
-  const server = hold.httpServer;
 
   hold.wsServer = new WebSocketServer({ noServer: true });
 

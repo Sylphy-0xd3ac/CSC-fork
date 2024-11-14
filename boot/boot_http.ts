@@ -40,12 +40,14 @@ export default async function (hazel, core, hold) {
       );
 
       htmlContent = htmlContent.replace('${data}', '\n' + data);
-      if(hold.errorCount > 0) {
-          htmlContent = htmlContent.replace('${errorCount}', '\n' + `<p style="color: red;">${hold.errorCount} Errors.</p>`);
+      if(hold.warningCount > 0 || hold.errorCount > 0) {
+        htmlContent = htmlContent.replace('${errorAndWarningCount}', `<p style="color: orange;">${hold.warningCount} Warnings.</p><p style="color: red;">${hold.errorCount} Errors.</p>`);
       }
       else {
-          htmlContent = htmlContent.replace('${errorCount}', '\n' + `<p style="color: green;">${hold.errorCount} Errors.</p>`);
+        htmlContent = htmlContent.replace('${errorAndWarningCount}', '<p style="color: green;">No errors or warnings.</p>');
       }
+      
+      htmlContent = htmlContent.replace('${logs}', hold.logs);
       // 设置内容类型并返回 HTML 内容
       ctx.set('Content-Type', 'text/html; charset=utf-8');
       ctx.body = htmlContent;

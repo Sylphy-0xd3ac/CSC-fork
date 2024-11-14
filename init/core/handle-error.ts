@@ -10,8 +10,8 @@ export async function run(hazel, core, hold) {
       const id = Math.random().toString(16).slice(2, 10);
 
       // 打印错误内容
-      console.error('----------\nSERVER ERROR #' + id + ' CATCHED AT ' + new Date().toTimeString());
-      console.error(error.stack.split('\n').slice(0, 4).join('\n'));
+      // console.error('----------\nSERVER ERROR #' + id + ' CATCHED AT ' + new Date().toTimeString());
+      // console.error(error.stack.split('\n').slice(0, 4).join('\n'));
 
       if (typeof arg1 != 'undefined') {
         // 如果 arg1 是一个 socket 对象，将错误信息发送给客户端
@@ -21,25 +21,28 @@ export async function run(hazel, core, hold) {
             // 将 socket 信息写入日志
             core.log(core.LOG_LEVEL.ERROR, [
               'SERVER ERROR #' + id,
-              'FROM', arg1.remoteAddress, '(' + arg1.permission + ')[' + arg1.trip + ']', arg1.nick, arg1.channel,
-            ]);
+              'FROM', arg1.remoteAddress, '(' + arg1.permission + ')[' + arg1.trip + ']', arg1.nick, arg1.channel, arg1.connectionID,
+              '\n', 'ERROR STACK\n', error.stack
+            ],'HandleError');
           }
         }
       }
+      else
+      {
+        // 记日志
+        core.log(core.LOG_LEVEL.ERROR, [
+          'SERVER ERROR #' + id,
+          '\n', '\n', error.stack
+        ],'HandleError');
+      }
 
-      // 记日志
-      core.log(core.LOG_LEVEL.ERROR, [
-        'SERVER ERROR #' + id,
-        '\n', error.stack,
-        '\n----------'
-      ]);
     } catch (error) {
       // 错误处理程序自身发生错误，打印错误内容
-      console.error('----------\nERROR HANDLER ERROR CATCHED AT ' + new Date().toTimeString());
-      console.error(error.stack.split('\n').slice(0, 4).join('\n'));
+      core.log(core.LOG_LEVEL.ERROR, [
+        'ERROR HANDLER ERROR CATCHED AT ' + new Date().toTimeString(),
+        '\n', '\n', error.stack
+      ],'HandleError');
     }
-
-    hold.errorCount++;
   });
 }
 
