@@ -10,6 +10,9 @@ export async function run( hazel, core, hold, ws_socket, request) {
     ws_socket.remoteAddress = request.socket.remoteAddress;
   }
 
+  // 测试错误处理
+  // throw new Error('Test error');
+
   // 检查该地址是否请求频率过高
   if (core.checkAddress(ws_socket.remoteAddress, 3)) {
     ws_socket.send('{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}');

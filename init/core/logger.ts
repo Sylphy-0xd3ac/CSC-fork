@@ -1,5 +1,7 @@
 // 日志记录器
 import { writeFileSync } from 'node:fs';
+import chalk from 'chalk';
+import { isContinueStatement } from 'typescript';
 
 export async function run(hazel, core, hold) {
   // 日志级别
@@ -9,9 +11,24 @@ export async function run(hazel, core, hold) {
     WARN: 2,
     ERROR: 3
   };
+  core.getrandomColor = function () {
+    core.colors = [
+      chalk.red,
+      chalk.green,
+      chalk.blue,
+      chalk.yellow,
+      chalk.magenta,
+      chalk.cyan,
+      chalk.gray
+    ];
+    return core.colors[Math.floor(Math.random() * core.colors.length)];
+  }
 
   // 记录技术性日志 
-  core.log = function (level, content) {
+  core.log = function (level, content, func = 'Unknown') {
+    // 去颜色日志
+    let contentClean = '';
+
     if (level >= core.config.logLevel) {
       // 如果要求写入的日志级别高于设定的日志级别，写入日志
       // 如果 content 是数组，转为字符串
@@ -21,20 +38,37 @@ export async function run(hazel, core, hold) {
         content = JSON.stringify(content);
       }
 
+      const randomColor = core.getrandomColor();
+
+      // 记录日志
       if (level == core.LOG_LEVEL.DEBUG) {
-        content = '[DEBUG] ' + content;
+        contentClean = `${core.getTimeString()}[DEBUG] ${func} ` + content + '\n'; 
+        hold.logs += contentClean + '\n';
+        content = `${core.getTimeString()}[DEBUG] ${randomColor(func)} ` + content + '\n';
+        console.log(content);
       } else if (level == core.LOG_LEVEL.LOG) {
-        content = '[LOG] ' + content;
+        contentClean = `${core.getTimeString()}[LOG] ${func} ` + content + '\n'; 
+        hold.logs += contentClean + '\n';
+        content = `${core.getTimeString()}[LOG] ${randomColor(func)} ` + content + '\n';
+        console.log(content);
       } else if (level == core.LOG_LEVEL.WARNING) {
-        content = '[WARN] ' + content;
+        contentClean = `${core.getTimeString()}[WARN] ${func} ` + content + '\n'; 
+        hold.logs += contentClean + '\n';
+        content = `${core.getTimeString()}[WARN] ${randomColor(func)} ` + content + '\n'; 
+        console.log(content);
+        hold.warningCount++;
       } else if (level == core.LOG_LEVEL.ERROR) {
-        content = '[ERROR] ' + content;
+        contentClean = `${core.getTimeString()}[ERROR] ${func} ` + content + '\n'; 
+        hold.logs += contentClean + '\n';
+        content = `${core.getTimeString()}[ERROR] ${randomColor(func)} ` + content + '\n'; 
+        console.log(content);
+        hold.errorCount++;
       }
 
       // 写入日志
       try {
         writeFileSync(hazel.mainConfig.logDir + '/' + core.getDateString() + '.log.txt',
-          core.getTimeString() + content + '\n',
+          core.getTimeString() + contentClean + '\n',
           { encoding: 'utf-8', flag: 'a' }
         );
       } catch (error) {

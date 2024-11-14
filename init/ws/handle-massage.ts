@@ -18,7 +18,7 @@ export async function run(hazel, core, hold) {
       data = JSON.parse(data);
     } catch (error) {
       // 记录在日志中
-      core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, data]);
+      core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, data], 'Handle-Message');
       // 按照惯例，如果消息不是 JSON 格式，则关闭连接
       socket.terminate();
       return;
