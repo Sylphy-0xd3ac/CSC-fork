@@ -1,7 +1,7 @@
 // 各种不知道在哪能用到的工具函数
 import os from 'node:os';
 import { pbkdf2Sync, createHmac } from 'node:crypto';
-
+import chalk from 'chalk';
 export async function run(hazel, core, hold) {
   // 净化对象以防止原型链污染
   core.purifyObject = function (input) {
@@ -111,6 +111,20 @@ export async function run(hazel, core, hold) {
   core.getDateString = function () {
     let timeNow = new Date();
     return (timeNow.getFullYear() - 2000) + '-' + (timeNow.getMonth() + 1) + '-' + timeNow.getDate();
+  }
+
+  // 随机颜色
+  core.randomColor = function () {
+    core.colors = [
+      chalk.red,
+      chalk.green,
+      chalk.blue,
+      chalk.yellow,
+      chalk.magenta,
+      chalk.cyan,
+      chalk.gray
+    ];
+    return core.colors[Math.floor(Math.random() * core.colors.length)];
   }
 }
 

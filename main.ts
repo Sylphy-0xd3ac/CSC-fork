@@ -14,7 +14,7 @@ import process from 'node:process';
  ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓███████▓▒░▒▓███████▓▒░   ░▒▓█▓▒░             ░▒▓█▓▒░  ░▒▓███████▓▒░                                                                                                                                                                                                                                                                                                       
 */                                                                                               
 
-let mainConfig: any;
+let mainConfig : any;
 async function main() {
   try {
     mainConfig = JSON.parse(readFileSync(
@@ -27,7 +27,7 @@ async function main() {
     process.exit(1);
   }
 
-  mainConfig.baseDir = dirname(fileURLToPath(import.meta.url));
+  mainConfig.baseDir = dirname(fileURLToPath(import.meta.url)) as any;
 
   const hazel = new HazelCore( mainConfig );
   await hazel.initialize(process.argv.includes('--force'));
