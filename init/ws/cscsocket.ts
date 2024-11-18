@@ -2,7 +2,7 @@
 import { WebSocket } from 'ws';
 
 export class CSCWebSocket extends WebSocket {
-  constructor(...args: [string]) {
+  constructor(...args: any) {
     super(...args);
 
     // 生成一个随机的 connectionID

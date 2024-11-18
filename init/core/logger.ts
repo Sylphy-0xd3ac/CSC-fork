@@ -10,18 +10,6 @@ export async function run(hazel, core, hold) {
     WARN: 2,
     ERROR: 3
   };
-  core.getrandomColor = function () {
-    core.colors = [
-      chalk.red,
-      chalk.green,
-      chalk.blue,
-      chalk.yellow,
-      chalk.magenta,
-      chalk.cyan,
-      chalk.gray
-    ];
-    return core.colors[Math.floor(Math.random() * core.colors.length)];
-  }
 
   // 记录技术性日志 
   core.log = function (level, content, func = 'Unknown') {
@@ -37,29 +25,27 @@ export async function run(hazel, core, hold) {
         content = JSON.stringify(content);
       }
 
-      const randomColor = core.getrandomColor();
-
       // 记录日志
       if (level == core.LOG_LEVEL.DEBUG) {
         contentClean = `${core.getTimeString()}[DEBUG] ${func} ` + content + '\n'; 
         hold.logs += contentClean + '\n';
-        content = `${core.getTimeString()}[DEBUG] ${randomColor(func)} ` + content + '\n';
+        content = `${core.getTimeString()}[DEBUG] ${core.randomColor()(func)} ` + content + '\n';
         console.log(content);
       } else if (level == core.LOG_LEVEL.LOG) {
         contentClean = `${core.getTimeString()}[LOG] ${func} ` + content + '\n'; 
         hold.logs += contentClean + '\n';
-        content = `${core.getTimeString()}[LOG] ${randomColor(func)} ` + content + '\n';
+        content = `${core.getTimeString()}[LOG] ${core.randomColor()(func)} ` + content + '\n';
         console.log(content);
       } else if (level == core.LOG_LEVEL.WARNING) {
         contentClean = `${core.getTimeString()}[WARN] ${func} ` + content + '\n'; 
         hold.logs += contentClean + '\n';
-        content = `${core.getTimeString()}[WARN] ${randomColor(func)} ` + content + '\n'; 
+        content = `${core.getTimeString()}[WARN] ${core.randomColor()(func)} ` + content + '\n'; 
         console.log(content);
         hold.warningCount++;
       } else if (level == core.LOG_LEVEL.ERROR) {
         contentClean = `${core.getTimeString()}[ERROR] ${func} ` + content + '\n'; 
         hold.logs += contentClean + '\n';
-        content = `${core.getTimeString()}[ERROR] ${randomColor(func)} ` + content + '\n'; 
+        content = `${core.getTimeString()}[ERROR] ${core.randomColor()(func)} ` + content + '\n'; 
         console.log(content);
         hold.errorCount++;
       }
