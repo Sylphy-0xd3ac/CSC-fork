@@ -20,9 +20,9 @@ body {
 }
 </style>
 <div class="art">
-${data}
+${errorAndWarningCount}Logs:
 
-Server running...
+${logs}
 </div>
 <head>
 <html>

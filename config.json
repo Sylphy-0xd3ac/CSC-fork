@@ -7,7 +7,7 @@
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
-      "staticDir": "/boot/boot.ts,/boot/boot_ws.ts,/boot/boot_http.ts"   
+      "staticDir": "/boot/boot.ts,/boot/boot_http.ts,/boot/boot_ws.ts"   
     }
   },
   "logDir": "./logs",
@@ -16,5 +16,6 @@
   "appConfigDir": "/config/config.json",
   "signPath": "/config/sign.txt",
   "htmlsignDir": "/config/HTMLSign.txt",
+  "htmluserlogsDir": "/config/HTMLuserlogs.txt",
   "allowCIDRlistDir": "/config/allow.txt"
 }

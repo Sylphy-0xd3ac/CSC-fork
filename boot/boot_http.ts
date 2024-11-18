@@ -6,7 +6,7 @@ import http from 'node:http';
 
 export default async function (hazel, core, hold) {
   // 创建一个 Koa 应用
-  const app = new Koa();
+  const app = new Koa() ;
   const router = new Router();
 
   // 定义 GET 路由
@@ -14,14 +14,13 @@ export default async function (hazel, core, hold) {
     // 检查 token 参数
     const token = ctx.query.token;
 
-    if (!token) {
-      // 如果没有 token，返回 401 未授权
-      ctx.status = 401;
-      ctx.body = 'Unauthorized: Token is required';
+    if(!token) // token是必须的
+    {
+      ctx.status = 403;
+      ctx.body = 'Forbidden: token is required';
       return;
     }
 
-    // 你可以在这里添加更多的验证逻辑，例如检查 token 是否有效
     if (token !== core.config.rootPasscode) {
       ctx.status = 403; // 禁止访问
       ctx.body = 'Forbidden: Invalid token';
@@ -40,14 +39,7 @@ export default async function (hazel, core, hold) {
       );
 
       htmlContent = htmlContent.replace('${data}', '\n' + data);
-      if(hold.warningCount > 0 || hold.errorCount > 0) {
-        htmlContent = htmlContent.replace('${errorAndWarningCount}', `<p style="color: orange;">${hold.warningCount} Warnings.</p><p style="color: red;">${hold.errorCount} Errors.</p>`);
-      }
-      else {
-        htmlContent = htmlContent.replace('${errorAndWarningCount}', '<p style="color: green;">No errors or warnings.</p>');
-      }
-      
-      htmlContent = htmlContent.replace('${logs}', hold.logs);
+
       // 设置内容类型并返回 HTML 内容
       ctx.set('Content-Type', 'text/html; charset=utf-8');
       ctx.body = htmlContent;
@@ -57,6 +49,65 @@ export default async function (hazel, core, hold) {
       ctx.status = 500;
       ctx.body = 'Internal Server Error';
     }
+  });
+
+  // 美化的日志,给用户看的
+  router.get('/logs/user',async (ctx) => {
+    const token = ctx.query.token; // 获取token
+
+    if(!token) // token是必须的
+    {
+      ctx.status = 403;
+      ctx.body = 'Forbidden: token is required';
+      return;
+    }
+
+    if (token !== core.config.rootPasscode)
+    {
+      ctx.status = 403;
+      ctx.body = 'Forbidden: Invalid token';
+      return;
+    }
+
+    ctx.status = 200;
+    let htmlContent = await fs.promises.readFile(
+      path.join(hazel.mainConfig.baseDir, hazel.mainConfig.htmluserlogsDir),
+      'utf-8'
+    );
+    htmlContent = htmlContent.replace('${logs}', hold.logs);
+
+    if(hold.warningCount > 0 || hold.errorCount > 0) {
+      htmlContent = htmlContent.replace('${errorAndWarningCount}', `<p style="color: orange;">${hold.warningCount} Warnings.</p><p style="color: red;">${hold.errorCount} Errors.</p>`);
+    }
+    else {
+      htmlContent = htmlContent.replace('${errorAndWarningCount}', '<p style="color: green;">No errors or warnings.</p>');
+    }
+
+    ctx.set('Content-Type', 'text/html; charset=utf-8');
+    ctx.body = htmlContent;
+  });
+
+  // 标准化的日志,给API用的
+  router.get('/logs/api',async (ctx) => {
+    const token = ctx.query.token;
+
+    if(!token) // token是必须的
+    {
+      ctx.status = 403;
+      ctx.body = 'Forbidden: token is required';
+      return;
+    }
+
+    if(token !== core.config.rootPasscode)
+    {
+      ctx.status = 403;
+      ctx.body = 'Forbidden: Invalid token';
+      return;
+    }
+
+    ctx.status = 200;
+    ctx.set('Content-Type', 'text/plain; charset=utf-8');
+    ctx.body = hold.logs;
   });
 
   // 将路由应用于 Koa 应用

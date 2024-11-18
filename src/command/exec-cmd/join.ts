@@ -5,14 +5,15 @@ export async function run(hazel, core, hold, socket, data) {
   core.checkAddress(socket.remoteAddress, 6);
 
   // 如果用户已经加入了聊天室，则不处理
-  if (typeof socket.channel == 'string') { return; }
+  if (typeof socket.channel == 'string') { socket.close(); return; }
 
   // 如果用户提供了 key，则必须提供 trip，反之亦然
-  if ((typeof data.trip == 'string') !== (typeof data.key == 'string')) { return; }
+  if ((typeof data.trip == 'string') !== (typeof data.key == 'string')) { socket.close(); return; }
 
   // 检查聊天室名称是否合法
   if (!core.verifyChannel(data.channel)) {
     core.replyWarn('CHANNEL_NAME_INVALID', '聊天室名称应当仅由汉字、字母和数字组成，并不超过 20 个字符。', socket);
+    socket.close();
     return;
   }
 
@@ -21,11 +22,13 @@ export async function run(hazel, core, hold, socket, data) {
     if (hold.checkCIDRchannelList.has(data.channel)) {
       if (hold.checkCIDRchannelList.get(data.channel)) {
         core.replyWarn('IP_NOT_ALLOWED', '## 訪問被拒絕\n\n非常抱歉，基於您的IP地址，您現在暫時不允許加入這個頻道。 您現在可以嘗試：\n\n一、十字街禁止某區域的使用通常是暫時性的，稍後再來這個聊天室。\n\n二、聯繫電郵： mail@henrize.kim 詢問可能的解封時間或將您暫時加入白名單的方法。\n\n現時十字街對IP的檢查和處理方法還不成熟，感謝您的耐心和支持。\n\n-----\n\n## Access Denied\n\nBased on your IP address, it is not allowed to join this channel right now. Please try again later.', socket);
+        socket.close();
         return;
       }
     } else {
       if (hold.checkCIDRglobal) {
         core.replyWarn('IP_NOT_ALLOWED', '## 訪問被拒絕\n\n非常抱歉，基於您的IP地址，您現在暫時不允許加入這個頻道。 您現在可以嘗試：\n\n一、十字街禁止某區域的使用通常是暫時性的，稍後再來這個聊天室。\n\n二、聯繫電郵： mail@henrize.kim 詢問可能的解封時間或將您暫時加入白名單的方法。\n\n現時十字街對IP的檢查和處理方法還不成熟，感謝您的耐心和支持。\n\n-----\n\n## Access Denied\n\nBased on your IP address, it is not allowed to join this channel right now. Please try again later.', socket);
+        socket.close();
         return;
       }
     }
