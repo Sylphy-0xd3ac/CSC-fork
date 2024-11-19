@@ -85,6 +85,10 @@ export async function run(hazel, core, hold) {
     content += '\n';
 
     // 写入日志
+    // 如果日志目录不存在，则创建
+    if (!existsSync(hazel.mainConfig.logDir)) {
+      mkdirSync(hazel.mainConfig.logDir);
+    }
     try {
       writeFileSync(hazel.mainConfig.logDir + '/' + core.getDateString() + '.archive.txt',
         content,
