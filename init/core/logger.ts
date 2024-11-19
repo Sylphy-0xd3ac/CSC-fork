@@ -1,6 +1,5 @@
 // 日志记录器
-import { writeFileSync } from 'node:fs';
-import chalk from 'chalk';
+import { writeFileSync, existsSync, mkdirSync } from 'node:fs';
 
 export async function run(hazel, core, hold) {
   // 日志级别
@@ -51,6 +50,10 @@ export async function run(hazel, core, hold) {
       }
 
       // 写入日志
+      // 如果日志目录不存在，则创建
+      if (!existsSync(hazel.mainConfig.logDir)) {
+        mkdirSync(hazel.mainConfig.logDir);
+      }
       try {
         writeFileSync(hazel.mainConfig.logDir + '/' + core.getDateString() + '.log.txt',
           core.getTimeString() + contentClean + '\n',
