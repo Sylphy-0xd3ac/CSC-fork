@@ -1,23 +1,14 @@
-# 使用最新的 Node.js 官方镜像
-FROM node:latest
+# 使用 Deno 官方镜像
+FROM denoland/deno:latest
 
 # 设置工作目录
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# 复制 package.json 和 package-lock.json 文件
-COPY package*.json ./
-
-# 安装项目依赖
-RUN npm install
-
-# 复制应用程序代码到容器中
+# 复制项目文件到容器
 COPY . .
 
-# 暴露应用程序的端口
+# 暴露应用的端口（请根据您的应用配置更改端口号）
 EXPOSE 52764
 
-# 编译
-RUN npm run build
-
-# 启动应用程序
-CMD ["npm", "start"]
+# 运行应用程序
+CMD ["run", "--allow-all", "--unstable-sloppy-imports", "main.ts"]

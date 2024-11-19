@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "ebuild": "node ebuild.cjs",
-    "ddev": "deno run --allow-net --allow-read --unstable-sloppy-imports --allow-write --allow-env main.ts",
+    "ddev": "deno run --allow-all --unstable-sloppy-imports main.ts",
     "bdev": "bun run main.ts",
     "start": "node main.js"
   },
