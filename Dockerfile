@@ -10,5 +10,8 @@ COPY . .
 # 暴露应用的端口（请根据您的应用配置更改端口号）
 EXPOSE 52764
 
+# 安装依赖
+RUN deno install
+
 # 运行应用程序
 CMD ["run", "--allow-all", "--unstable-sloppy-imports", "main.ts"]
