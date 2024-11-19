@@ -7,10 +7,11 @@
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
-      "staticDir": "/boot/boot.ts,/boot/boot_http.ts,/boot/boot_ws.ts"   
+      "staticDir": "/boot/boot.ts,/boot/boot_server.ts"   
     }
   },
   "logDir": "./logs",
+  "enableHttps": false,
   "behindReverseProxy": false,
   "wsHeartbeatInterval": 16000,
   "appConfigDir": "/config/config.json",
