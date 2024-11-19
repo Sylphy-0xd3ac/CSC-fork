@@ -13,8 +13,11 @@ RUN npm install
 # 复制应用程序代码到容器中
 COPY . .
 
-# 暴露应用程序的端口（根据应用程序配置的端口修改）
+# 暴露应用程序的端口
 EXPOSE 52764
+
+# 编译
+RUN npm run build
 
 # 启动应用程序
 CMD ["npm", "start"]
