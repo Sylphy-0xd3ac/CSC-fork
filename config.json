@@ -7,7 +7,7 @@
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
-      "staticDir": "/boot/boot.ts,/boot/boot_server.ts"   
+      "staticDir": "/boot/boot.ts,/boot/boot_http.ts,/boot/boot_ws.ts"   
     }
   },
   "logDir": "./logs",

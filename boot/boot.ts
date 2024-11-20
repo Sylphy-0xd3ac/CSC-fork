@@ -13,6 +13,9 @@ export default async function (hazel, core, hold) {
   // 保存一些服务器的运行数据
   hold.stats = {};
 
+  // 服务器http被访问host
+  hold.httphost = '';
+
   // CIDR 列表
   hold.allowCIDRlist = [];
   hold.denyCIDRlist = [];

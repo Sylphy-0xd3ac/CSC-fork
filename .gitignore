@@ -12,4 +12,7 @@ package-lock.json
 # Bot
 bot.js
 
+# Getlog
+getlog.ts
+
 # Security
