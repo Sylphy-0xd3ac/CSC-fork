@@ -21,8 +21,8 @@ export async function run(hazel, core, hold, c) {
   }
 }
 
-export const name = 'console';
+export const name = 'homepage';
 export const moduleType = 'http-command-client';
-export const requiredLevel = 1;
+export const requiredLevel = 0;
 export const requiredData = [];
-export const url = 'console';
+export const url = '';

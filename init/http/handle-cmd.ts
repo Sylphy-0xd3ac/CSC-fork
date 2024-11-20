@@ -3,8 +3,9 @@ export async function run(hazel, core, hold) {
   core.handleHttp = async function (hazel, core, hold, ctx, path) {
     // 获取用户password
     const pwd = ctx.req.query('pwd');
-    // 如果密码为空，则返回
-    if (!pwd) { return; }
+    if (typeof pwd === 'undefined') {
+      return;
+    }
     // 生成trip
     const trip = core.generateTrips(pwd);
     // 初始化权限等级

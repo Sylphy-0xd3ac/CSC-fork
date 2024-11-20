@@ -12,6 +12,9 @@ export async function run(hazel, core, hold, app) {
     if (path.includes('?')) {
       path = path.split('?')[0];
     }
+    if (path === '') {
+      return hazel.runFunction('homepage', c);
+    }
     return core.handleHttp(hazel, core, hold, c, path);
   });
 }
