@@ -14,6 +14,7 @@ export class CSCWebSocket extends WebSocket {
   remoteAddress;
   isAllowedIP = false;
   isDeniedIP = false;
+  handlePrompt = false;
 
   nick;
   trip;
