@@ -1,32 +1,61 @@
-[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
-# 十字街聊天室 - TypeScript
 
-十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript,添加网页服务器等.
+# CrosSt Street Chatroom - TypeScript Version
 
-## 本地测试
+The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street version](https://github.com/CrosSt-Chat/CSC-main/). This fork primarily converts the original JavaScript implementation to TypeScript and adds a web server.
 
-### 编译版本准备
+---
 
-[Node.js](https://nodejs.org/) 14.0 或更高版本（十字街TS后端一般在 Node.js 最新 LTS 版本上测试，推荐您使用 Node.js 最新 LTS 版本运行）。
+## Local Testing
 
-### 安装
+### Prerequisites
 
-1. 克隆本仓库compiled-output分支源代码。
+- **Node.js**: Ensure you have [Node.js](https://nodejs.org/) version 14.0 or higher installed.
+  - The backend is tested with the latest LTS version of Node.js, so it is recommended to use the latest LTS version.
 
-2. 进入十字街后端源代码目录（CSC-main），并运行 `npm install` 安装依赖。
+---
 
-3. 运行 `node main.js` 启动十字街后端。
+### Installation Steps
 
-4. 测试十字街后端是否正常运行：打开client文件夹中的index.html,如果成功显示homepage则为成功.
+1. **Clone the Repository**:
+   ```bash
+   git clone -b compiled-output https://github.com/YourRepo/CSC-main.git
+   cd CSC-main
+   ```
 
-## 部署和配置
-从client中获取客户端.
-随后配置网页,并在同服务器上运行.
+2. **Install Dependencies**:
+   Run the following command in the backend directory:
+   ```bash
+   npm install
+   ```
 
-## 贡献
-感谢十字街官方开放原代码.
-[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
+3. **Start the Backend**:
+   Execute:
+   ```bash
+   node main.js
+   ```
 
-## 开源协议
+4. **Test the Backend**:
+   Open the `index.html` file in the `client` folder using your browser. If the homepage is displayed successfully, the backend is running correctly.
 
-十字街聊天室遵循 [GNU Public License v3.0](./LICENSE) 开放源代码。
+---
+
+## Deployment and Configuration
+
+1. **Client Setup**:
+   Copy the `client` folder and configure your web server to serve the frontend files.
+
+2. **Run on the Same Server**:
+   Ensure that the backend (`main.js`) and frontend (from the `client` folder) are hosted on the same server.
+
+---
+
+## Contributions
+
+We extend our gratitude to the official CrosSt Street project for making the source code available.  
+[Official CrosSt Street Version](https://github.com/CrosSt-Chat/CSC-main/)
+
+---
+
+## License
+
+CrosSt Street Chatroom is licensed under the [GNU Public License v3.0](./LICENSE).
