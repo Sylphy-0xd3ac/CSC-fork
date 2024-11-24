@@ -13,9 +13,6 @@ export default async function (hazel, core, hold) {
   // 保存一些服务器的运行数据
   hold.stats = {};
 
-  // 服务器http被访问host
-  hold.httphost = '';
-
   // CIDR 列表
   hold.allowCIDRlist = [];
   hold.denyCIDRlist = [];
@@ -41,12 +38,6 @@ export default async function (hazel, core, hold) {
   // 错误和警告个数
   hold.errorCount = 0;
   hold.warningCount = 0;
-
-  // 读取服务器sign
-  hold.serverSign = fs.readFileSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.signPath), 'utf8').trim();
-
-  // 日志
-  hold.logs = '';
 
   // 写日志，保存服务器启动时间，上次重读时间
   hold.startTime = Date.now();

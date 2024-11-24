@@ -3,15 +3,12 @@ export async function run( hazel, core, hold, ws_socket, request) {
   /* 前置检查 */
   // 获取客户端地址
   if (hazel.mainConfig.behindReverseProxy) {
-    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
     // 十字街现在不用 CDN 所以不用这个玩意
     // socket.remoteAddress = request.headers['x-forwarded-for'].split(',').pop().trim() || request.socket.remoteAddress;
   } else {
-    ws_socket.remoteAddress = request.socket.remoteAddress;
+    ws_socket.remoteAddress = request.connection.remoteAddress;
   }
-
-  // 测试错误处理
-  // throw new Error('Test error');
 
   // 检查该地址是否请求频率过高
   if (core.checkAddress(ws_socket.remoteAddress, 3)) {

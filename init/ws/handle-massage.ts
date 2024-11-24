@@ -29,7 +29,7 @@ export async function run(hazel, core, hold) {
     }
 
     // JSON 对象中每个属性都必须是字符串
-    // 且属性名不应该是 __proto__  porototype constructor
+    // 且属性名不应该是 __proto__  prototype constructor
     // 否则关闭连接
     for (const key in data) {
       if (typeof data[key] !== 'string') {
@@ -46,6 +46,12 @@ export async function run(hazel, core, hold) {
     }
 
     if (!data.cmd) { return; } // 消息必须有 cmd 属性
+    
+    // 处理 prompt
+    if (socket.handlePrompt) {
+      socket.handlePrompt = false;
+      return;
+    }
 
     // 直接从 hazel 中拿命令
     let command = hazel.loadedFunctions.get(data.cmd);
