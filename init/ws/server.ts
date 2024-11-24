@@ -1,4 +1,5 @@
 // 负责查找 socket、对 socket 发送消息、广播消息等操作
+import EventEmitter from "node:events";
 
 export async function run(hazel, core, hold) {
   // 向指定的 socket 发送消息
@@ -11,6 +12,25 @@ export async function run(hazel, core, hold) {
       hazel.emit('error', error, socket);
     }
   }
+  
+  // 添加 prompt 方法
+  core.prompt = function (socket) {
+    return new Promise((resolve) => {
+      const messageHandler = (message) => {
+        // 处理消息并解析
+        const data = JSON.parse(message);
+        // 移除事件监听器
+        socket.off('message', messageHandler);
+        // 解析并返回数据
+        resolve(data);
+      };
+  
+      // 添加事件监听器
+      socket.on('message', messageHandler);
+      socket.handlePrompt = true;
+    });
+  };
+
   core.extendedFindSockets = function (filter, sockets) {
     const filterAttrs = Object.keys(filter);
     const reqCount = filterAttrs.length;
