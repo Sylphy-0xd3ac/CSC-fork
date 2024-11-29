@@ -9,14 +9,10 @@
     "user": 1
   },
   "adminList": [
-    "f7ZtZf",
-    "+OBfDB",
     "Xd+VDx"
   ],
   "botList": [],
-  "memberList": [
-    "btQdQa"
-  ],
+  "memberList": [],
   "dataMaximumLength": 32768,
   "rateLimiter": {
     "globalTimeRange": 10000,

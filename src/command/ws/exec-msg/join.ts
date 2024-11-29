@@ -173,6 +173,15 @@ export async function run(hazel, core, hold, socket, data) {
   // 返回用户列表等信息
   if (typeof data.password == 'string') {
     const generatedKey = core.generateKeys(data.clientName);
+    if (hold.noticeList.length > 0) {
+      hold.noticeList.forEach(notice => {
+        core.reply({
+          cmd: 'info',
+          code: 'NOTICE',
+          text: notice,
+        }, socket);
+      });
+    }
     core.reply({
       cmd: 'onlineSet',
       nicks: channelNicks,
@@ -180,6 +189,15 @@ export async function run(hazel, core, hold, socket, data) {
       key: generatedKey,
     }, socket);
   } else {
+    if (hold.noticeList.length > 0) {
+      hold.noticeList.forEach(notice => {
+      core.reply({
+        cmd: 'info',
+          code: 'NOTICE',
+          text: notice,
+        }, socket);
+      });
+    }
     core.reply({
       cmd: 'onlineSet',
       nicks: channelNicks,

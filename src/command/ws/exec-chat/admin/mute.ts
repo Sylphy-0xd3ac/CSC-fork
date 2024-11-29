@@ -67,6 +67,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'mute';
 export const requiredLevel = 4;
-export const requiredData = ['nick', 'mins'];
+export const requiredData = {'nick':{'description':'用户昵称','value':[{'name':'any'}]},'mins':{'description':'禁言时长','value':[{'name':'any'}]}};
 export const moduleType = 'ws-command';
 export const description = '禁言聊天室中某人';

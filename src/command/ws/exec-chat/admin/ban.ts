@@ -51,6 +51,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'ban';
 export const requiredLevel = 4;
-export const requiredData = ['nick'];
+export const requiredData = {'nick':{'description':'用户昵称','value':[{'name':'any'}]}};
 export const moduleType = 'ws-command';
 export const description = '封禁聊天室中某人的 IP';

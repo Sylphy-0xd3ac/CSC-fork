@@ -31,6 +31,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'unban';
 export const requiredLevel = 4;
-export const requiredData = ['address'];
+export const requiredData = {'address':{'description':'IP 地址','value':[{'name':'any'}]}};
 export const moduleType = 'ws-command';
 export const description = '解封某个 IP 地址';

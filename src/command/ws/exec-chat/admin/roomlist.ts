@@ -33,6 +33,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'roomlist';
 export const requiredLevel = 4;
-export const requiredData = [];
+export const requiredData = {};
 export const moduleType = 'ws-command';
 export const description = '返回房间以及房间内的用户列表';

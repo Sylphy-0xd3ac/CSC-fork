@@ -30,6 +30,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'w';
 export const requiredLevel = 1;
-export const requiredData = [];
+export const requiredData = {'nick':{'description':'用户昵称','value':'any'},'text':{'description':'消息内容','value':'any'}};
 export const moduleType = 'ws-command';
 export const description = '发送私聊消息';
