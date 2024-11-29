@@ -2,19 +2,24 @@ export async function run(hazel, core, hold, socket, data) {
   let noList = ['elevate', 'help'];
 
   if(data.command) {
+    // 查找指令
     let recommand = null;
     hazel.loadedFunctions.forEach(command => {
       if(command.name === data.command && command.requiredLevel <= socket.level && !noList.includes(command.name) && command.moduleType === 'ws-command') {
         recommand = command;
       }
     });
+    // 如果找到了指令
     if(recommand !== null) {
+      // 构建返回文本
       let returnText = `指令: ${recommand.name} - ${recommand.description}.
       ${Object.keys(recommand.requiredData).length > 0 ? `可用的选项有:\n${Object.keys(recommand.requiredData).map(key => `${key}: ${recommand.requiredData[key].description} ${recommand.requiredData[key].value ? `, 可用的值有: ${recommand.requiredData[key].value !== 'any' ? recommand.requiredData[key].value.map(value => value.name === 'any' ? '任意值' : value.name + ' - ' + value.description).join(', ') : '任意值'}` : ''}`).join('\n')}` : ''}
       `;
+      // 回复用户
       core.replyInfo('HELP_COMMAND', returnText, socket);
       return;
     } else {
+      // 如果没找到指令
       core.replyInfo('HELP_COMMAND', '指令不存在.', socket);
       return;
     }
