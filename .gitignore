@@ -9,10 +9,10 @@ package-lock.json
 .vscode
 .idea
 
-# Bot
-bot.js
-
-# Getlog
-getlog.ts
+# Yarn
+yarn.lock
 
 # Security
+
+# Git
+.gitignore

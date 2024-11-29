@@ -76,5 +76,5 @@ export async function run(hazel, core, hold, socket, data) {
 
 export const name = 'whisper';
 export const requiredLevel = 1;
-export const requiredData = ['nick', 'text'];
+export const requiredData = {'nick':{'description':'用户昵称','value':'any'},'text':{'description':'消息内容','value':'any'}};
 export const moduleType = 'ws-command-depend';
