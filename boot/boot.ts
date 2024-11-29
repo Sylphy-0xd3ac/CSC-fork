@@ -24,6 +24,9 @@ export default async function (hazel, core, hold) {
   // 封禁的 IP 列表
   hold.bannedIPlist = [];
 
+  // 公告列表
+  hold.noticeList = [];
+
   // CIDR 检查规则
   hold.checkCIDRglobal = false;
   hold.checkCIDRchannelList = new Map();

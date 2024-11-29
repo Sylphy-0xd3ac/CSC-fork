@@ -51,6 +51,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'locksite';
 export const requiredLevel = 4;
-export const requiredData = ['type'];
+export const requiredData = {'type':{'description':'锁定类型','value':[{'name':'kick','description':'锁定后踢出非成员'},{'name':'no-kick','description':'锁定后不踢出非成员'}]}};
 export const moduleType = 'ws-command';
 export const description = '锁定全站，禁止非成员进入';

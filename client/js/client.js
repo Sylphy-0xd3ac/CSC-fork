@@ -45,9 +45,6 @@ function getHomepage() {
     pushMessage({ text: "# dx_xb\n连接聊天室服务器失败，请稍候重试。\n**如果这个问题持续出现，请立刻联系 mail@henrize.kim 感谢您的理解和支持**", nick: '!'});
   }
 
-  
-
-
   var reqSent = false;
 
   ws.onopen = function () {
@@ -138,8 +135,8 @@ function join(channel) {
   }
 
   ws.onclose = function () {
-    if (wasConnected) {
-      pushMessage({ nick: '!', text: "与服务器的连接已断开，请刷新重试。" });
+    if (!wasConnected) {
+      pushMessage({ nick: '!', text: "与服务器的连接已断开,请重试." });
     }
   }
 
@@ -155,6 +152,8 @@ var COMMANDS = {
   chat: function (args) {
     pushMessage(args);
   },
+
+  pong: function (args) {},
 
   info: function (args) {
     args.nick = '*';

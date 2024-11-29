@@ -18,6 +18,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 }
 export const name = 'unlocksite';
 export const requiredLevel = 4;
-export const requiredData = ['type'];
+export const requiredData = {};
 export const moduleType = 'ws-command';
 export const description = '解锁全站';
