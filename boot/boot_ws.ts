@@ -1,7 +1,7 @@
 import { WebSocketServer } from 'ws';
 
 export default async function (hazel, core, hold) { 
-  // 尽可能简单地创建一个无头 WebSocket 服务器
+  // 尽可能简单地创建一个 WebSocket 服务器
   hold.wsServer = new WebSocketServer({ port: hazel.mainConfig.port });
 
   // 绑定 WebSocket 服务器的事件
