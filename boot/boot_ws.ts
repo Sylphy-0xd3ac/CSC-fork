@@ -11,7 +11,10 @@ export default async function (hazel, core, hold) {
   // hold.wsServer.on('headers', ( headers, request ) => { hazel.runFunction('handle-headers', headers, request); });
 
   // 启动 WebSocket Heartbeat
-  setInterval(() => { hazel.runFunction('heartbeat'); }, hazel.mainConfig.wsHeartbeatInterval);
+  await new Promise((resolve) => {
+    setInterval(() => { hazel.runFunction('heartbeat'); }, hazel.mainConfig.wsHeartbeatInterval);
+    resolve(true);
+  });
 
   hazel.emit('ws_initialized')
 }
