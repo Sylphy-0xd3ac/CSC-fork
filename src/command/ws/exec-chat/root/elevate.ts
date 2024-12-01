@@ -27,5 +27,5 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'elevate';
 export const requiredLevel = 1;
-export const requiredData = {'passcode':{'description':'提权密码','value':'any'}};
+export const requiredData = [{'passcode':{'description':'提权密码'}}];
 export const moduleType = 'ws-command';

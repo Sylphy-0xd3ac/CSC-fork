@@ -26,6 +26,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'broadcast';
 export const requiredLevel = 4;
-export const requiredData = {'text':{'description':'消息内容','value':[{'name':'any'}]}};
+export const requiredData = [{'text':{'description':'消息内容'}}];
 export const moduleType = 'ws-command';
 export const description = '向在线的所有用户广播消息';

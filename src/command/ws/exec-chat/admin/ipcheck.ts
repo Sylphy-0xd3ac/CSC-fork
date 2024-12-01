@@ -50,6 +50,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'ipcheck';
 export const requiredLevel = 4;
-export const requiredData = {'rule':{'description':'规则','value':[{'name':'on','description':'开启CIDR检查'},{'name':'off','description':'关闭CIDR检查'}]},'type':{'description':'类型','value':[{'name':'global','description':'全站CIDR检查'},{'name':'channel','description':'频道CIDR检查'}]}};
+export const requiredData = [{'rule':{'description':'规则','value':[{'on':'开启CIDR检查'},{'off':'关闭CIDR检查'}]}},{'type':{'description':'类型','value':[{'global':'全站CIDR检查'},{'channel':'频道CIDR检查'}]}}];
 export const moduleType = 'ws-command';
 export const description = '设置全站或频道的 CIDR 检查规则';

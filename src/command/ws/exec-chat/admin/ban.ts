@@ -13,7 +13,7 @@ export async function run(hazel, core, hold, socket, data) {
   if (!targetSocket) {
     core.replyWarn('USER_NOT_FOUND', '在这个聊天室找不到您指定的用户。', socket);
     return;
-  }
+  } 
 
   // 封禁该用户的 IP
   hold.bannedIPlist.push(targetSocket.remoteAddress);
@@ -51,6 +51,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'ban';
 export const requiredLevel = 4;
-export const requiredData = {'nick':{'description':'用户昵称','value':[{'name':'any'}]}};
+export const requiredData = [{'nick':{'description':'用户昵称'}}];
 export const moduleType = 'ws-command';
 export const description = '封禁聊天室中某人的 IP';

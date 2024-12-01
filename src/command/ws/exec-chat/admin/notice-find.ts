@@ -56,6 +56,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'find-notice';
 export const requiredLevel = 4;
-export const requiredData = {'text':{'description':'查找关键字','value':[{'name':'any'}]},'type':{'description':'查找类型','value':[{'name':'num','description':'编号查找'},{'name':'text','description':'文本查找'}]}};
+export const requiredData = [{'text':{'description':'查找关键字'}},{'type':{'description':'查找类型','value':[{'num':'编号查找'},{'text':'文本查找'}]}}];
 export const moduleType = 'ws-command';
 export const description = '查看公告列表或搜索公告, 如果未输入参数或输入错误,则显示所有公告';  
