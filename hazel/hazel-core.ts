@@ -16,9 +16,10 @@ export default class Hazel extends EventEmitter2 {
     });
   }
 
-  #core = {};
+  #core = {
+    version: '0.3.6',
+  };
   #hold = {};
-  version = '0.3.6';
 
   async initialize( forceInit ) {
     console.log('Initializing ' + this.mainConfig.projectName + '...\n');

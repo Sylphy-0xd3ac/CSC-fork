@@ -9,8 +9,8 @@
   "scripts": {
     "build": "tsc",
     "ebuild": "node ebuild.cjs",
-    "ddev": "deno run --allow-all --unstable-sloppy-imports main.ts",
-    "bdev": "bun run main.ts",
+    "d-dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
+    "b-dev": "bun run main.ts",
     "start": "node main.js"
   },
   "contributors": [],

@@ -5,7 +5,7 @@ export async function run(hazel, core, hold, socket,) {
   core.checkAddress(socket.remoteAddress, 3);
 
   // 准备数据
-  let statsText = '### 十字街 ' + core.config.version + '\nPowered by Hazel Core '+ hazel.version;
+  let statsText = '### 十字街 ' + core.config.version + '\nPowered by Hazel Core '+ core.version;
   statsText += '\n#### --- 运行状态 ---';
   statsText += '\n在线连接：' + hold.wsServer.clients.size;
   statsText += '\n聊天室数：' + hold.channel.size;
