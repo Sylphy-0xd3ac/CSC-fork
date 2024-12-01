@@ -46,7 +46,7 @@ export async function run(hazel, core, hold, socket, data) {
   // 如果用户提供了 key 和 trip，则使用 key 验证已有的用户信息
   if (typeof data.trip == 'string') {
     // 验证 nick、key 和 trip
-    if (!(() => {
+    if (!(await (async () => {
       // 以下是一个 if 语句里的 IIFE
       // 先检查昵称和 trip 是否合规
       if (!core.verifyNickname(data.nick)) { return false; }
@@ -56,8 +56,8 @@ export async function run(hazel, core, hold, socket, data) {
       if (!/^[a-zA-Z0-9+/]{32}$/.test(data.key)) { return false; }
 
       // 比较生成的哈希值与data.key
-      return core.generateKeys(data.clientName) === data.key;
-    })()) {
+      return await core.generateKeys(data.clientName) === data.key;
+    })())) {
       // 如果验证失败，则返回错误信息
       core.reply({
         cmd: 'infoInvalid',
@@ -83,7 +83,7 @@ export async function run(hazel, core, hold, socket, data) {
 
     // 如果用户提供了密码，则使用密码生成 trip
     if (typeof data.password == 'string') {
-      userInfo.trip = core.generateTrips(data.password);
+      userInfo.trip = await core.generateTrips(data.password);
     }
   }
 
@@ -105,7 +105,7 @@ export async function run(hazel, core, hold, socket, data) {
     if (data.clientName === '[十字街网页版](https://crosst.chat/)') {
       cName = data.clientName;
     } else {
-      if ((() => {
+      if ((await (async () => {
         // 如果客户端名称中存在换行，直接返回 false
         if (data.clientName.indexOf('\r') !== -1 || data.clientName.indexOf('\n') !== -1) { return false; }
 
@@ -119,12 +119,12 @@ export async function run(hazel, core, hold, socket, data) {
             // 如果 key 不合规，返回 false
             if (!/^[a-zA-Z0-9+/]{32}$/.test(data.clientKey)) { return false; }
             // 比较生成的哈希值与data.clientkey
-            return core.generateKeys(data.clientName) === data.clientKey;
+            return await core.generateKeys(data.clientName) === data.clientKey;
           }
         }
         // 如果客户端名称中没有暗示为官方客户端的关键字，则不需要验证 key
         return true;
-      })()) {
+      })())) {
         cName = data.clientName;
       }
     }
@@ -172,7 +172,7 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 返回用户列表等信息
   if (typeof data.password == 'string') {
-    const generatedKey = core.generateKeys(data.clientName);
+    const generatedKey = await core.generateKeys(data.clientName);
     if (hold.noticeList.length > 0) {
       hold.noticeList.forEach(notice => {
         core.reply({

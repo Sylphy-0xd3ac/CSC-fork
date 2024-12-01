@@ -11,7 +11,7 @@ export async function run(hazel, core, hold, socket, data) {
   }
 
   // 运行 whisper 命令
-  await hazel.loadedFunctions.get('whisper').run(hazel, core, hold, socket, { nick, text });
+  await hazel.runFunction('whisper', socket, { nick, text });
 }
 
 // 用户使用 /w nick text 命令发送私聊消息
