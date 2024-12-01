@@ -11,12 +11,32 @@ export async function run(hazel, core, hold, socket, data) {
     });
     // 如果找到了指令
     if(recommand !== null) {
-      // 构建返回文本
-      let returnText = `指令: ${recommand.name} - ${recommand.description}.
-      ${Object.keys(recommand.requiredData).length > 0 ? `可用的选项有:\n${Object.keys(recommand.requiredData).map(key => `${key}: ${recommand.requiredData[key].description} ${recommand.requiredData[key].value ? `, 可用的值有: ${recommand.requiredData[key].value !== 'any' ? recommand.requiredData[key].value.map(value => value.name === 'any' ? '任意值' : value.name + ' - ' + value.description).join(', ') : '任意值'}` : ''}`).join('\n')}` : ''}
-      `;
+      let description = recommand.description;
+      let options = recommand.requiredData.map((data) => {
+        // 获取选项名
+        let option_name = Object.keys(data)[0];
+        // 获取选项描述
+        let option_description = data[option_name].description;
+        // 获取选项值
+        let option_value = data[option_name].value ? // 如果选项有值
+          data[option_name].value.map((value) => // 遍历选项值
+            [
+              Object.keys(value)[0], // 返回选项值的键
+              Object.values(value)[0] // 返回选项值的值
+            ]
+          )
+        : ''; // 如果选项没有值,则返回空字符串
+        return [
+          option_name,
+          option_description,
+          option_value
+        ]; // 返回选项名, 选项描述, 选项值
+      });
+      let return_text = `指令: ${recommand.name} - ${description}
+      可用的选项有:
+      ${options.map(option => `  ${option[0]}: ${option[1]} ${option[2] ? ` - 可用的值有: ${option[2].map(value => `  ${value[0]}: ${value[1]}`).join(',')}` : ''}`).join('\n')}`;
       // 回复用户
-      core.replyInfo('HELP_COMMAND', returnText, socket);
+      core.replyInfo('HELP_COMMAND', return_text, socket);
       return;
     } else {
       // 如果没找到指令
@@ -53,6 +73,17 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'help';
 export const requiredLevel = 1;
-export const requiredData = {'command':{'description':'指令名','value':[{'name':'any'}]}};
+export const requiredData = [{'command':{'description':'指令名'}}];
 export const moduleType = 'ws-command';
 export const description = '查看当前可用的指令';
+
+// 定义接口以确保类型安全
+interface OptionValue {
+    description: string;
+}
+
+interface RequiredData {
+    [key: string]: {
+        value: OptionValue[];
+    };
+}

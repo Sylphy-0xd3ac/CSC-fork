@@ -64,6 +64,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'add-member';
 export const requiredLevel = 4;
-export const requiredData = {'trip':{'description':'识别码','value':[{'name':'any'}]}};
+export const requiredData = [{'trip':{'description': '识别码'}}];
 export const moduleType = 'ws-command';
 export const description = '添加成员';

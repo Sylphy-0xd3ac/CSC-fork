@@ -38,6 +38,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'rm-notice';
 export const requiredLevel = 4;
-export const requiredData = {'id':{'description':'公告编号','value':[{'name':'any'}]}};
+export const requiredData = [{'id':{'description':'公告编号'}}];
 export const moduleType = 'ws-command';
 export const description = '删除公告'; 

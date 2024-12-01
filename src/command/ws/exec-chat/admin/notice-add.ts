@@ -28,6 +28,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'add-notice';
 export const requiredLevel = 4;
-export const requiredData = {'text':{'description':'公告内容','value':[{'name':'any'}]}};
+export const requiredData = [{'text':{'description':'公告内容'}}];
 export const moduleType = 'ws-command';
 export const description = '添加公告'; 
