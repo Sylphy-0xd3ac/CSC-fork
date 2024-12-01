@@ -22,7 +22,7 @@ export async function run(hazel, core, hold) {
             core.log(core.LOG_LEVEL.ERROR, [
               'SERVER ERROR #' + id,
               'FROM', arg1.remoteAddress, '(' + arg1.permission + ')[' + arg1.trip + ']', arg1.nick, arg1.channel, arg1.connectionID,
-              '\n', 'ERROR STACK\n', error.stack
+              '\n', error.stack
             ],'HandleError');
           }
         }
@@ -32,7 +32,7 @@ export async function run(hazel, core, hold) {
         // 记日志
         core.log(core.LOG_LEVEL.ERROR, [
           'SERVER ERROR #' + id,
-          '\n', '\n', error.stack
+          '\n', error.stack
         ],'HandleError');
       }
 
@@ -40,7 +40,7 @@ export async function run(hazel, core, hold) {
       // 错误处理程序自身发生错误，打印错误内容
       core.log(core.LOG_LEVEL.ERROR, [
         'ERROR HANDLER ERROR CATCHED AT ' + new Date().toTimeString(),
-        '\n', '\n', error.stack
+        '\n', error.stack
       ],'HandleError');
     }
   });

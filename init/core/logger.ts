@@ -26,29 +26,22 @@ export async function run(hazel, core, hold) {
 
       // 记录日志
       if (level == core.LOG_LEVEL.DEBUG) {
-        contentClean = `${core.getTimeString()}[DEBUG] ${func} ` + content + '\n'; 
-        hold.logs += contentClean + '\n';
+        contentClean = `${core.getTimeString()}[DEBUG] ${func} ` + content + '\n';
         content = `${core.getTimeString()}[DEBUG] ${core.randomColor()(func)} ` + content + '\n';
-        console.log(content);
+        console.debug(content);
       } else if (level == core.LOG_LEVEL.LOG) {
-        contentClean = `${core.getTimeString()}[LOG] ${func} ` + content + '\n'; 
-        hold.logs += contentClean + '\n';
+        contentClean = `${core.getTimeString()}[LOG] ${func} ` + content + '\n';
         content = `${core.getTimeString()}[LOG] ${core.randomColor()(func)} ` + content + '\n';
         console.log(content);
       } else if (level == core.LOG_LEVEL.WARNING) {
-        contentClean = `${core.getTimeString()}[WARN] ${func} ` + content + '\n'; 
-        hold.logs += contentClean + '\n';
+        contentClean = `${core.getTimeString()}[WARN] ${func} ` + content + '\n';
         content = `${core.getTimeString()}[WARN] ${core.randomColor()(func)} ` + content + '\n'; 
-        console.log(content);
-        hold.warningCount++;
+        console.warn(content);
       } else if (level == core.LOG_LEVEL.ERROR) {
-        contentClean = `${core.getTimeString()}[ERROR] ${func} ` + content + '\n'; 
-        hold.logs += contentClean + '\n';
+        contentClean = `${core.getTimeString()}[ERROR] ${func} ` + content + '\n';
         content = `${core.getTimeString()}[ERROR] ${core.randomColor()(func)} ` + content + '\n'; 
-        console.log(content);
-        hold.errorCount++;
+        console.error(content);
       }
-
       // 写入日志
       // 如果日志目录不存在，则创建
       if (!existsSync(hazel.mainConfig.logDir)) {
@@ -56,7 +49,7 @@ export async function run(hazel, core, hold) {
       }
       try {
         writeFileSync(hazel.mainConfig.logDir + '/' + core.getDateString() + '.log.txt',
-          core.getTimeString() + contentClean + '\n',
+          contentClean,
           { encoding: 'utf-8', flag: 'a' }
         );
       } catch (error) {
