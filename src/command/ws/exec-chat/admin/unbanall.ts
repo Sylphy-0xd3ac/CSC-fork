@@ -22,6 +22,6 @@ export async function execByChat(hazel, core, hold, socket, line) {
 
 export const name = 'unbanall';
 export const requiredLevel = 4;
-export const requiredData = {};
+export const requiredData = [];
 export const moduleType = 'ws-command';
 export const description = '解封全部 IP 地址';
