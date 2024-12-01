@@ -1,7 +1,9 @@
 // 各种不知道在哪能用到的工具函数
 import os from 'node:os';
-import { pbkdf2Sync, createHmac } from 'node:crypto';
+import { scryptSync } from 'node:crypto';
 import chalk from 'chalk';
+import { Buffer } from 'node:buffer';
+
 export async function run(hazel, core, hold) {
   // 净化对象以防止原型链污染
   core.purifyObject = function (input) {
@@ -53,23 +55,17 @@ export async function run(hazel, core, hold) {
     return days.toString().padStart(2, '0') + ':' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0') + '.' + time.toString().padStart(3, '0');
   }
 
+
   // 生成key
-  core.generateKeys = function (clientName) {
-    const salt = core.config.salts.client; // 盐值
-    const iterations = 100000; // 增加迭代次数以提高安全性
-    const key = pbkdf2Sync(clientName, salt, iterations, 32, 'sha512');
-    const hmac = createHmac('sha512', key);
-    hmac.update(clientName + salt);
-    return hmac.digest('base64').slice(0, 32);
+  core.generateKeys = async function (clientName) {
+    const scryptKey = scryptSync(Buffer.from(clientName), core.config.salts.client, 64); // 使用 Scrypt 增强安全性
+    return scryptKey.toString('base64').slice(0, 32);
   }
-  // 生成trip
-  core.generateTrips = function (password) {
-    const salt = core.config.salts.auth; // 盐值
-    const iterations = 100000; // 增加迭代次数以提高安全性
-    const key = pbkdf2Sync(password, salt, iterations, 32, 'sha512');
-    const hmac = createHmac('sha512', key);
-    hmac.update(password + salt);
-    return hmac.digest('base64').slice(0, 6);
+
+// 生成trip
+  core.generateTrips = async function (password) {
+    const scryptKey = scryptSync(Buffer.from(password), core.config.salts.auth, 6); // 使用 Scrypt 增强安全性
+    return scryptKey.toString('base64').slice(0, 6);
   }
 
   // 从数组中删除指定元素
