@@ -55,8 +55,8 @@ export async function run(hazel, core, hold) {
 
   // 生成key
   core.generateKeys = function (clientName) {
-    const salt = core.config.salts.client;
-    const iterations = 1000; // 增加迭代次数以提高安全性
+    const salt = core.config.salts.client; // 盐值
+    const iterations = 100000; // 增加迭代次数以提高安全性
     const key = pbkdf2Sync(clientName, salt, iterations, 32, 'sha256');
     const hmac = createHmac('sha256', key);
     hmac.update(clientName + salt);
@@ -64,8 +64,8 @@ export async function run(hazel, core, hold) {
   }
   // 生成trip
   core.generateTrips = function (password) {
-    const salt = core.config.salts.auth;
-    const iterations = 1000; // 增加迭代次数以提高安全性
+    const salt = core.config.salts.auth; // 盐值
+    const iterations = 100000; // 增加迭代次数以提高安全性
     const key = pbkdf2Sync(password, salt, iterations, 32, 'sha256');
     const hmac = createHmac('sha256', key);
     hmac.update(password + salt);
