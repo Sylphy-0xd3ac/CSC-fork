@@ -12,5 +12,6 @@ esbuild.build({
   outdir: '.',
   bundle: true,          // 是否进行打包
   platform: 'node',      // 目标平台为 Node.js
+  format: 'esm',
   target: 'esnext',      // 设定目标语法版本
 }).catch(() => process.exit(1));
