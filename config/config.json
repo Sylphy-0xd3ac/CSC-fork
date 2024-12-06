@@ -22,10 +22,9 @@
   "alertFrequency": 180,
   "sitePolicy": {},
   "salts": {
-    "trip": "TEMPORARYSALT",
     "auth": "TEMPORARYSALT",
     "client": "TEMPORARYSALT",
-    "bot": "TEMPORARYSALT"
+    "secret": "TEMPORARYSECRET"
   },
   "logLevel": 0
 }
