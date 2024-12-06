@@ -1,6 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 export default async function (hazel, core, hold) {
   // 冻结对象和函数的原型链
   Object.freeze(Object.prototype);
