@@ -20,7 +20,9 @@ export async function run(hazel, core, hold) {
       // 记录在日志中
       core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, data], 'Handle-Message');
       // 按照惯例，如果消息不是 JSON 格式，则关闭连接
-      socket.terminate();
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.terminate();
+      }
       return;
     }
     if (typeof data !== 'object') {
@@ -40,13 +42,15 @@ export async function run(hazel, core, hold) {
       if (key === '__proto__' || key === 'prototype' || key === 'constructor') {
         // 记录攻击行为
         core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, JSON.stringify(data)]);
-        socket.terminate();
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.terminate();
+        }
         return;
       }
     }
 
     if (!data.cmd) { return; } // 消息必须有 cmd 属性
-    
+
     // 处理 prompt
     if (socket.handlePrompt) {
       socket.handlePrompt = false;
