@@ -1,73 +1,107 @@
-import recursiveReadDir from './recursive-readdir';
-import { cpSync, mkdirSync, rmSync } from 'node:fs';
+import recursiveReadDir from "./recursive-readdir";
+import { cpSync, mkdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-export default async function loadDir(hazel: any, dirName: string, loadType: string) {
+export default async function loadDir(
+  hazel: any,
+  dirName: string,
+  loadType: string,
+) {
   let existError = false;
 
-  let tempFolder = '';
+  let tempFolder = "";
 
   if (!hazel.mainConfig.hazel.debuggingMode) {
-    tempFolder = resolve('.temp-' + Math.random().toString().slice(-8) + '/');
+    tempFolder = resolve(".temp-" + Math.random().toString().slice(-8) + "/");
     try {
       mkdirSync(tempFolder);
       cpSync(dirName, tempFolder, {
-        recursive: true
+        recursive: true,
       });
       dirName = tempFolder;
     } catch (error) {
       existError = true;
-      this.emit('error', error);
+      this.emit("error", error);
       console.error(error);
       return false;
     }
   }
 
   let moduleList;
-  if (loadType === 'function') {
+  if (loadType === "function") {
     moduleList = new Map();
-  } else if (loadType === 'init'){
-    moduleList = new Array();
+  } else if (loadType === "init") {
+    moduleList = [];
   }
 
   for (const filePath of recursiveReadDir(dirName)) {
-    if (!filePath.includes('/_') && (filePath.endsWith('.js') || filePath.endsWith('.mjs') || filePath.endsWith('.ts')) || filePath.endsWith('.cjs')) {
-    //if (!filePath.includes('/_') && (filePath.endsWith('.ts'))) {
-      console.log('* Initializing ' + filePath + ' ...');
+    if (
+      (!filePath.includes("/_") &&
+        (filePath.endsWith(".js") ||
+          filePath.endsWith(".mjs") ||
+          filePath.endsWith(".ts"))) ||
+      filePath.endsWith(".cjs")
+    ) {
+      //if (!filePath.includes('/_') && (filePath.endsWith('.ts'))) {
+      console.log("* Initializing " + filePath + " ...");
       let currentModule;
       try {
         currentModule = await import(pathToFileURL(filePath).toString());
       } catch (error) {
-        hazel.emit('error', error);
+        hazel.emit("error", error);
         console.error(error);
         existError = true;
         continue;
       }
-      
-      if ( typeof currentModule.run != 'function' ) {
-        hazel.emit('error', new Error( filePath + ' should export a function named "run".'));
-        console.error( filePath + ' should export a function named "run".');
+
+      if (typeof currentModule.run != "function") {
+        hazel.emit(
+          "error",
+          new Error(filePath + ' should export a function named "run".'),
+        );
+        console.error(filePath + ' should export a function named "run".');
         existError = true;
         continue;
       }
 
-      if ( loadType === 'function' && typeof currentModule.name != 'string') {
-        hazel.emit('error', new Error( filePath + ' should export a string named "name" as the function name.'));
-        console.error( filePath + ' should export a string named "name" as the function name.');
+      if (loadType === "function" && typeof currentModule.name != "string") {
+        hazel.emit(
+          "error",
+          new Error(
+            filePath +
+              ' should export a string named "name" as the function name.',
+          ),
+        );
+        console.error(
+          filePath +
+            ' should export a string named "name" as the function name.',
+        );
         existError = true;
         continue;
-      } else if ( loadType === 'init' && typeof currentModule.priority != 'number') {
-        hazel.emit('error', new Error( filePath + ' should export a number named "priority" to declare the priority of the module.'));
-        console.error( filePath + ' should export a number named "priority" to declare the priority of the module.');
+      } else if (
+        loadType === "init" &&
+        typeof currentModule.priority != "number"
+      ) {
+        hazel.emit(
+          "error",
+          new Error(
+            filePath +
+              ' should export a number named "priority" to declare the priority of the module.',
+          ),
+        );
+        console.error(
+          filePath +
+            ' should export a number named "priority" to declare the priority of the module.',
+        );
         existError = true;
         continue;
       }
-      
-      if ( loadType === 'function') {
-        moduleList.set( currentModule.name, currentModule );
-      } else if ( loadType === 'init'){
-        moduleList.push( currentModule );
+
+      if (loadType === "function") {
+        moduleList.set(currentModule.name, currentModule);
+      } else if (loadType === "init") {
+        moduleList.push(currentModule);
       }
     }
   }
@@ -76,14 +110,14 @@ export default async function loadDir(hazel: any, dirName: string, loadType: str
     try {
       rmSync(tempFolder, { recursive: true });
     } catch (error) {
-      hazel.emit('error', error);
+      hazel.emit("error", error);
       console.error(error);
     }
   }
 
-  if ( loadType === 'init') {
-    moduleList.sort(( first, last ) => first.priority - last.priority );
+  if (loadType === "init") {
+    moduleList.sort((first, last) => first.priority - last.priority);
   }
 
-  return { moduleList, existError };  
+  return { moduleList, existError };
 }

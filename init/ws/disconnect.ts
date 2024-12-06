@@ -6,11 +6,14 @@ export async function run(hazel, core, hold) {
 
     // 向所有用户广播用户退出的消息
     if (!socket.isInvisible) {
-      if (typeof socket.channel == 'string') {
-        core.broadcast({
-          cmd: 'onlineRemove',
-          nick: socket.nick,
-        }, hold.channel.get(socket.channel).socketList);
+      if (typeof socket.channel == "string") {
+        core.broadcast(
+          {
+            cmd: "onlineRemove",
+            nick: socket.nick,
+          },
+          hold.channel.get(socket.channel).socketList,
+        );
 
         // 从 hold.channel 中删除用户
         hold.channel.get(socket.channel).socketList.delete(socket);
@@ -21,10 +24,10 @@ export async function run(hazel, core, hold) {
         }
 
         // 写入存档
-        core.archive('LEF', socket, '');
+        core.archive("LEF", socket, "");
       }
     }
-  }
+  };
 }
 
 export const priority = 32;

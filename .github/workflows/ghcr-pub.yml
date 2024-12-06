@@ -7,8 +7,7 @@ on:
 
 permissions:
   contents: read
-  packages: write  # 设置工作流对代码和包的权限
-
+  packages: write # 设置工作流对代码和包的权限
 
 jobs:
   build:

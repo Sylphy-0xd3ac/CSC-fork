@@ -3,7 +3,7 @@ name: Compile and Push
 on:
   push:
     branches:
-      - main  # 你也可以根据需要改成任何你想监控的分支
+      - main # 你也可以根据需要改成任何你想监控的分支
   pull_request:
     branches:
       - main
@@ -21,13 +21,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # 可根据需要选择 Node.js 版本
+          node-version: "16" # 可根据需要选择 Node.js 版本
 
       # Step 3: 安装依赖
       - name: Install dependencies
         run: npm install
 
-      # Step 4: 编译代码
+      # Step 4: 运行 lint
+      - name: Run lint
+        run: npm run lint
+
+      # Step 5: 运行 format
+      - name: Run format
+        run: npm run format
+
+      # Step 6: 编译代码
       - name: Compile TypeScript
         run: npx tsc
 
