@@ -23,10 +23,12 @@
 4. 测试十字街后端是否正常运行：打开client文件夹中的index.html,如果成功显示homepage则为成功.
 
 ## 部署和配置
+
 从client中获取客户端.
 随后配置网页,并在同服务器上运行.
 
 ## 贡献
+
 感谢十字街官方开放原代码.
 [十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
 

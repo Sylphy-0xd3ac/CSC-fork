@@ -11,7 +11,7 @@ export async function run(hazel, core, hold, socket, data) {
   }
 
   // 运行 whisper 命令
-  await hazel.runFunction('whisper', socket, { nick, text });
+  await hazel.runFunction("whisper", socket, { nick, text });
 }
 
 // 用户使用 /w nick text 命令发送私聊消息
@@ -25,11 +25,17 @@ export async function execByChat(hazel, core, hold, socket, line) {
     return;
   }
 
-  await run(hazel, core, hold, socket, { nick: line.split(' ')[0], text: line.slice(line.split(' ')[0].length).trim() });
+  await run(hazel, core, hold, socket, {
+    nick: line.split(" ")[0],
+    text: line.slice(line.split(" ")[0].length).trim(),
+  });
 }
 
-export const name = 'w';
+export const name = "w";
 export const requiredLevel = 1;
-export const requiredData = [{'nick':{'description':'用户昵称'}},{'text':{'description':'消息内容'}}];
-export const moduleType = 'ws-command';
-export const description = '发送私聊消息';
+export const requiredData = [
+  { nick: { description: "用户昵称" } },
+  { text: { description: "消息内容" } },
+];
+export const moduleType = "ws-command";
+export const description = "发送私聊消息";

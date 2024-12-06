@@ -3,29 +3,37 @@ export async function run(hazel, core, hold) {
     // 检查该地址是否请求频率过高
     if (core.checkAddress(socket.remoteAddress, 1)) {
       // 防止在短时间内发送大量数据时程序占用过高，直接回复处理好的警告消息
-      socket.send('{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}');
+      socket.send(
+        '{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}',
+      );
       return;
-    };
+    }
 
     // 将消息转换为字符串
-    data = data.toString('utf8');
+    data = data.toString("utf8");
 
     // 检测消息长度，不符合要求则忽略
-    if (data.length > core.config.dataMaximumLength || data.length < 1) { return; }
+    if (data.length > core.config.dataMaximumLength || data.length < 1) {
+      return;
+    }
 
     // 将消息转换为 JSON 对象
     try {
       data = JSON.parse(data);
     } catch (error) {
       // 记录在日志中
-      core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, data], 'Handle-Message');
+      core.log(
+        core.LOG_LEVEL.WARN,
+        ["Malformed JSON data received from ", socket.remoteAddress, data],
+        "Handle-Message",
+      );
       // 按照惯例，如果消息不是 JSON 格式，则关闭连接
       if (socket.readyState === WebSocket.OPEN) {
         socket.terminate();
       }
       return;
     }
-    if (typeof data !== 'object') {
+    if (typeof data !== "object") {
       socket.terminate();
       return;
     }
@@ -34,14 +42,18 @@ export async function run(hazel, core, hold) {
     // 且属性名不应该是 __proto__  prototype constructor
     // 否则关闭连接
     for (const key in data) {
-      if (typeof data[key] !== 'string') {
+      if (typeof data[key] !== "string") {
         socket.terminate();
         return;
       }
 
-      if (key === '__proto__' || key === 'prototype' || key === 'constructor') {
+      if (key === "__proto__" || key === "prototype" || key === "constructor") {
         // 记录攻击行为
-        core.log(core.LOG_LEVEL.WARN, ['Malformed JSON data received from ', socket.remoteAddress, JSON.stringify(data)]);
+        core.log(core.LOG_LEVEL.WARN, [
+          "Malformed JSON data received from ",
+          socket.remoteAddress,
+          JSON.stringify(data),
+        ]);
         if (socket.readyState === WebSocket.OPEN) {
           socket.terminate();
         }
@@ -49,7 +61,9 @@ export async function run(hazel, core, hold) {
       }
     }
 
-    if (!data.cmd) { return; } // 消息必须有 cmd 属性
+    if (!data.cmd) {
+      return;
+    } // 消息必须有 cmd 属性
 
     // 处理 prompt
     if (socket.handlePrompt) {
@@ -61,47 +75,44 @@ export async function run(hazel, core, hold) {
     let command = hazel.loadedFunctions.get(data.cmd);
 
     // 如果命令不存在，或者不公开，提示命令不存在
-    if (typeof command == 'undefined') {
+    if (typeof command == "undefined") {
       core.replyMalformedCommand(socket);
       return;
     }
 
     // 检查命令是否为公开命令
-    if (typeof command.moduleType !== 'undefined') {
-      if (command.moduleType !== 'ws-command-client') {
+    if (typeof command.moduleType !== "undefined") {
+      if (command.moduleType !== "ws-command-client") {
         core.replyMalformedCommand(socket);
         return;
       }
-    }
-    else {
+    } else {
       core.replyMalformedCommand(socket);
       return;
     }
 
     // 检查该客户端是否有权限运行该命令
-    if (typeof command.requiredLevel !== 'undefined') {
+    if (typeof command.requiredLevel !== "undefined") {
       if (command.requiredLevel > socket.level) {
         core.replyMalformedCommand(socket);
         return;
       }
-    }
-    else {
+    } else {
       core.replyMalformedCommand(socket);
       return;
     }
 
     // 检查命令的参数是否齐全
-    if (typeof command.requiredData !== 'undefined') {
+    if (typeof command.requiredData !== "undefined") {
       if (command.requiredData.length > 0) {
         for (let attr of command.requiredData) {
-          if (typeof data[attr] == 'undefined') {
+          if (typeof data[attr] == "undefined") {
             core.replyMalformedCommand(socket);
             return;
           }
         }
       }
-    }
-    else {
+    } else {
       core.replyMalformedCommand(socket);
       return;
     }
@@ -110,12 +121,12 @@ export async function run(hazel, core, hold) {
     try {
       await command.run(hazel, core, hold, socket, data);
     } catch (error) {
-      hazel.emit('error', error, socket);
+      hazel.emit("error", error, socket);
     }
 
     // 计入全局频率
     core.increaseGlobalRate();
-  }
+  };
 }
 
 export const priority = 32;

@@ -12,7 +12,7 @@
     "d-dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
     "b-dev": "bun run main.ts",
     "start": "node main.js",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "format": "prettier --write ."
   },
   "contributors": [],

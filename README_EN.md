@@ -1,4 +1,3 @@
-
 # CrosSt Street Chatroom - TypeScript Version
 
 The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street version](https://github.com/CrosSt-Chat/CSC-main/). This fork primarily converts the original JavaScript implementation to TypeScript and adds a web server.
@@ -17,6 +16,7 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 ### Installation Steps
 
 1. **Clone the Repository**:
+
    ```bash
    git clone -b compiled-output https://github.com/YourRepo/CSC-main.git
    cd CSC-main
@@ -24,12 +24,14 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 
 2. **Install Dependencies**:
    Run the following command in the backend directory:
+
    ```bash
    npm install
    ```
 
 3. **Start the Backend**:
    Execute:
+
    ```bash
    node main.js
    ```

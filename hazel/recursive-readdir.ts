@@ -1,13 +1,13 @@
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 
 function readDir(baseDir, resultArray) {
-  let dirResult = readdirSync(
-    baseDir,
-    { encoding: 'utf-8', withFileTypes: true }
-  );
+  let dirResult = readdirSync(baseDir, {
+    encoding: "utf-8",
+    withFileTypes: true,
+  });
 
-  dirResult.forEach(value => {
+  dirResult.forEach((value) => {
     if (!value.isDirectory()) {
       resultArray.push(join(baseDir, value.name));
     } else {

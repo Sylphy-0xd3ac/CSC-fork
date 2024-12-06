@@ -16,7 +16,7 @@ export default async function (hazel, core, hold) {
   core.loadAllowCIDR();
 
   // 添加本机回环地址到允许列表
-  core.allowCIDR('127.0.0.1/24');
+  core.allowCIDR("127.0.0.1/24");
 
   // 封禁的 IP 列表
   hold.bannedIPlist = [];
@@ -39,5 +39,5 @@ export default async function (hazel, core, hold) {
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
 
-  core.log(core.LOG_LEVEL.LOG, 'Server initialized', 'BOOT');
-};
+  core.log(core.LOG_LEVEL.LOG, "Server initialized", "BOOT");
+}

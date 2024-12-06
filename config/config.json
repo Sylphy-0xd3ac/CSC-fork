@@ -8,9 +8,7 @@
     "member": 2,
     "user": 1
   },
-  "adminList": [
-    "gEXXfL"
-  ],
+  "adminList": ["gEXXfL"],
   "botList": [],
   "memberList": [],
   "dataMaximumLength": 32768,

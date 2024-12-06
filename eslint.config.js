@@ -7,7 +7,7 @@ import tsParser from "@typescript-eslint/parser";
 export default [
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
-    ignores: ["node_modules/**", "dist/**"], // 忽略特定文件夹
+    ignores: ["node_modules/**", "ebuild.cjs", "eslint.config.js"], // 忽略特定文件夹
     languageOptions: {
       parser: tsParser, // 使用 @typescript-eslint/parser 作为解析器
       parserOptions: {
@@ -25,6 +25,17 @@ export default [
       ...pluginJs.configs.recommended.rules, // 基于 @eslint/js 提供的推荐规则
       ...tseslint.configs.recommended.rules, // 基于 typescript-eslint 的推荐规则
       "@typescript-eslint/no-unused-vars": "warn", // TypeScript 特定的规则
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn", // 设置为 "warn" 或 "error"
+        {
+          vars: "all", // 检查所有未使用的变量
+          args: "none", // 忽略未使用的函数参数
+          ignoreRestSiblings: true, // 忽略解构中的剩余属性
+          caughtErrors: "none", // 忽略 catch 语句中未使用的错误参数
+          varsIgnorePattern: "^_", // 忽略变量名以 "_" 开头的未使用变量
+        },
+      ],
     },
   },
 ];

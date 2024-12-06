@@ -4,8 +4,7 @@ export async function run(hazel, core, hold) {
   hold.wsServer.clients.forEach((socket) => {
     if (!socket.isAlive && socket.readyState === WebSocket.OPEN) {
       socket.close();
-    }
-    else {
+    } else {
       if (socket.readyState === WebSocket.OPEN) {
         socket.isAlive = true;
         socket.ping();
@@ -14,5 +13,5 @@ export async function run(hazel, core, hold) {
   });
 }
 
-export const name = 'heartbeat';
-export const moduleType = 'system';
+export const name = "heartbeat";
+export const moduleType = "system";
