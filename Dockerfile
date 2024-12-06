@@ -10,6 +10,9 @@ COPY . .
 # 安装依赖
 RUN bun install
 
+# 运行 lint
+RUN bun run lint
+
 # 暴露应用的端口（根据你的应用配置端口号）
 EXPOSE 52764
 

@@ -2,7 +2,7 @@
 export async function run(hazel, core, hold) {
   core.canSpeak = function (socket) {
     // 检查用户是否在聊天室内
-    if (typeof socket.channel == 'undefined') {
+    if (typeof socket.channel == "undefined") {
       return false;
     }
     // 检查用户是否被禁言
@@ -16,10 +16,12 @@ export async function run(hazel, core, hold) {
         // 发送禁言提示
         let time = hold.muteUntil.get(socket.remoteAddress) - Date.now();
         core.replyWarn(
-          'MUTED',
-          '您已经被管理员禁言，将于 ' + Math.ceil(time / 60000) + ' 分钟后解除禁言。',
+          "MUTED",
+          "您已经被管理员禁言，将于 " +
+            Math.ceil(time / 60000) +
+            " 分钟后解除禁言。",
           socket,
-          { time }
+          { time },
         );
 
         // 频率计数器计数
@@ -28,7 +30,7 @@ export async function run(hazel, core, hold) {
       }
     }
     return true;
-  }
+  };
 }
 
 export const priority = 16;
