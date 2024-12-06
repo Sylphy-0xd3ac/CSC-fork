@@ -1,10 +1,10 @@
 // 判断一个 socket 现在是否可以发言
 export async function run(hazel, core, hold) {
   core.canSpeak = function (socket) {
-      // 检查用户是否在聊天室内
-      if (typeof socket.channel == 'undefined') {
-        return false;
-      }
+    // 检查用户是否在聊天室内
+    if (typeof socket.channel == 'undefined') {
+      return false;
+    }
     // 检查用户是否被禁言
     if (hold.muteUntil.has(socket.remoteAddress)) {
       // 如果禁言时间已过
@@ -27,7 +27,6 @@ export async function run(hazel, core, hold) {
         return false;
       }
     }
-
     return true;
   }
 }

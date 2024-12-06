@@ -3,18 +3,24 @@ export async function run( hazel, core, hold, ws_socket, request) {
   /* 前置检查 */
   // 获取客户端地址
   if (hazel.mainConfig.behindReverseProxy) {
-    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+    ws_socket.remoteAddress = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     // 十字街现在不用 CDN 所以不用这个玩意
     // socket.remoteAddress = request.headers['x-forwarded-for'].split(',').pop().trim() || request.socket.remoteAddress;
   } else {
-    ws_socket.remoteAddress = request.connection.remoteAddress;
+    ws_socket.remoteAddress = request.socket.remoteAddress;
+  }
+
+  if (ws_socket.remoteAddress.startsWith('::ffff:')) {
+    ws_socket.remoteAddress = ws_socket.remoteAddress.slice(7);
   }
 
   // 检查该地址是否请求频率过高
   if (core.checkAddress(ws_socket.remoteAddress, 3)) {
     ws_socket.send('{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}');
-    // 关闭连接
-    ws_socket.terminate();
+    if (ws_socket.readyState === WebSocket.OPEN) {
+      // 关闭连接
+      ws_socket.terminate();
+    }
     return;
   };
 
@@ -26,7 +32,9 @@ export async function run( hazel, core, hold, ws_socket, request) {
   if (hold.bannedIPlist.includes(ws_socket.remoteAddress) || ws_socket.isDeniedIP) {
     ws_socket.send('{"cmd":"warn","code":"BANNED","text":"您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。"}');
     // 关闭连接
-    ws_socket.terminate();
+    if (ws_socket.readyState === WebSocket.OPEN) {
+      ws_socket.terminate();
+    }
     return;
   }
 
@@ -40,6 +48,11 @@ export async function run( hazel, core, hold, ws_socket, request) {
     if (typeof ws_socket.channel !== 'undefined') {
       core.removeSocket(ws_socket);
     }
+  });
+
+  // pong 事件
+  ws_socket.on('pong', (socket) => {
+    socket.alive = true;
   });
 
   // error 事件

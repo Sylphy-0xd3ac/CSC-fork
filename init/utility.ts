@@ -55,19 +55,6 @@ export async function run(hazel, core, hold) {
     return days.toString().padStart(2, '0') + ':' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0') + '.' + time.toString().padStart(3, '0');
   }
 
-
-  // 生成key
-  core.generateKeys = async function (clientName) {
-    const scryptKey = scryptSync(Buffer.from(clientName), core.config.salts.client, 64); // 使用 Scrypt 增强安全性
-    return scryptKey.toString('base64').slice(0, 32);
-  }
-
-// 生成trip
-  core.generateTrips = async function (password) {
-    const scryptKey = scryptSync(Buffer.from(password), core.config.salts.auth, 6); // 使用 Scrypt 增强安全性
-    return scryptKey.toString('base64').slice(0, 6);
-  }
-
   // 从数组中删除指定元素
   core.removeFromArray = function (array, element) {
     let index = array.indexOf(element);

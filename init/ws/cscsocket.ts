@@ -2,7 +2,7 @@
 import { WebSocket } from 'ws';
 
 export class CSCWebSocket extends WebSocket {
-  constructor(...args: any) {
+  constructor(...args: ConstructorParameters<typeof WebSocket>) {
     super(...args);
 
     // 生成一个随机的 connectionID
@@ -10,19 +10,20 @@ export class CSCWebSocket extends WebSocket {
   }
 
   // 十字街在运行时使用的属性
-  connectionID;
-  remoteAddress;
+  connectionID: string;
+  remoteAddress: string | undefined;
   isAllowedIP = false;
   isDeniedIP = false;
   handlePrompt = false;
 
-  nick;
-  trip;
+  nick: string | undefined;
+  trip: string | undefined;
   permission = 'USER';
   level = 1;
-  channel;
+  channel: string | undefined;
   isInvisible = false;
-  lastWhisperFrom;
+  lastWhisperFrom: string | undefined;
+  isAlive = true;
 }
 
 export async function run(hazel, core, hold) {
