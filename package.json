@@ -13,7 +13,8 @@
     "b-dev": "bun run main.ts",
     "start": "node main.js",
     "lint": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "husky install"
   },
   "contributors": [],
   "license": "GNU General Public License v3.0",
@@ -44,6 +45,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "glob": "^11.0.0",
     "globals": "^15.13.0",
+    "husky": "^9.1.7",
     "prettier": "^3.4.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.17.0"
