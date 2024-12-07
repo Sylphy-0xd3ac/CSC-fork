@@ -32,7 +32,7 @@
 感谢十字街官方开放原代码.
 [十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
 
-## 开源协议
+## LICENSE
 
 十字街聊天室遵循 [GNU Public License v3.0](./LICENSE) 开放源代码。
 
