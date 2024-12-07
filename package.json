@@ -13,8 +13,8 @@
     "lint": "eslint . --fix",
     "format": "prettier --write ."
   },
+  "license": "GNU General Public License",
   "contributors": [],
-  "license": "GNU General Public License v3.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:CrosSt-Chat/CSC-main.git"
