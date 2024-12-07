@@ -1,0 +1,39 @@
+name: Lint and Format
+
+on:
+  push:
+    branches:
+      - main # 你也可以根据需要改成任何你想监控的分支
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: 设置 Node.js 版本
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # 可根据需要选择 Node.js 版本
+
+      # Step 3: 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: 运行 lint
+      - name: Run lint
+        run: npm run lint
+
+      # Step 5: 运行 format
+      - name: Run format
+        run: npm run format
+
+      - name: Commit and push changes
+        run: git config --global user.email "action@github.com" && git config --global user.name "GitHub Action" && git commit -m "Lint and format" && git push
