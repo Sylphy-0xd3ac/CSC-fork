@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "d-dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
+    "dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
     "start": "node main.js",
     "lint": "eslint . --fix",
     "format": "prettier --write ."
@@ -24,7 +24,6 @@
   "dependencies": {
     "argon2": "^0.41.1",
     "chalk": "^5.3.0",
-    "deno": "^0.1.1",
     "typescript": "^5.6.3",
     "ws": "^8.12.0"
   },
