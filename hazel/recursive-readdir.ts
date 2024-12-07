@@ -7,14 +7,14 @@ function readDir(baseDir, resultArray) {
     withFileTypes: true,
   });
 
-                         dirResult.forEach((value) => {
+             dirResult.forEach((value) => {
     if (!value.isDirectory()) {
       resultArray.push(join(baseDir, value.name));
     } else {
       resultArray = readDir(join(baseDir, value.name), resultArray);
     }
   });
-       
+
   return resultArray;
 }
 
