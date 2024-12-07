@@ -7,22 +7,29 @@ on:
 
 permissions:
   contents: read
-  packages: write # 设置工作流对代码和包的权限
+  packages: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 检出代码库
+      # Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Log in to the GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and push Docker images
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.10.0
         with:
           context: .
           push: true
           tags: ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }}
-          secrets:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
