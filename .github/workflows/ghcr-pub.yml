@@ -24,3 +24,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }}
+          secrets:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
