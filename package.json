@@ -11,8 +11,7 @@
     "d-dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
     "start": "node main.js",
     "lint": "eslint . --fix",
-    "format": "prettier --write .",
-    "postinstall": "husky install"
+    "format": "prettier --write ."
   },
   "contributors": [],
   "license": "GNU General Public License v3.0",
