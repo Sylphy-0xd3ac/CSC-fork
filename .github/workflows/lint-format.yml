@@ -42,4 +42,4 @@ jobs:
           git config user.name "Github Actions[bot]"
           git add .
           git commit -m "Lint and format"
-          git push
+          git push --set-upstream origin master
