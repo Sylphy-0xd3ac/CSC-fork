@@ -21,16 +21,6 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.10.0
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # 构建 Docker 镜像
-      - name: Build Docker Image
-        run: |
-          docker build -t ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }} .
-
-      # 推送 Docker 镜像到 GitHub Packages
-      - name: Push Docker Image
-        run: |
-          docker push ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }}
+          context: .
+          push: true
+          tags: ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }}
