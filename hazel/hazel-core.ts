@@ -106,6 +106,7 @@ export default class Hazel extends EventEmitter2 {
     for (let property in this.#core) {
       delete this.#core[property];
     }
+
     loadedInits.forEach((initFunction) => {
       initFunction.run(this, this.#core, this.#hold).catch((error) => {
         this.emit("error", error);
@@ -116,7 +117,7 @@ export default class Hazel extends EventEmitter2 {
       });
     });
 
-    console.log(`√ Initialize inits complete!\n`);
+    console.log(`√ Initialize inits ${loadedInits.length} complete!\n`);
 
     let { moduleList: loadedFunctions, existError: functionExistError } =
       (await loadModule(
