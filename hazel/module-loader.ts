@@ -3,7 +3,7 @@ import { pathToFileURL } from "node:url";
 
 const cache: Record<string, any> = {};
 
-async function importModule(modulePath: string) {
+export async function importModule(modulePath: string) {
   if (cache[modulePath]) {
     delete cache[modulePath];
   }
