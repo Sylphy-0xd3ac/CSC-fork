@@ -89,6 +89,7 @@ export default async function loadDir(
         moduleList.push(currentModule);
       }
       hazel.moduleDir.set(currentModule.name, filePath);
+      hazel.moduleLoadID.set(filePath, loadID);
     }
   }
 
