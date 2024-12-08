@@ -1,5 +1,3 @@
-// 重载十字街几乎全部的代码
-import path from "node:path";
 import fs from "node:fs";
 
 export async function reloadAll(hazel, core, hold, socket, line) {
@@ -22,32 +20,22 @@ export async function reloadAll(hazel, core, hold, socket, line) {
 export async function reloadModule(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
-  let modulePath = hazel.moduleDir.get(args[1]);
-  if (!fs.existsSync(modulePath)) {
-    core.replyInfo("ROOT", "模块 " + args[1] + " 不存在。", socket);
+  let moduleName = args[1];
+  let modulePath = await hazel.getModulePath(moduleName);
+
+  if (!modulePath || !fs.existsSync(modulePath)) {
+    core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
 
-  // 发送重载请求
-  core.replyInfo(
-    "ROOT",
-    "模块 " +
-      path.basename(modulePath, path.extname(modulePath)) +
-      " 重载请求已接收。",
-    socket,
-  );
-
-  // 重载模块
+  // 重载指定模块
+  core.replyInfo("ROOT", `模块 ${moduleName} 重载请求已接收。`, socket);
   await hazel.reloadModule(modulePath);
 
   // 发送重载完成消息
   core.replyInfo(
     "ROOT",
-    "模块 " +
-      path.basename(modulePath, path.extname(modulePath)) +
-      " 重载完成, 当前版本为 " +
-      hazel.moduleLoadID.get(modulePath) +
-      "。",
+    `模块 ${moduleName} 重载完成，当前版本为 ${hazel.loadHistory.get(modulePath)}。`,
     socket,
   );
 }
@@ -55,63 +43,46 @@ export async function reloadModule(hazel, core, hold, socket, line) {
 export async function reloadModuleByID(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
-  let modulePath = hazel.moduleDir.get(args[1]);
-  if (!fs.existsSync(modulePath)) {
-    core.replyInfo("ROOT", "模块 " + args[1] + " 不存在。", socket);
+  let moduleName = args[1];
+  let versionID = parseInt(args[2]);
+  let modulePath = await hazel.getModulePath(moduleName);
+
+  if (!modulePath || !fs.existsSync(modulePath)) {
+    core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
 
-  if (parseInt(args[2]) == hazel.moduleLoadID.get(modulePath)) {
+  if (versionID > hazel.loadIDMax.get(modulePath)) {
     core.replyInfo(
       "ROOT",
-      "模块 " +
-        path.basename(modulePath, path.extname(modulePath)) +
-        " 已处于 " +
-        args[2] +
-        " 版本。",
+      "模块 " + moduleName + " 的版本 " + versionID + " 不存在。",
       socket,
     );
     return;
   }
 
-  if (parseInt(args[2]) > hazel.moduleLoadID.get(modulePath)) {
-    core.replyInfo(
-      "ROOT",
-      "模块 " +
-        path.basename(modulePath, path.extname(modulePath)) +
-        " 不存在ID为 " +
-        args[2] +
-        " 的加载记录。",
-      socket,
-    );
+  if (versionID === hazel.loadHistory.get(modulePath)) {
+    core.replyInfo("ROOT", "模块 " + moduleName + " 已是最新版本。", socket);
     return;
   }
 
-  if (parseInt(args[2]) == 0) {
-    core.replyInfo("ROOT", "模块版本不能为0。", socket);
+  if (isNaN(versionID) || versionID <= 0) {
+    core.replyInfo("ROOT", "版本号无效。", socket);
     return;
   }
 
-  // 发送重载请求
+  // 重载指定模块到指定版本
   core.replyInfo(
     "ROOT",
-    "模块 " +
-      path.basename(modulePath, path.extname(modulePath)) +
-      " 重载请求已接收。",
+    `模块 ${moduleName} 重载请求已接收，目标版本为 ${versionID}。`,
     socket,
   );
-
-  // 重载模块
-  await hazel.reloadModuleByID(modulePath, parseInt(args[2]));
+  await hazel.reloadModuleByID(modulePath, versionID);
 
   // 发送重载完成消息
   core.replyInfo(
     "ROOT",
-    "模块 " +
-      path.basename(modulePath, path.extname(modulePath)) +
-      " 已恢复至 " +
-      args[2] +
-      " 版本。",
+    `模块 ${moduleName} 重载完成，已恢复至版本 ${versionID}。`,
     socket,
   );
 }
@@ -120,23 +91,23 @@ export async function run(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
 
-  // 重载全部命令
-  if (args[0] == "/reload" && args[1] == undefined) {
+  // /reload - 重载所有命令
+  if (args[0] === "/reload" && args[1] === undefined) {
     await reloadAll(hazel, core, hold, socket, line);
-  } else if (args[1] != undefined && args[2] == undefined) {
-    // 重载指定模块
+  } else if (args[0] === "/reload" && args[1] !== undefined && args[2] === undefined) {
+    // /reload <moduleName> - 重载指定模块
     await reloadModule(hazel, core, hold, socket, line);
-  } else if (args[1] != undefined && args[2] != undefined) {
-    // 重载指定模块的指定版本
+  } else if (args[0] === "/reload" && args[1] !== undefined && args[2] !== undefined) {
+    // /reload <moduleName> <version> - 重载指定模块到指定版本
     await reloadModuleByID(hazel, core, hold, socket, line);
   } else {
     core.replyMalformedCommand(socket);
   }
 }
 
-// 使用 /reload 重载十字街
+// 使用 /reload 命令
 export async function execByChat(hazel, core, hold, socket, line) {
-  run(hazel, core, hold, socket, line);
+  await run(hazel, core, hold, socket, line);
 }
 
 export const name = "reload";
