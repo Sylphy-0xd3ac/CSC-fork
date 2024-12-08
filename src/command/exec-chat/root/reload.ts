@@ -38,7 +38,7 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   );
 
   // 重载模块
-  await hazel.reloadModule(args[1]);
+  await hazel.reloadModule(modulePath);
 
   // 发送重载完成消息
   core.replyInfo(
@@ -46,7 +46,7 @@ export async function reloadModule(hazel, core, hold, socket, line) {
     "模块 " +
       path.basename(modulePath, path.extname(modulePath)) +
       " 重载完成, 当前版本为 " +
-      hazel.moduleLoadID.get(args[1]) +
+      hazel.moduleLoadID.get(modulePath) +
       "。",
     socket,
   );
@@ -95,7 +95,7 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   );
 
   // 重载模块
-  await hazel.reloadModuleByID(args[1], parseInt(args[2]));
+  await hazel.reloadModuleByID(modulePath, parseInt(args[2]));
 
   // 发送重载完成消息
   core.replyInfo(
