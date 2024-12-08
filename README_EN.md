@@ -62,4 +62,4 @@ We extend our gratitude to the official CrosSt Street project for making the sou
 
 CrosSt Street Chatroom is licensed under the [GNU Public License v3.0](./LICENSE).
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork?ref=badge_large&issueType=license)
+[[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork?ref=badge_large&issueType=license)
