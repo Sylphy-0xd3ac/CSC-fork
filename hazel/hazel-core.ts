@@ -66,11 +66,7 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async reloadModule(moduleDir: string) {
-    if (this.moduleLoadID.get(moduleDir) == undefined) {
-      this.moduleLoadID.set(moduleDir, ++this.functionLoadID);
-    } else {
-      this.moduleLoadID.set(moduleDir, this.moduleLoadID.get(moduleDir) + 1);
-    }
+    this.moduleLoadID.set(moduleDir, this.moduleLoadID.get(moduleDir) + 1);
     let module = await importModule(
       moduleDir,
       this.moduleLoadID.get(moduleDir),
