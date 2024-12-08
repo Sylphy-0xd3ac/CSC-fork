@@ -8,7 +8,7 @@ export async function importModule(modulePath: string) {
     delete cache[modulePath];
   }
 
-  const module = await import(`${modulePath}?ts=${Date.now()}`);
+  const module = await import(`${modulePath}?loadID=${Date.now()}`);
   cache[modulePath] = module;
   return module;
 }
