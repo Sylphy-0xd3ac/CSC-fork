@@ -1,15 +1,7 @@
 import recursiveReadDir from "./recursive-readdir";
-import { pathToFileURL } from "node:url";
 
-const cache: Record<string, any> = {};
-
-export async function importModule(modulePath: string) {
-  if (cache[modulePath]) {
-    delete cache[modulePath];
-  }
-
-  const module = await import(`${modulePath}?loadID=${Date.now()}`);
-  cache[modulePath] = module;
+export async function importModule(filePath: string, loadID: number) {
+  const module = await import(`${filePath}?loadID=${loadID}`);
   return module;
 }
 
@@ -17,6 +9,7 @@ export default async function loadDir(
   hazel: any,
   dirName: string,
   loadType: string,
+  loadID: number,
 ) {
   let existError = false;
 
@@ -39,7 +32,7 @@ export default async function loadDir(
       console.log("* Initializing " + filePath + " ...");
       let currentModule;
       try {
-        currentModule = await importModule(pathToFileURL(filePath).toString());
+        currentModule = await importModule(filePath, loadID);
       } catch (error) {
         hazel.emit("error", error);
         console.error(error);
@@ -95,6 +88,7 @@ export default async function loadDir(
       } else if (loadType === "init") {
         moduleList.push(currentModule);
       }
+      hazel.moduleDir.set(currentModule.name, filePath);
     }
   }
 

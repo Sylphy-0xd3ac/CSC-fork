@@ -1,4 +1,4 @@
-import loadModule from "./module-loader";
+import loadModule, { importModule } from "./module-loader";
 import EventEmitter2 from "node:events";
 import process from "node:process";
 
@@ -20,6 +20,10 @@ export default class Hazel extends EventEmitter2 {
     version: "0.3.6",
   };
   #hold = {};
+  moduleDir: Map<string, string> = new Map();
+  initLoadID = 0;
+  functionLoadID = 0;
+  moduleLoadID: Map<string, number> = new Map();
 
   async initialize(forceInit) {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
@@ -61,6 +65,25 @@ export default class Hazel extends EventEmitter2 {
     return true;
   }
 
+  async reloadModule(moduleDir: string) {
+    if (this.moduleLoadID.get(moduleDir) == undefined) {
+      this.moduleLoadID.set(moduleDir, ++this.functionLoadID);
+    } else {
+      this.moduleLoadID.set(moduleDir, this.moduleLoadID.get(moduleDir) + 1);
+    }
+    let module = await importModule(moduleDir, this.moduleLoadID.get(moduleDir));
+    this.loadedFunctions.set(
+      module.name,
+      module
+    );
+  }
+
+  async reloadModuleByID(moduleDir: string, moduleID: number) {
+    this.moduleLoadID.set(moduleDir, moduleID);
+    let module = await importModule(moduleDir, moduleID);
+    this.loadedFunctions.set(module.name, module);
+  }
+
   async runFunction(functionName, ...functionArgs) {
     if (!this.loadedFunctions.has(functionName)) {
       this.emit(
@@ -94,6 +117,7 @@ export default class Hazel extends EventEmitter2 {
       this,
       this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
       "init",
+      ++this.initLoadID,
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedInits, existError: initsExistError } = result;
     if (!forceLoad && initsExistError) {
@@ -124,6 +148,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
         "function",
+        ++this.functionLoadID,
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && functionExistError) {
       return false;
