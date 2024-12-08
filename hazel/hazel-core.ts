@@ -71,11 +71,11 @@ export default class Hazel extends EventEmitter2 {
     } else {
       this.moduleLoadID.set(moduleDir, this.moduleLoadID.get(moduleDir) + 1);
     }
-    let module = await importModule(moduleDir, this.moduleLoadID.get(moduleDir));
-    this.loadedFunctions.set(
-      module.name,
-      module
+    let module = await importModule(
+      moduleDir,
+      this.moduleLoadID.get(moduleDir),
     );
+    this.loadedFunctions.set(module.name, module);
   }
 
   async reloadModuleByID(moduleDir: string, moduleID: number) {
