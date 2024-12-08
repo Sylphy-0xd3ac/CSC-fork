@@ -1,7 +1,17 @@
 import recursiveReadDir from "./recursive-readdir";
-import { cpSync, mkdirSync, rmSync } from "node:fs";
-import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+
+const cache: Record<string, any> = {};
+
+async function importModule(modulePath: string) {
+  if (cache[modulePath]) {
+    delete cache[modulePath];
+  }
+
+  const module = await import(`${modulePath}?ts=${Date.now()}`);
+  cache[modulePath] = module;
+  return module;
+}
 
 export default async function loadDir(
   hazel: any,
@@ -9,24 +19,6 @@ export default async function loadDir(
   loadType: string,
 ) {
   let existError = false;
-
-  let tempFolder = "";
-
-  if (!hazel.mainConfig.hazel.debuggingMode) {
-    tempFolder = resolve(".temp-" + Math.random().toString().slice(-8) + "/");
-    try {
-      mkdirSync(tempFolder);
-      cpSync(dirName, tempFolder, {
-        recursive: true,
-      });
-      dirName = tempFolder;
-    } catch (error) {
-      existError = true;
-      this.emit("error", error);
-      console.error(error);
-      return false;
-    }
-  }
 
   let moduleList;
   if (loadType === "function") {
@@ -47,7 +39,7 @@ export default async function loadDir(
       console.log("* Initializing " + filePath + " ...");
       let currentModule;
       try {
-        currentModule = await import(pathToFileURL(filePath).toString());
+        currentModule = await importModule(pathToFileURL(filePath).toString());
       } catch (error) {
         hazel.emit("error", error);
         console.error(error);
@@ -103,15 +95,6 @@ export default async function loadDir(
       } else if (loadType === "init") {
         moduleList.push(currentModule);
       }
-    }
-  }
-
-  if (!hazel.mainConfig.hazel.debuggingMode) {
-    try {
-      rmSync(tempFolder, { recursive: true });
-    } catch (error) {
-      hazel.emit("error", error);
-      console.error(error);
     }
   }
 
