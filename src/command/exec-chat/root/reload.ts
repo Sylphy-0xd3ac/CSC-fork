@@ -61,7 +61,20 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
     return;
   }
 
-  if (parseInt(args[2]) > hazel.moduleLoadID.get(args[1])) {
+  if (parseInt(args[2]) == hazel.moduleLoadID.get(modulePath)) {
+    core.replyInfo(
+      "ROOT",
+      "模块 " +
+        path.basename(modulePath, path.extname(modulePath)) +
+        " 已处于 " +
+        args[2] +
+        " 版本。",
+      socket,
+    );
+    return;
+  }
+
+  if (parseInt(args[2]) > hazel.moduleLoadID.get(modulePath)) {
     core.replyInfo(
       "ROOT",
       "模块 " +
@@ -72,16 +85,10 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
       socket,
     );
     return;
-  } else if (parseInt(args[2]) == hazel.moduleLoadID.get(args[1])) {
-    core.replyInfo(
-      "ROOT",
-      "模块 " +
-        path.basename(modulePath, path.extname(modulePath)) +
-        " 已处于 " +
-        args[2] +
-        " 版本。",
-      socket,
-    );
+  }
+
+  if (parseInt(args[2]) == 0) {
+    core.replyInfo("ROOT", "模块版本不能为0。", socket);
     return;
   }
 
