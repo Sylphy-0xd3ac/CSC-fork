@@ -4,7 +4,7 @@
 
 # 十字街聊天室 - TypeScript
 
-十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript,添加网页服务器等.
+十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript.
 
 ## 本地测试
 
