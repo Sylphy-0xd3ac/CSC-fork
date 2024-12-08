@@ -3,7 +3,6 @@
   "port": 52764,
   "baseDir": "",
   "hazel": {
-    "debuggingMode": true,
     "moduleDirs": {
       "initsDir": "/init",
       "functionsDir": "/src",
