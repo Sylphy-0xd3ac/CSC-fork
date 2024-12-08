@@ -14,9 +14,7 @@ export async function run(hazel, core, hold, socket, data) {
 
   // 如果用户提供了 key，则必须提供 trip，反之亦然
   if (
-    (typeof data.trip == "string") !== (typeof data.key == "string") &&
-    typeof data.skey == "undefined" &&
-    typeof data.bkey == "undefined"
+    (typeof data.trip == "string") !== (typeof data.key == "string")
   ) {
     if (socket.readyState === WebSocket.OPEN) {
       socket.close();
@@ -248,6 +246,7 @@ export async function run(hazel, core, hold, socket, data) {
         nicks: channelNicks,
         trip: userInfo.trip,
         key: generatedKey,
+        ver: core.config.version,
       },
       socket,
     );
