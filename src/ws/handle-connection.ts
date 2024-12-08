@@ -12,8 +12,7 @@ export async function run(hazel, core, hold, ws_socket, request) {
   }
 
   if (
-    ws_socket.remoteAddress.startsWith("::ffff:") &&
-    ws_socket !== undefined
+    ws_socket.remoteAddress !== undefined
   ) {
     ws_socket.remoteAddress = ws_socket.remoteAddress.slice(7);
   }
