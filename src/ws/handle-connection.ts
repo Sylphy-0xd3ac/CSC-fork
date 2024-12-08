@@ -11,9 +11,7 @@ export async function run(hazel, core, hold, ws_socket, request) {
     ws_socket.remoteAddress = request.socket.remoteAddress;
   }
 
-  if (
-    ws_socket.remoteAddress !== undefined
-  ) {
+  if (ws_socket.remoteAddress !== undefined) {
     ws_socket.remoteAddress = ws_socket.remoteAddress.slice(7);
   }
 
