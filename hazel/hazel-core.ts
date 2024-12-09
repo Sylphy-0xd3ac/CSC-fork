@@ -6,8 +6,7 @@ export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedFunctions: Map<string, any>;
   moduleDir: Map<string, string>;
-  loadHistory: Map<string, number>;
-  loadIDMax: Map<string, number>;
+  loadHistory: Map<string, string[]>;
 
   constructor(mainConfig: any) {
     super();
@@ -15,7 +14,6 @@ export default class Hazel extends EventEmitter2 {
     this.loadedFunctions = new Map();
     this.moduleDir = new Map();
     this.loadHistory = new Map();
-    this.loadIDMax = new Map();
 
     process.on("unhandledRejection", (error) => {
       this.emit("error", error);
@@ -26,8 +24,10 @@ export default class Hazel extends EventEmitter2 {
     version: "0.3.6",
   };
   #hold = {};
-  initLoadID = 0;
-  functionLoadID = 0;
+
+  async randomLoadID() {
+    return Math.random().toString(36).slice(4, 10);
+  }
 
   async initialize(forceInit) {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
@@ -51,9 +51,6 @@ export default class Hazel extends EventEmitter2 {
     } else {
       process.exit();
     }
-    this.loadIDMax.forEach((loadID, modulePath) => {
-      this.loadIDMax.set(modulePath, this.functionLoadID);
-    });
     this.emit("initialized");
     console.log(
       "\n==" + this.mainConfig.projectName + " Initialize Complete==\n",
@@ -65,31 +62,20 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async reloadModule(modulePath: string) {
-    let loadID =
-      this.loadHistory.get(modulePath) !== undefined
-        ? this.loadHistory.get(modulePath)[0] + 1
-        : this.functionLoadID + 1;
+    let loadID = await this.randomLoadID();
+    const history = this.loadHistory.get(modulePath) || [];
+    history.push(loadID);
+    this.loadHistory.set(modulePath, history);
     let module = await importModule(modulePath, loadID);
-    this.loadHistory.set(modulePath, loadID);
     this.loadedFunctions.set(module.name, module);
-    this.loadIDMax.set(
-      modulePath,
-      this.loadIDMax.get(modulePath) === undefined
-        ? this.functionLoadID
-        : Math.max(loadID, this.loadIDMax.get(modulePath)),
-    );
   }
 
-  async reloadModuleByID(modulePath: string, loadID: number) {
+  async reloadModuleByID(modulePath: string, loadID: string) {
+    const history = this.loadHistory.get(modulePath) || [];
+    history.push(loadID);
+    this.loadHistory.set(modulePath, history);
     let module = await importModule(modulePath, loadID);
-    this.loadHistory.set(modulePath, loadID);
     this.loadedFunctions.set(module.name, module);
-    this.loadIDMax.set(
-      modulePath,
-      this.loadIDMax.get(modulePath) === undefined
-        ? this.functionLoadID
-        : Math.max(loadID, this.loadIDMax.get(modulePath)),
-    );
   }
 
   async runFunction(functionName, ...functionArgs) {
@@ -128,15 +114,6 @@ export default class Hazel extends EventEmitter2 {
     ) {
       return false;
     }
-    this.loadHistory.forEach((loadID, modulePath) => {
-      this.loadHistory.set(modulePath, loadID + 1);
-      this.loadIDMax.set(
-        modulePath,
-        this.loadIDMax.get(modulePath) === undefined
-          ? this.functionLoadID
-          : Math.max(loadID + 1, this.loadIDMax.get(modulePath)),
-      );
-    });
     this.emit("reload-complete");
     return true;
   }
@@ -146,7 +123,7 @@ export default class Hazel extends EventEmitter2 {
       this,
       this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
       "init",
-      ++this.initLoadID,
+      await this.randomLoadID(),
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedInits, existError: initsExistError } = result;
     if (!forceLoad && initsExistError) {
@@ -177,7 +154,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
         "function",
-        ++this.functionLoadID,
+        await this.randomLoadID(),
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && functionExistError) {
       return false;
