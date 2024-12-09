@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 
 export async function reloadAll(hazel, core, hold, socket, line) {
   core.replyInfo("ROOT", "全部命令重载请求已接收。", socket);
@@ -12,7 +13,7 @@ export async function reloadAll(hazel, core, hold, socket, line) {
   // 发送重载完成消息
   core.replyInfo(
     "ROOT",
-    "全部命令重载完成, 当前公用版本为 " + hazel.functionLoadID + "。",
+    "全部命令重载完成。",
     socket,
   );
 }
@@ -20,8 +21,10 @@ export async function reloadAll(hazel, core, hold, socket, line) {
 export async function reloadModule(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
-  let moduleName = args[1];
+  let moduleName = args[1].trim();
   let modulePath = await hazel.getModulePath(moduleName);
+
+  moduleName = path.basename(modulePath, path.extname(modulePath));
 
   if (!modulePath || !fs.existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
@@ -35,7 +38,7 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   // 发送重载完成消息
   core.replyInfo(
     "ROOT",
-    `模块 ${moduleName} 重载完成，当前版本为 ${hazel.loadHistory.get(modulePath)}。`,
+    `模块 ${moduleName} 重载完成，当前版本为 ${hazel.loadHistory.get(modulePath)[hazel.loadHistory.get(modulePath)?.length - 1]}。`,
     socket,
   );
 }
@@ -43,54 +46,84 @@ export async function reloadModule(hazel, core, hold, socket, line) {
 export async function reloadModuleByID(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
-  let moduleName = args[1];
-  let versionID = parseInt(args[2]);
+  let moduleName = args[1].trim();
+  let version = args[2].trim();
   let modulePath = await hazel.getModulePath(moduleName);
+
+  moduleName = path.basename(modulePath, path.extname(modulePath));
 
   if (!modulePath || !fs.existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
 
-  if (versionID > hazel.loadIDMax.get(modulePath)) {
-    core.replyInfo(
-      "ROOT",
-      "模块 " + moduleName + " 的版本 " + versionID + " 不存在。",
-      socket,
-    );
+  if (!hazel.loadHistory.get(modulePath).includes(version)) {
+    core.replyInfo("ROOT", "模块 " + moduleName + " 的版本 " + version + " 不存在。", socket);
     return;
   }
 
-  if (versionID === hazel.loadHistory.get(modulePath)) {
+  if (version === hazel.loadHistory.get(modulePath)[hazel.loadHistory.get(modulePath)?.length - 1]) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 已是最新版本。", socket);
-    return;
-  }
-
-  if (isNaN(versionID) || versionID <= 0) {
-    core.replyInfo("ROOT", "版本号无效。", socket);
     return;
   }
 
   // 重载指定模块到指定版本
   core.replyInfo(
     "ROOT",
-    `模块 ${moduleName} 重载请求已接收，目标版本为 ${versionID}。`,
+    `模块 ${moduleName} 重载请求已接收，目标版本为 ${version}。`,
     socket,
   );
-  await hazel.reloadModuleByID(modulePath, versionID);
+  await hazel.reloadModuleByID(modulePath, version);
 
   // 发送重载完成消息
   core.replyInfo(
     "ROOT",
-    `模块 ${moduleName} 重载完成，已恢复至版本 ${versionID}。`,
+    `模块 ${moduleName} 重载完成，已恢复至版本 ${version}。`,
     socket,
   );
+}
+
+export async function listModulesVersion(hazel, core, hold, socket, line) {
+  // 解析参数
+  let args = core.splitArgs(line);
+  let moduleName = args[2].trim();
+  let modulePath = await hazel.getModulePath(moduleName);
+
+  // 获取模块名称
+  moduleName = path.basename(modulePath, path.extname(modulePath));
+
+  // 检查模块是否存在
+  if (!modulePath || !fs.existsSync(modulePath)) {
+    core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
+    return;
+  }
+
+  // 获取模块版本列表
+  let versions = hazel.loadHistory.get(modulePath);
+  // 去重
+  versions = versions.filter((version, index, self) => self.indexOf(version) === index);
+  let versionList = "";
+
+  // 发送版本列表
+  core.replyInfo("ROOT", "模块 " + moduleName + " 的版本列表：", socket);
+
+  // 遍历版本列表
+  versions.forEach((version) => {
+    versionList += "[" + (versions.indexOf(version) + 1) + "] " + version + (hazel.loadHistory.get(modulePath)[hazel.loadHistory.get(modulePath).length - 1] === version ? " (最新)" : "") + "\n";
+  });
+
+  // 发送版本列表
+  core.replyInfo("ROOT", versionList, socket);
 }
 
 export async function run(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
 
+  if (args[0] === "/reload" && args[1] === "list" && args[2] !== undefined) {
+    await listModulesVersion(hazel, core, hold, socket, line);
+    return;
+  }
   // /reload - 重载所有命令
   if (args[0] === "/reload" && args[1] === undefined) {
     await reloadAll(hazel, core, hold, socket, line);
