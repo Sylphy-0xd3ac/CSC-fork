@@ -109,7 +109,7 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
 
   // 遍历版本列表
   versions.forEach((version) => {
-    versionList += "[" + (versions.indexOf(version) + 1) + "] " + version + (hazel.loadHistory.get(modulePath)[hazel.loadHistory.get(modulePath).length - 1] === version ? " (当前版本)" : "") + "\n";
+    versionList += "[" + (versions.indexOf(version) + 1) + "] " + version + (hazel.loadHistory.get(modulePath)[hazel.loadHistory.get(modulePath).length - 1] === version ? " (当前)" : "") + "\n";
   });
 
   // 发送版本列表
