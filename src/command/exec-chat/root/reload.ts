@@ -24,12 +24,14 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   let moduleName = args[1].trim();
   let modulePath = await hazel.getModulePath(moduleName);
 
-  moduleName = path.basename(modulePath, path.extname(modulePath));
 
-  if (!modulePath || !fs.existsSync(modulePath)) {
+  if (!fs.existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
+
+
+  moduleName = path.basename(modulePath, path.extname(modulePath));
 
   // 重载指定模块
   core.replyInfo("ROOT", `模块 ${moduleName} 重载请求已接收。`, socket);
@@ -50,12 +52,12 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   let version = args[2].trim();
   let modulePath = await hazel.getModulePath(moduleName);
 
-  moduleName = path.basename(modulePath, path.extname(modulePath));
-
-  if (!modulePath || !fs.existsSync(modulePath)) {
+  if (!fs.existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
+
+  moduleName = path.basename(modulePath, path.extname(modulePath));
 
   if (!hazel.loadHistory.get(modulePath).includes(version)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 的版本 " + version + " 不存在。", socket);
@@ -89,15 +91,14 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
   let moduleName = args[2].trim();
   let modulePath = await hazel.getModulePath(moduleName);
 
-  // 获取模块名称
-  moduleName = path.basename(modulePath, path.extname(modulePath));
-
   // 检查模块是否存在
-  if (!modulePath || !fs.existsSync(modulePath)) {
+  if (!fs.existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
 
+  // 获取模块名称
+  moduleName = path.basename(modulePath, path.extname(modulePath));
   // 获取模块版本列表
   let versions = hazel.loadHistory.get(modulePath);
   // 去重
