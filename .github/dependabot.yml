@@ -1,10 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # 包管理工具
-    directory: "/"          # 项目根目录
+    directory: "/" # 项目根目录
     schedule:
-      interval: "daily"    # 每周检查更新
+      interval: "daily" # 每周检查更新
     assignees:
-      - "Hex-0xd3ac"           # PR 指派给某人
+      - "Hex-0xd3ac" # PR 指派给某人
     labels:
-      - "dependencies"      # 为 PR 添加标签
+      - "dependencies" # 为 PR 添加标签
