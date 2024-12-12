@@ -85,13 +85,13 @@ export default async function loadDir(
 
       if (loadType === "function") {
         moduleList.set(currentModule.name, currentModule);
+        hazel.moduleDir.set(currentModule.name, filePath);
+        const history = hazel.loadHistory.get(filePath) || [];
+        history.push(await hazel.randomLoadID());
+        hazel.loadHistory.set(filePath, history);
       } else if (loadType === "init") {
         moduleList.push(currentModule);
       }
-      hazel.moduleDir.set(currentModule.name, filePath);
-      const history = hazel.loadHistory.get(filePath) || [];
-      history.push(await hazel.randomLoadID());
-      hazel.loadHistory.set(filePath, history);
     }
   }
 
