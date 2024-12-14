@@ -35,5 +35,3 @@
 ## LICENSE
 
 十字街聊天室遵循 [GNU Public License v3.0](./LICENSE) 开放源代码。
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FHex-0xd3ac%2FCSC-fork?ref=badge_large&issueType=license)
