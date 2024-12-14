@@ -39,5 +39,5 @@ export default async function (hazel, core, hold) {
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
 
-  core.log(core.LOG_LEVEL.LOG, "Server initialized", "BOOT");
+  core.log(core.LOG_LEVEL.INFO, "Server initialized", "BOOT");
 }

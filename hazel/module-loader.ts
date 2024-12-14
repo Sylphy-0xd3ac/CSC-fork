@@ -1,4 +1,5 @@
 import recursiveReadDir from "./recursive-readdir";
+import path from "node:path";
 
 export async function importModule(filePath: string, loadID: string) {
   const module = await import(`${filePath}?loadID=${loadID}`);
@@ -91,6 +92,13 @@ export default async function loadDir(
         hazel.loadHistory.set(filePath, history);
       } else if (loadType === "init") {
         moduleList.push(currentModule);
+        hazel.moduleDir.set(
+          path.basename(filePath, path.extname(filePath)),
+          filePath,
+        );
+        const history = hazel.loadHistory.get(filePath) || [];
+        history.push(await hazel.randomLoadID());
+        hazel.loadHistory.set(filePath, history);
       }
     }
   }

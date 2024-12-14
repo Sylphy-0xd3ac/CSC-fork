@@ -1,13 +1,21 @@
 // 日志记录器
+import chalk from "chalk";
 import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 
 export async function run(hazel, core, hold) {
   // 日志级别
   core.LOG_LEVEL = {
     DEBUG: 0,
-    LOG: 1,
+    INFO: 1,
     WARN: 2,
     ERROR: 3,
+  };
+
+  core.LOG_LEVEL_COLOR = {
+    DEBUG: chalk.cyan("[D]"),
+    INFO: chalk.green("[I]"),
+    WARN: chalk.yellow("[W]"),
+    ERROR: chalk.red("[E]"),
   };
 
   // 记录技术性日志
@@ -27,32 +35,33 @@ export async function run(hazel, core, hold) {
       // 记录日志
       if (level == core.LOG_LEVEL.DEBUG) {
         contentClean =
-          `${core.getTimeString()}[DEBUG] ${func} ` + content + "\n";
+          `${core.getTimeStringLogger()} [D] ${func} ` + content + "\n";
         content =
-          `${core.getTimeString()}[DEBUG] ${core.randomColor()(func)} ` +
+          `${chalk.cyan(core.getTimeStringLogger())} ${core.LOG_LEVEL_COLOR.DEBUG} ${core.randomColor()(func)} ` +
           content +
           "\n";
         console.debug(content);
-      } else if (level == core.LOG_LEVEL.LOG) {
-        contentClean = `${core.getTimeString()}[LOG] ${func} ` + content + "\n";
+      } else if (level == core.LOG_LEVEL.INFO) {
+        contentClean =
+          `${core.getTimeStringLogger()} [I] ${func} ` + content + "\n";
         content =
-          `${core.getTimeString()}[LOG] ${core.randomColor()(func)} ` +
+          `${chalk.cyan(core.getTimeStringLogger())} ${core.LOG_LEVEL_COLOR.INFO} ${core.randomColor()(func)} ` +
           content +
           "\n";
         console.log(content);
       } else if (level == core.LOG_LEVEL.WARNING) {
         contentClean =
-          `${core.getTimeString()}[WARN] ${func} ` + content + "\n";
+          `${core.getTimeStringLogger()} [W] ${func} ` + content + "\n";
         content =
-          `${core.getTimeString()}[WARN] ${core.randomColor()(func)} ` +
+          `${chalk.cyan(core.getTimeStringLogger())} ${core.LOG_LEVEL_COLOR.WARN} ${core.randomColor()(func)} ` +
           content +
           "\n";
         console.warn(content);
       } else if (level == core.LOG_LEVEL.ERROR) {
         contentClean =
-          `${core.getTimeString()}[ERROR] ${func} ` + content + "\n";
+          `${core.getTimeStringLogger()} [E] ${func} ` + content + "\n";
         content =
-          `${core.getTimeString()}[ERROR] ${core.randomColor()(func)} ` +
+          `${chalk.cyan(core.getTimeStringLogger())} ${core.LOG_LEVEL_COLOR.ERROR} ${core.randomColor()(func)} ` +
           content +
           "\n";
         console.error(content);
