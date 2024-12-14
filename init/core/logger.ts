@@ -12,10 +12,10 @@ export async function run(hazel, core, hold) {
   };
 
   core.LOG_LEVEL_COLOR = {
-    DEBUG: chalk.cyan("[D]"),
-    INFO: chalk.green("[I]"),
-    WARN: chalk.yellow("[W]"),
-    ERROR: chalk.red("[E]"),
+    DEBUG: chalk.cyan("<D>"),
+    INFO: chalk.green("<I>"),
+    WARN: chalk.yellow("<W>"),
+    ERROR: chalk.red("<E>"),
   };
 
   // 记录技术性日志
