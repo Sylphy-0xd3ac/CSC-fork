@@ -5,6 +5,7 @@ import process from "node:process";
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedFunctions: Map<string, any>;
+  loadedInits: any[];
   moduleDir: Map<string, string>;
   loadHistory: Map<string, string[]>;
 
@@ -12,6 +13,7 @@ export default class Hazel extends EventEmitter2 {
     super();
     this.mainConfig = mainConfig;
     this.loadedFunctions = new Map();
+    this.loadedInits = [];
     this.moduleDir = new Map();
     this.loadHistory = new Map();
 
@@ -70,12 +72,30 @@ export default class Hazel extends EventEmitter2 {
     this.loadedFunctions.set(module.name, module);
   }
 
+  async reloadInit(modulePath: string) {
+    let loadID = await this.randomLoadID();
+    const history = this.loadHistory.get(modulePath) || [];
+    history.push(loadID);
+    this.loadHistory.set(modulePath, history);
+    let module = await importModule(modulePath, loadID);
+    this.loadedInits.push(module);
+  }
+
   async reloadModuleByID(modulePath: string, loadID: string) {
     const history = this.loadHistory.get(modulePath) || [];
     history.push(loadID);
     this.loadHistory.set(modulePath, history);
     let module = await importModule(modulePath, loadID);
     this.loadedFunctions.set(module.name, module);
+  }
+
+  async reloadInitByID(modulePath: string, loadID: string) {
+    const history = this.loadHistory.get(modulePath) || [];
+    history.push(loadID);
+    this.loadHistory.set(modulePath, history);
+    let module = await importModule(modulePath, loadID);
+    delete this.loadedInits[this.loadedInits.indexOf(module)];
+    this.loadedInits.push(module);
   }
 
   async runFunction(functionName, ...functionArgs) {
@@ -130,6 +150,8 @@ export default class Hazel extends EventEmitter2 {
       return false;
     }
 
+    this.loadedInits = loadedInits;
+
     this.removeAllListeners();
     this.on("error", () => {});
 
@@ -137,7 +159,7 @@ export default class Hazel extends EventEmitter2 {
       delete this.#core[property];
     }
 
-    loadedInits.forEach((initFunction) => {
+    this.loadedInits.forEach((initFunction) => {
       initFunction.run(this, this.#core, this.#hold).catch((error) => {
         this.emit("error", error);
         console.error(error);
@@ -147,7 +169,7 @@ export default class Hazel extends EventEmitter2 {
       });
     });
 
-    console.log(`√ Initialize inits ${loadedInits.length} complete!\n`);
+    console.log(`√ Initialize inits ${this.loadedInits.length} complete!\n`);
 
     let { moduleList: loadedFunctions, existError: functionExistError } =
       (await loadModule(
