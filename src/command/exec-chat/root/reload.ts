@@ -29,7 +29,12 @@ export async function reloadModule(hazel, core, hold, socket, line) {
 
   // 重载指定模块
   core.replyInfo("ROOT", `模块 ${moduleName} 重载请求已接收。`, socket);
-  await hazel.reloadModule(modulePath);
+
+  if (hazel.loadedFunctions.has(moduleName)) {
+    await hazel.reloadModule(modulePath);
+  } else {
+    await hazel.reloadInit(modulePath);
+  }
 
   // 发送重载完成消息
   core.replyInfo(
@@ -78,7 +83,12 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
     `模块 ${moduleName} 重载请求已接收，目标版本为 ${version}。`,
     socket,
   );
-  await hazel.reloadModuleByID(modulePath, version);
+
+  if (hazel.loadedFunctions.has(moduleName)) {
+    await hazel.reloadModuleByID(modulePath, version);
+  } else {
+    await hazel.reloadInitByID(modulePath, version);
+  }
 
   // 发送重载完成消息
   core.replyInfo(

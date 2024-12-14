@@ -109,6 +109,38 @@ export async function run(hazel, core, hold) {
     return "[" + hour + ":" + min + ":" + sec + "]";
   };
 
+  // 获取就像 2024-12-14 20:42:13 一样的时间字符串 Logger 专用
+  core.getTimeStringLogger = function () {
+    let timeNow = new Date();
+    let hour = timeNow.getHours().toString();
+    let min = timeNow.getMinutes().toString();
+    let sec = timeNow.getSeconds().toString();
+    let year = timeNow.getFullYear().toString();
+    let month = timeNow.getMonth().toString();
+    let day = timeNow.getDate().toString();
+    let hourNum = parseInt(hour);
+    let minNum = parseInt(min);
+    let secNum = parseInt(sec);
+    let monthNum = parseInt(month);
+    let dayNum = parseInt(day);
+    if (hourNum < 10) {
+      hour = "0" + hour;
+    }
+    if (minNum < 10) {
+      min = "0" + min;
+    }
+    if (secNum < 10) {
+      sec = "0" + sec;
+    }
+    if (monthNum < 10) {
+      month = "0" + month;
+    }
+    if (dayNum < 10) {
+      day = "0" + day;
+    }
+    return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+  };
+
   // 获取就像 21-06-18 一样的日期字符串
   core.getDateString = function () {
     let timeNow = new Date();
