@@ -174,6 +174,12 @@ export async function run(hazel, core, hold, socket, line) {
 
 // 使用 /reload 命令
 export async function execByChat(hazel, core, hold, socket, line) {
+  // 进行严格的频率限制
+  if (await core.checkAddress(socket.remoteAddress, 3)) {
+    core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
+    return;
+  }
+
   await run(hazel, core, hold, socket, line);
 }
 
