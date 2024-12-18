@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main # 你也可以根据需要改成任何你想监控的分支
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
