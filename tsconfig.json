@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "target": "ESNext",
     "module": "ESNext",
     "allowSyntheticDefaultImports": true
