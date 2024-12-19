@@ -19,7 +19,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint,
+      "@typescript-eslint": tseslint, // 使用 @typescript-eslint/eslint-plugin 插件
     },
     rules: {
       ...pluginJs.configs.recommended.rules, // 基于 @eslint/js 提供的推荐规则
