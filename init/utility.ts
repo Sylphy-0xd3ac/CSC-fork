@@ -115,6 +115,7 @@ export async function run(hazel, core, hold) {
     let hour = timeNow.getHours().toString();
     let min = timeNow.getMinutes().toString();
     let sec = timeNow.getSeconds().toString();
+    let ms = timeNow.getMilliseconds().toString();
     let year = timeNow.getFullYear().toString();
     let month = timeNow.getMonth().toString();
     let day = timeNow.getDate().toString();
@@ -123,6 +124,7 @@ export async function run(hazel, core, hold) {
     let secNum = parseInt(sec);
     let monthNum = parseInt(month);
     let dayNum = parseInt(day);
+    let msNum = parseInt(ms);
     if (hourNum < 10) {
       hour = "0" + hour;
     }
@@ -138,7 +140,24 @@ export async function run(hazel, core, hold) {
     if (dayNum < 10) {
       day = "0" + day;
     }
-    return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+    if (msNum < 10) {
+      ms = "0" + ms;
+    }
+    return (
+      year +
+      "-" +
+      month +
+      "-" +
+      day +
+      " " +
+      hour +
+      ":" +
+      min +
+      ":" +
+      sec +
+      "." +
+      ms
+    );
   };
 
   // 获取就像 21-06-18 一样的日期字符串
