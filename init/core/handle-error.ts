@@ -25,41 +25,48 @@ export async function run(hazel, core, hold) {
                 '"}}',
             );
             // 将 socket 信息写入日志
-            core.log(
-              core.LOG_LEVEL.ERROR,
-              [
-                "SERVER ERROR #" + id,
-                "FROM",
-                arg1.remoteAddress,
-                "(" + arg1.permission + ")[" + arg1.trip + "]",
-                arg1.nick,
-                arg1.channel,
-                arg1.connectionID,
-                "\n",
-                error.stack,
-              ],
-              "HandleError",
+            let fileLogger = new core.fileLogger("HandleError");
+            fileLogger.error(
+              "SERVER ERROR #" +
+                id +
+                "\n" +
+                error.stack +
+                "\n" +
+                JSON.stringify(arg1, null, 2),
+            );
+            let consoleLogger = new core.logger("HandleError");
+            consoleLogger.error(
+              "SERVER ERROR #" +
+                id +
+                "\n" +
+                error.stack +
+                "\n" +
+                JSON.stringify(arg1, null, 2),
             );
           }
         }
       } else {
         // 记日志
-        core.log(
-          core.LOG_LEVEL.ERROR,
-          ["SERVER ERROR #" + id, "\n", error.stack],
-          "HandleError",
-        );
+        let fileLogger = new core.fileLogger("HandleError");
+        fileLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
+        let consoleLogger = new core.logger("HandleError");
+        consoleLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
       }
     } catch (error) {
       // 错误处理程序自身发生错误，打印错误内容
-      core.log(
-        core.LOG_LEVEL.ERROR,
-        [
-          "ERROR HANDLER ERROR CATCHED AT " + new Date().toTimeString(),
-          "\n",
+      let fileLogger = new core.fileLogger("HandleError");
+      fileLogger.error(
+        "ERROR HANDLER ERROR CATCHED AT " +
+          new Date().toTimeString() +
+          "\n" +
           error.stack,
-        ],
-        "HandleError",
+      );
+      let consoleLogger = new core.logger("HandleError");
+      consoleLogger.error(
+        "ERROR HANDLER ERROR CATCHED AT " +
+          new Date().toTimeString() +
+          "\n" +
+          error.stack,
       );
     }
   });
