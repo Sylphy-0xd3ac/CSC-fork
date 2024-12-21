@@ -48,14 +48,14 @@ export default class Hazel extends EventEmitter2 {
               process.exit();
             }
           });
-        console.log(`√ Static function ${staticDir} executed.`);
+        console.log(`√ Static function ${staticDir} executed.\n`);
       }
     } else {
       process.exit();
     }
     this.emit("initialized");
     console.log(
-      "\n==" + this.mainConfig.projectName + " Initialize Complete==\n",
+      "==" + this.mainConfig.projectName + " Initialize Complete==\n",
     );
   }
 

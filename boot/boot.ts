@@ -1,3 +1,4 @@
+// 初始化服务器
 export default async function (hazel, core, hold) {
   // 冻结对象和函数的原型链
   Object.freeze(Object.prototype);
@@ -39,5 +40,8 @@ export default async function (hazel, core, hold) {
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
 
-  core.log(core.LOG_LEVEL.INFO, "Server initialized", "BOOT");
+  let fileLogger = new core.fileLogger("BOOT");
+  fileLogger.info("Server initializing\n");
+  let consoleLogger = new core.logger("BOOT");
+  consoleLogger.info("Server initializing\n");
 }
