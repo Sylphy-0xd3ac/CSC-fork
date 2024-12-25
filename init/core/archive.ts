@@ -13,7 +13,8 @@ export async function run(hazel, core, hold) {
           " [" +
           socket.trip +
           "]" +
-          socket.nick + " " +
+          socket.nick +
+          " " +
           logText.join(" ");
       } else {
         content += socket.channel + " []" + socket.nick + ": " + logText;
