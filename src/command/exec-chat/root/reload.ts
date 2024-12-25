@@ -115,10 +115,15 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
     "ROOT",
     `模块 ${moduleName} 重载完成，已恢复至版本 ${version}，耗时 ${reloadTimeUsed} ms。`,
     socket,
-  )
+  );
 
   // 记录操作
-  core.archive("RLD", socket, moduleName + " " + version, reloadTimeUsed + "ms");
+  core.archive(
+    "RLD",
+    socket,
+    moduleName + " " + version,
+    reloadTimeUsed + "ms",
+  );
 }
 
 export async function listModulesVersion(hazel, core, hold, socket, line) {
