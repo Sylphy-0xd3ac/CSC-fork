@@ -24,7 +24,7 @@ export default async function (hazel, core, hold) {
 
   hazel.emit("ws_initialized");
   let fileLogger = new core.fileLogger("BOOT").extend("WS");
-  fileLogger.info("WebSocket server initialized\n");
-  let consoleLogger = new core.logger("BOOT").extend("WS");
-  consoleLogger.info("WebSocket server initialized\n");
+  fileLogger.info("WebSocket server initialized");
+  let consoleLogger = new core.consoleLogger("BOOT").extend("WS");
+  consoleLogger.info("WebSocket server initialized");
 }
