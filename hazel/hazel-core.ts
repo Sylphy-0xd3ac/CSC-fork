@@ -78,7 +78,14 @@ export default class Hazel extends EventEmitter2 {
     history.push(loadID);
     this.loadHistory.set(modulePath, history);
     let module = await importModule(modulePath, loadID);
+    delete this.loadedInits[this.loadedInits.indexOf(module)];
     this.loadedInits.push(module);
+    this.loadedInits.forEach((initFunction) => {
+      initFunction.run(this, this.#core, this.#hold).catch((error) => {
+        this.emit("error", error);
+        console.error(error);
+      });
+    });
   }
 
   async reloadModuleByID(modulePath: string, loadID: string) {
@@ -96,6 +103,12 @@ export default class Hazel extends EventEmitter2 {
     let module = await importModule(modulePath, loadID);
     delete this.loadedInits[this.loadedInits.indexOf(module)];
     this.loadedInits.push(module);
+    this.loadedInits.forEach((initFunction) => {
+      initFunction.run(this, this.#core, this.#hold).catch((error) => {
+        this.emit("error", error);
+        console.error(error);
+      });
+    });
   }
 
   async runFunction(functionName, ...functionArgs) {

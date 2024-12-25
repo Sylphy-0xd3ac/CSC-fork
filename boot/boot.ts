@@ -41,7 +41,7 @@ export default async function (hazel, core, hold) {
   hold.lastReloadTime = Date.now();
 
   let fileLogger = new core.fileLogger("BOOT");
-  fileLogger.info("Server initializing\n");
-  let consoleLogger = new core.logger("BOOT");
-  consoleLogger.info("Server initializing\n");
+  fileLogger.info("Server initializing");
+  let consoleLogger = new core.consoleLogger("BOOT");
+  consoleLogger.info("Server initializing");
 }
