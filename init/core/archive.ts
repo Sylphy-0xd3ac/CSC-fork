@@ -3,9 +3,9 @@ import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 
 export async function run(hazel, core, hold) {
   // 记录聊天和操作记录存档
-  core.archive = function (logType, socket, logText) {
+  core.archive = function (logType, socket, ...logText: string[]) {
     // 生成日志内容
-    let content = core.getTimeString() + logType + " ";
+    let content = logType + " ";
     if (socket) {
       if (typeof socket.trip == "string") {
         content +=
@@ -14,8 +14,8 @@ export async function run(hazel, core, hold) {
           socket.trip +
           "]" +
           socket.nick +
-          ": " +
-          logText;
+          " " +
+          logText.join(" ");
       } else {
         content += socket.channel + " []" + socket.nick + ": " + logText;
       }
@@ -36,12 +36,16 @@ export async function run(hazel, core, hold) {
     try {
       writeFileSync(
         hazel.mainConfig.logDir + "/" + core.getDateString() + ".archive.txt",
-        content,
+        core.getTimeString() + content,
         { encoding: "utf-8", flag: "a" },
       );
     } catch (error) {
       hazel.emit("error", error);
     }
+    let fileLogger = new core.fileLogger("ARCHIVE");
+    fileLogger.info(`${content.trim()}`);
+    let consoleLogger = new core.consoleLogger("ARCHIVE");
+    consoleLogger.info(`${content.trim()}`);
   };
 }
 
