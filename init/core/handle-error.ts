@@ -34,7 +34,7 @@ export async function run(hazel, core, hold) {
                 "\n" +
                 JSON.stringify(arg1, null, 2),
             );
-            let consoleLogger = new core.logger("HandleError");
+            let consoleLogger = new core.consoleLogger("HandleError");
             consoleLogger.error(
               "SERVER ERROR #" +
                 id +
@@ -49,7 +49,7 @@ export async function run(hazel, core, hold) {
         // 记日志
         let fileLogger = new core.fileLogger("HandleError");
         fileLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
-        let consoleLogger = new core.logger("HandleError");
+        let consoleLogger = new core.consoleLogger("HandleError");
         consoleLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
       }
     } catch (error) {
@@ -61,7 +61,7 @@ export async function run(hazel, core, hold) {
           "\n" +
           error.stack,
       );
-      let consoleLogger = new core.logger("HandleError");
+      let consoleLogger = new core.consoleLogger("HandleError");
       consoleLogger.error(
         "ERROR HANDLER ERROR CATCHED AT " +
           new Date().toTimeString() +
