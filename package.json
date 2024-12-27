@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git@github.com:CrosSt-Chat/CSC-main.git"
   },
-  "main": "./main.ts",
+  "main": "./main.js",
   "type": "module",
   "dependencies": {
     "argon2": "^0.41.1",
