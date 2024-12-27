@@ -4,10 +4,11 @@
   "version": "2.0.0-beta",
   "scripts": {
     "build": "tsc",
-    "dev": "deno run --allow-all --unstable-sloppy-imports main.ts",
+    "dev": "deno run --allow-all --unstable-sloppy-imports --unstable-node-globals main.ts",
     "start": "node main.js",
     "lint": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "nexebuild": "node nexe.config.cjs"
   },
   "license": "GNU General Public License",
   "contributors": [],
@@ -19,6 +20,7 @@
   "type": "module",
   "dependencies": {
     "argon2": "^0.41.1",
+    "nexe": "^4.0.0-rc.6",
     "ws": "^8.12.0"
   },
   "engines": {
