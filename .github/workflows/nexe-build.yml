@@ -1,0 +1,21 @@
+name: Build Nexe Executable
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Nexe Executable
+        run: npm run nexebuild
+      - name: Upload Nexe Executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: crosst-chat-ts
+          path: ./crosst-chat-ts
