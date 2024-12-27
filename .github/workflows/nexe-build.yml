@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: crosst-chat-ts
-          path: ./crosst-chat-ts
+          path: crosst-chat-ts.exe,crosst-chat-ts,crosst-chat-ts
