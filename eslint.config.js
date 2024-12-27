@@ -37,6 +37,7 @@ export default [
         },
       ],
       "@typescript-eslint/no-explicit-any": "off", // 允许使用 `any` 类型
+      "@typescript-eslint/no-require-imports": "off", // 允许使用 require
     },
   },
 ];
