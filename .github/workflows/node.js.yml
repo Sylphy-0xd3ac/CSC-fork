@@ -43,7 +43,7 @@ jobs:
       # Step 8: 压缩文件
       - name: Compress
         run: |
-          tar -zcf source.tar.gz main.ts config.json src/**/**/**/**/* init/**/**/**/**/* hazel/**/**/**/**/* config/**/**/**/**/* boot/**/**/**/**/*
+          tar -zcf source.tar.gz .
 
       # Step 9: 上传文件
       - name: Upload
