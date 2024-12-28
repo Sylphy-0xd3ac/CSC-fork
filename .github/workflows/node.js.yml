@@ -62,3 +62,16 @@ jobs:
 
           # 推送到远程的 `compiled-output` 分支
           git push -u origin compiled-output --force
+      
+      # Step 8: 压缩文件
+      - name: Compress
+        run: |
+          tar -zcf source.tar.gz main.ts config.json src/**/**/**/**/* init/**/**/**/**/* hazel/**/**/**/**/* config/**/**/**/**/* boot/**/**/**/**/*
+
+      # Step 9: 上传文件
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: source
+          path: source.tar.gz
+        
