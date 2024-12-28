@@ -15,10 +15,11 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 
 ### Installation Steps
 
-1. **Clone the Repository**:
+1. **Download the Repository**:
+
+   Download Actions artifacts.
 
    ```bash
-   git clone -b compiled-output https://github.com/YourRepo/CSC-main.git
    cd CSC-main
    ```
 
