@@ -48,9 +48,10 @@ jobs:
 
       # Step 7: 创建新分支并提交编译产物
       - name: Commit and Push compiled files
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           # 创建一个新的分支（这里我们使用 `compiled-output` 分支）
           git checkout -b compiled-output
 
