@@ -45,13 +45,13 @@ jobs:
         run: |
           mkdir -p source
           find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
-          tar -zcf source.tar.gz source
-          gzip -r source.tar.gz -N source.zip
+          tar -zcf source.tar source
+          gzip -r source.tar
 
       # Step 9: 上传文件
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: source
-          path: source.zip
+          path: source.tar.gz
         
