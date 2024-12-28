@@ -1,4 +1,4 @@
-name: Compile and Push
+name: Build and Compress
 
 on:
   push:
