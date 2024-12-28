@@ -78,13 +78,13 @@ export async function execByChat(hazel, core, hold, socket, line) {
 export const name = "find-notice";
 export const requiredLevel = 4;
 export const requiredData = [
-  { text: { description: "查找关键字" } },
   {
     type: {
       description: "查找类型",
       value: [{ num: "编号查找" }, { text: "文本查找" }],
     },
   },
+  { text: { description: "查找关键字" } }
 ];
 export const moduleType = "ws-command";
 export const description =
