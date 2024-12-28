@@ -47,7 +47,8 @@ jobs:
 
       # Step 7: 上传到 GitHub Actions 的 artifacts
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: source.tar.gz
+          name: source
           path: dist.tar.gz
+
