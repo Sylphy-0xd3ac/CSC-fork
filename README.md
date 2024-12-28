@@ -14,7 +14,7 @@
 
 ### 安装
 
-1. 克隆本仓库compiled-output分支源代码。
+1. 下载Action最新版本释放文件包。
 
 2. 进入十字街后端源代码目录（CSC-main），并运行 `npm install` 安装依赖。
 
