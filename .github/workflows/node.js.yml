@@ -43,12 +43,12 @@ jobs:
       # Step 8: 压缩文件
       - name: Compress
         run: |
-          gzip -r .
+          gzip -r . -o source.zip
 
       # Step 9: 上传文件
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: source
-          path: source.tar.gz
+          path: source.zip
         
