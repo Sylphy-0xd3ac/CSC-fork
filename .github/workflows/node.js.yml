@@ -43,7 +43,7 @@ jobs:
       # Step 8: 压缩文件
       - name: Compress
         run: |
-          tar -zcf source.tar.gz .
+          gzip -r .
 
       # Step 9: 上传文件
       - name: Upload
