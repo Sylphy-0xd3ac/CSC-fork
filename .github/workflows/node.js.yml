@@ -43,8 +43,8 @@ jobs:
       # Step 8: 复制文件
       - name: Copy files
         run: |
-          mkdir source
-          cp -r . source
+          mkdir -p source
+          cp -r ./* source/
           tar -zcf source.tar.gz source
           gzip -r source.tar.gz -N source.zip
 
