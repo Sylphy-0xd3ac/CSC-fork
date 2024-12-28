@@ -40,10 +40,12 @@ jobs:
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
       
-      # Step 8: 压缩文件
-      - name: Compress
+      # Step 8: 复制文件
+      - name: Copy files
         run: |
-          gzip -r . -o source.zip
+          cp -r . source
+          tar -zcf source.tar.gz source
+          gzip -r source.tar.gz -N source.zip
 
       # Step 9: 上传文件
       - name: Upload
