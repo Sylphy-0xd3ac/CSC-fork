@@ -36,12 +36,24 @@ jobs:
       - name: Compile TypeScript
         run: npx tsc
 
-      # Step 5: 删除所有 `.ts` 文件
+      # Step 7: 删除所有 `.ts` 文件
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
+
+      # Step : 提交编译后的代码到 `compiled-output` 分支
+      - name: Push to compiled-output branch
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b compiled-output
+          git add -A
+          git commit -m "Compiled output"
+          git push -f origin compiled-output
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       # Step 8: 复制文件
-      - name: Copy files
+      - name: Copy files and compress
         run: |
           mkdir -p source
           find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
