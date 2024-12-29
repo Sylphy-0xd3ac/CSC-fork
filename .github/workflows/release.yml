@@ -37,30 +37,7 @@ jobs:
           tar -zcf source.tar source
           gzip -r source.tar
 
-      - name: Generate release notes
+      - name: Generate release
         id: generate_notes
         run: |
           gh release create nightly source.tar.gz --generate-notes
-          gh release view nightly --json body --jq '.body' > release_notes.txt
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: 'nightly'
-          release_name: 'Nightly Release'
-          body: ${{ steps.generate_notes.outputs.body }}
-          draft: false
-          prerelease: false
-
-      - name: Upload source.tar.gz to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./source.tar.gz
-          asset_name: source.tar.gz
-          asset_content_type: application/tar.gz
