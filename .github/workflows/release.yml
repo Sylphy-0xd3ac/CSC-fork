@@ -42,4 +42,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: generate_notes
         run: |
-          gh release create nightly source.tar.gz --generate-notes
+          gh release create nightly -t "Nightly Release" source.tar.gz --generate-notes
