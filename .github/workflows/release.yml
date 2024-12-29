@@ -1,0 +1,88 @@
+name: Lagrange.OneBot Release
+
+on:
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  delete-tag:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - run: gh release delete nightly --cleanup-tag -y -R ${{ github.repository }}
+
+  create-tag:
+    needs:
+      - delete-tag
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - run: echo -e "> This is a nightly release.\r\n> This is not the latest version." > note
+
+      - run: gh release create nightly -F ./note -p -t "Nightly Release" -R ${{ github.repository }}
+
+  build-and-upload-release:
+    if: ${{ always() }}
+
+    needs:
+      - create-tag
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+        # Step 1: 检出代码
+        - name: Checkout repository
+          uses: actions/checkout@v2
+  
+        # Step 2: 设置 Node.js 版本
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: "18" # 可根据需要选择 Node.js 版本
+  
+        # Step 3: 安装依赖
+        - name: Install dependencies
+          run: npm install
+  
+        # Step 4: 运行 lint
+        - name: Run lint
+          run: npm run lint
+  
+        # Step 5: 运行 format
+        - name: Run format
+          run: npm run format
+  
+        # Step 6: 编译代码
+        - name: Compile TypeScript
+          run: npx tsc
+  
+        # Step 7: 删除所有 `.ts` 文件
+        - name: Delete TypeScript files
+          run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
+        
+        # Step 8: 复制文件
+        - name: Copy files and compress
+          run: |
+            mkdir -p source
+            find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
+            tar -zcf source.tar source
+            gzip -r source.tar
+
+        # Step 9: 上传文件
+        - name: Upload
+          run: |
+            gh release upload nightly source.tar.gz -R ${{ github.repository }}
+        
+       
