@@ -40,17 +40,21 @@ jobs:
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
 
-      # Step : 提交编译后的代码到 `compiled-output` 分支
+      # Step 6: 配置 Git 用户信息
+      - name: Setup Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 8: 提交编译后的代码到 `compiled-output` 分支
       - name: Push to compiled-output branch
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout -b compiled-output
-          git add -A
-          git commit -m "Compiled output"
-          git push -f origin compiled-output
+          git add .
+          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || exit 0
+          git push -u origin compiled-output --force
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
       
       # Step 8: 复制文件
       - name: Copy files and compress
