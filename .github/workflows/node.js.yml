@@ -54,7 +54,7 @@ jobs:
           git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || exit 0
           git push -u origin compiled-output --force
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
       
       # Step 8: 复制文件
       - name: Copy files and compress
