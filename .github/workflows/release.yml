@@ -1,87 +1,61 @@
-name: Release
+name: Nightly Release
 
 on:
   workflow_dispatch:
 
-env:
-  GH_TOKEN: ${{ github.token }}
-
 jobs:
-  #如果有tag，则删除tag
-  delete-tag:
+  create-release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - run: |
-          if gh release view nightly -R ${{ github.repository }}; then
-          gh release delete nightly --cleanup-tag -y -R ${{ github.repository }}
-          fi
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  create-tag:
-    runs-on: ubuntu-latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+    
+      - name: Install dependencies
+        run: npm install
+    
+      - name: Run lint
+        run: npm run lint
+    
+      - name: Run format
+        run: npm run format
+    
+      - name: Compile TypeScript
+        run: npx tsc
+    
+      - name: Delete TypeScript files
+        run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
 
-    permissions:
-      contents: write
+      - name: Generate source.tar.gz
+        run: |
+          mkdir -p source
+          find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
+          tar -zcf source.tar source
+          gzip -r source.tar
 
-    steps:
-      - run: echo -e "> This is a nightly release.\r\n> This is not the latest version." > note
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'nightly'
+          release_name: 'Nightly Release'
+          body: |
+            This is a nightly release.
+          draft: false
+          prerelease: false
 
-      - run: gh release create nightly -F ./note -p -t "Nightly Release" -R ${{ github.repository }}
-
-  build-and-upload-release:
-    if: ${{ always() }}
-
-    needs:
-      - create-tag
-
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
-    steps:
-        # Step 1: 检出代码
-        - name: Checkout repository
-          uses: actions/checkout@v2
-  
-        # Step 2: 设置 Node.js 版本
-        - name: Setup Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: "18" # 可根据需要选择 Node.js 版本
-  
-        # Step 3: 安装依赖
-        - name: Install dependencies
-          run: npm install
-  
-        # Step 4: 运行 lint
-        - name: Run lint
-          run: npm run lint
-  
-        # Step 5: 运行 format
-        - name: Run format
-          run: npm run format
-  
-        # Step 6: 编译代码
-        - name: Compile TypeScript
-          run: npx tsc
-  
-        # Step 7: 删除所有 `.ts` 文件
-        - name: Delete TypeScript files
-          run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
-        
-        # Step 8: 复制文件
-        - name: Copy files and compress
-          run: |
-            mkdir -p source
-            find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
-            tar -zcf source.tar source
-            gzip -r source.tar
-
-        # Step 9: 上传文件
-        - name: Upload
-          run: |
-            gh release upload nightly source.tar.gz -R ${{ github.repository }}
-        
-       
+      - name: Upload source.tar.gz to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./source.tar.gz
+          asset_name: source.tar.gz
+          asset_content_type: application/tar.gz
