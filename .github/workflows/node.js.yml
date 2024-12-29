@@ -43,8 +43,8 @@ jobs:
       # Step 6: 配置 Git 用户信息
       - name: Setup Git config
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Hex-0xd3ac"
+          git config user.email "1393309348@qq.com"
 
       # Step 8: 提交编译后的代码到 `compiled-output` 分支
       - name: Push to compiled-output branch
