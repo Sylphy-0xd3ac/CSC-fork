@@ -39,22 +39,6 @@ jobs:
       # Step 7: 删除所有 `.ts` 文件
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
-
-      # Step 6: 配置 Git 用户信息
-      - name: Setup Git config
-        run: |
-          git config user.name "Hex-0xd3ac"
-          git config user.email "1393309348@qq.com"
-
-      # Step 8: 提交编译后的代码到 `compiled-output` 分支
-      - name: Push to compiled-output branch
-        run: |
-          git checkout -b compiled-output
-          git add .
-          git commit -m "chore: compile TypeScript to JavaScript [skip ci]" || exit 0
-          git push -u origin compiled-output --force
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
       
       # Step 8: 复制文件
       - name: Copy files and compress
