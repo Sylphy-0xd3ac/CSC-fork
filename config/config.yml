@@ -1,0 +1,48 @@
+# Crosst-Chat Config v1
+# Version: 2.0.0-ts-beta
+version: 2.0.0-ts-beta
+
+# Root Passcode
+rootPasscode: "root"
+
+# Level Configuration
+level:
+  root: 10
+  admin: 4
+  bot: 3
+  member: 2
+  user: 1
+
+# Admin List
+adminList:
+  - "gEXXfL"
+
+# Bot List
+botList: []
+
+# Member List
+memberList: []
+
+# Data Maximum Length
+dataMaximumLength: 32768
+
+# Rate Limiter
+rateLimiter:
+  globalTimeRange: 10000
+  halfScoreTime: 30000
+  limit: 26
+
+# Alert Frequency
+alertFrequency: 180
+
+# Site Policy
+sitePolicy: {}
+
+# Salts
+salts:
+  auth: "TEMPORARYSALT"
+  client: "TEMPORARYSALT"
+  secret: "TEMPORARYSECRET"
+
+# Log Level
+logLevel: 0
