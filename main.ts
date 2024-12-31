@@ -12,7 +12,7 @@ async function main() {
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
     );
   } catch (error) {
-    console.error("Failed to parse config.json.");
+    console.error("Failed to parse config.yml.");
     console.error(error);
     process.exit(1);
   }
