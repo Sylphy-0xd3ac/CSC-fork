@@ -1,7 +1,6 @@
-// 用于管理 /config/config.json 文件，一个可能需要经常修改的配置文件
-
 import { readFileSync, watch, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import yaml from "js-yaml";
 
 export async function run(hazel, core, hold) {
   // 配置文件的路径
@@ -9,9 +8,11 @@ export async function run(hazel, core, hold) {
     hazel.mainConfig.baseDir,
     hazel.mainConfig.appConfigDir,
   );
+  
   // 从指定的路径加载配置文件
   try {
-    core.config = JSON.parse(readFileSync(configPath, { encoding: "utf-8" }));
+    const fileContents = readFileSync(configPath, { encoding: "utf-8" });
+    core.config = yaml.load(fileContents);
   } catch (error) {
     hazel.emit("error", error);
     core.config = {};
@@ -24,9 +25,8 @@ export async function run(hazel, core, hold) {
         await new Promise((resolve, reject) => {
           setTimeout(resolve, 300);
         });
-        core.config = JSON.parse(
-          readFileSync(configPath, { encoding: "utf-8" }),
-        );
+        const fileContents = readFileSync(configPath, { encoding: "utf-8" });
+        core.config = yaml.load(fileContents);
       } catch (error) {
         hazel.emit("error", error);
         return;
@@ -37,9 +37,8 @@ export async function run(hazel, core, hold) {
   // 保存配置文件
   core.saveConfig = function () {
     try {
-      writeFileSync(configPath, JSON.stringify(core.config, null, 2), {
-        encoding: "utf-8",
-      });
+      const yamlStr = yaml.dump(core.config);
+      writeFileSync(configPath, yamlStr, { encoding: "utf-8" });
     } catch (error) {
       hazel.emit("error", error);
     }

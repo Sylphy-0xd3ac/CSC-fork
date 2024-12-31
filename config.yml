@@ -1,0 +1,34 @@
+# Project Name
+projectName: "Crosst-Chat-TypeScript"
+
+# Port
+port: 52764
+
+# Base Directory
+baseDir: ""
+
+# Hazel Configuration
+hazel:
+  moduleDirs:
+    initsDir: "/init"
+    functionsDir: "/src"
+    staticDir: "/boot/boot.ts,/boot/boot_ws.ts"
+
+# Log Directory
+logDir: "./logs"
+
+# Behind Reverse Proxy
+behindReverseProxy: false
+
+# WebSocket Heartbeat Interval
+wsHeartbeatInterval: 16000
+
+# WebSocket Heartbeat Timeout
+wsHeartbeatTimeout: 10000
+
+# App Config Dir
+appConfigDir: "/config/config.yml"
+
+# Allow CIDR List Dir
+allowCIDRlistDir: "/config/allow.txt"
+
