@@ -31,7 +31,7 @@ export async function run(hazel, core, hold) {
     const argonTrip = await argon2.hash(password, {
       type: argon2.argon2id,
       timeCost: 3,
-      hashLength: 6,
+      hashLength: 4,
       memoryCost: 4096,
       parallelism: 2,
       secret: Buffer.from(core.config.salts.secret),
