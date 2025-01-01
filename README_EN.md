@@ -45,6 +45,7 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 ## Deployment and Configuration
 
 1. **Client Setup**:
+   Compress `client.zip`
    Copy the `client` folder and configure your web server to serve the frontend files.
 
 2. **Run on the Same Server**:
