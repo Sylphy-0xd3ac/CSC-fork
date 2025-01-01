@@ -84,7 +84,7 @@ export const requiredData = [
       value: [{ num: "编号查找" }, { text: "文本查找" }],
     },
   },
-  { text: { description: "查找关键字" } }
+  { text: { description: "查找关键字" } },
 ];
 export const moduleType = "ws-command";
 export const description =
