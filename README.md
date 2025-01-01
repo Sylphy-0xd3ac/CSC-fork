@@ -2,7 +2,7 @@
 
 [EN](./README_EN.md)
 
-# 十字街聊天室 - TypeScript
+# 十字街聊天室 - TypeScript | 新年快乐!
 
 十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript.
 
