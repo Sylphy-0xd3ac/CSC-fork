@@ -2,6 +2,8 @@
 
 The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street version](https://github.com/CrosSt-Chat/CSC-main/). This fork primarily converts the original JavaScript implementation to TypeScript.
 
+![Alt](https://repobeats.axiom.co/api/embed/62e128c0232fd379c2494ea34922538dd50387c4.svg "Repobeats analytics image")
+
 ---
 
 ## Local Testing
@@ -20,7 +22,7 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
    Download Actions artifacts.
 
    ```bash
-   cd CSC-main
+   cd source
    ```
 
 2. **Install Dependencies**:
