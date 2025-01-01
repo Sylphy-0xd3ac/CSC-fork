@@ -8,7 +8,7 @@ export async function run(hazel, core, hold) {
     hazel.mainConfig.baseDir,
     hazel.mainConfig.appConfigDir,
   );
-  
+
   // 从指定的路径加载配置文件
   try {
     const fileContents = readFileSync(configPath, { encoding: "utf-8" });
