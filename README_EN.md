@@ -1,4 +1,4 @@
-# CrosSt Street Chatroom - TypeScript Version
+# CrosSt Street Chatroom - TypeScript Version | Happy New Year!
 
 The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street version](https://github.com/CrosSt-Chat/CSC-main/). This fork primarily converts the original JavaScript implementation to TypeScript.
 
