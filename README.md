@@ -12,7 +12,7 @@
 
 ### 编译版本准备
 
-[Node.js](https://nodejs.org/) 14.0 或更高版本（十字街TS后端一般在 Node.js 最新 LTS 版本上测试，推荐您使用 Node.js 最新 LTS 版本运行）。
+[Node.js](https://nodejs.org/) 18.0 或更高版本（十字街TS后端一般在 Node.js 最新 LTS 版本上测试，推荐您使用 Node.js 最新 LTS 版本运行）。
 
 ### 安装
 
