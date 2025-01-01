@@ -39,7 +39,7 @@ jobs:
       # Step 7: 删除所有 `.ts` 文件
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
-      
+
       # Step 8: 复制文件
       - name: Copy files and compress
         run: |
@@ -54,4 +54,3 @@ jobs:
         with:
           name: source
           path: source.tar.gz
-        

@@ -55,17 +55,9 @@ export async function run(hazel, core, hold) {
     } catch (error) {
       // 错误处理程序自身发生错误，打印错误内容
       let fileLogger = new core.fileLogger("HandleError");
-      fileLogger.error(
-        "ERROR HANDLER ERROR" +
-          "\n" +
-          error.stack,
-      );
+      fileLogger.error("ERROR HANDLER ERROR" + "\n" + error.stack);
       let consoleLogger = new core.consoleLogger("HandleError");
-      consoleLogger.error(
-        "ERROR HANDLER ERROR" +
-          "\n" +
-          error.stack,
-      );
+      consoleLogger.error("ERROR HANDLER ERROR" + "\n" + error.stack);
     }
   });
 }

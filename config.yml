@@ -31,4 +31,3 @@ appConfigDir: "/config/config.yml"
 
 # Allow CIDR List Dir
 allowCIDRlistDir: "/config/allow.txt"
-
