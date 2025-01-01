@@ -1,7 +1,7 @@
 {
   "name": "crosst-chat-ts",
   "description": "A minimal, distraction-free chat TypeScript application based on Hazel Core TypeScript and hack.chat.",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-ts-beta",
   "scripts": {
     "build": "tsc",
     "dev": "deno run --allow-all --unstable-sloppy-imports --unstable-node-globals main.ts",
