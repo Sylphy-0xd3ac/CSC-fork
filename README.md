@@ -6,6 +6,8 @@
 
 十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript.
 
+![Alt](https://repobeats.axiom.co/api/embed/62e128c0232fd379c2494ea34922538dd50387c4.svg "Repobeats analytics image")
+
 ## 本地测试
 
 ### 编译版本准备
