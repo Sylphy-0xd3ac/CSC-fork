@@ -10,7 +10,7 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 
 ### Prerequisites
 
-- **Node.js**: Ensure you have [Node.js](https://nodejs.org/) version 14.0 or higher installed.
+- **Node.js**: Ensure you have [Node.js](https://nodejs.org/) version 18.0 or higher installed.
   - The backend is tested with the latest LTS version of Node.js, so it is recommended to use the latest LTS version.
 
 ---
