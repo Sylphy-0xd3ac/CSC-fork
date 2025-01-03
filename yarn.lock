@@ -5,6 +5,48 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@deno/darwin-arm64@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/darwin-arm64@npm:2.1.4"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@deno/darwin-x64@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/darwin-x64@npm:2.1.4"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@deno/linux-arm64-glibc@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/linux-arm64-glibc@npm:2.1.4"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@deno/linux-x64-glibc@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/linux-x64-glibc@npm:2.1.4"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@deno/win32-arm64@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/win32-arm64@npm:2.1.4"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@deno/win32-x64@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@deno/win32-x64@npm:2.1.4"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.4.1
   resolution: "@eslint-community/eslint-utils@npm:4.4.1"
@@ -211,6 +253,13 @@ __metadata:
   version: 0.1.1
   resolution: "@pkgr/core@npm:0.1.1"
   checksum: 10c0/3f7536bc7f57320ab2cf96f8973664bef624710c403357429fbf680a5c3b4843c1dbd389bb43daa6b1f6f1f007bb082f5abcb76bb2b5dc9f421647743b71d3d8
+  languageName: node
+  linkType: hard
+
+"@types/deno@npm:^2":
+  version: 2.0.0
+  resolution: "@types/deno@npm:2.0.0"
+  checksum: 10c0/90efbb2744df823434e5f9d34e635ad96b0379637b03a5c0dba38cf314ec8074e676d6e46b880a7b9d412b4960ed6a7934995af42b7e1d1a02b3a140dff9780d
   languageName: node
   linkType: hard
 
@@ -576,10 +625,12 @@ __metadata:
   resolution: "crosst-chat-ts@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.17.0"
+    "@types/deno": "npm:^2"
     "@types/js-yaml": "npm:^4"
     "@types/node": "npm:^22.10.2"
     "@types/ws": "npm:^8.5.13"
     argon2: "npm:^0.41.1"
+    deno: "npm:^2.1.4"
     eslint: "npm:^9.17.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-prettier: "npm:^5.2.1"
@@ -620,6 +671,35 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10c0/7f0ee496e0dff14a573dc6127f14c95061b448b87b995fc96c017ce0a1e66af1675e73f1d6064407975bc4ea6ab679497a29fff7b5b9c4e99cb10797c1ad0b4c
+  languageName: node
+  linkType: hard
+
+"deno@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "deno@npm:2.1.4"
+  dependencies:
+    "@deno/darwin-arm64": "npm:2.1.4"
+    "@deno/darwin-x64": "npm:2.1.4"
+    "@deno/linux-arm64-glibc": "npm:2.1.4"
+    "@deno/linux-x64-glibc": "npm:2.1.4"
+    "@deno/win32-arm64": "npm:2.1.4"
+    "@deno/win32-x64": "npm:2.1.4"
+  dependenciesMeta:
+    "@deno/darwin-arm64":
+      optional: true
+    "@deno/darwin-x64":
+      optional: true
+    "@deno/linux-arm64-glibc":
+      optional: true
+    "@deno/linux-x64-glibc":
+      optional: true
+    "@deno/win32-arm64":
+      optional: true
+    "@deno/win32-x64":
+      optional: true
+  bin:
+    deno: bin.cjs
+  checksum: 10c0/ba8996acd19ca523e6bcb450656c7584b5aa6387d965e7e36705c670727e19c002e579e3f96a5a12d6412c473eb96732ef6d131c846b41ca644454fdb4411f00
   languageName: node
   linkType: hard
 
