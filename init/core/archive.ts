@@ -42,8 +42,6 @@ export async function run(hazel, core, hold) {
     } catch (error) {
       hazel.emit("error", error);
     }
-    let fileLogger = new core.fileLogger("ARCHIVE");
-    fileLogger.info(`${content.trim()}`);
     let consoleLogger = new core.consoleLogger("ARCHIVE");
     consoleLogger.info(`${content.trim()}`);
   };
