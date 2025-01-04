@@ -40,7 +40,7 @@ jobs:
         run: npm run build
 
       - name: Copy package.json from root
-        run: cp ../package.json .
+        run: cp ./package.json dist/
 
       - name: Copy yarn.lock to dist
         run: cp ./yarn.lock dist/
