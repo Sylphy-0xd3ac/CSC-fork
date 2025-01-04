@@ -19,19 +19,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18" # 可根据需要选择 Node.js 版本
-
-      # Step 6: 编译代码
-      - name: Compile TypeScript
-        run: npm run build
-
-      # Step 3: 更改目录
-      - name: Change directory
-        run: cd dist
-
+      
       # Step 3: 安装依赖
       - name: Install dependencies
-        run: npm install
-
+        run: |
+          corepack enable
+          echo y | yarn
+          yarn install
+      
       # Step 4: 运行 lint
       - name: Run lint
         run: npm run lint
@@ -40,9 +35,22 @@ jobs:
       - name: Run format
         run: npm run format
 
-      # Step 7: 删除所有 `.ts` 文件
-      - name: Delete TypeScript files
-        run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
+      # Step 6: 编译代码
+      - name: Compile TypeScript
+        run: npm run build
+
+      # Step 3: 更改目录
+      - name: Change directory
+        run: cd dist
+      
+      - name: Copy yarn.lock from root
+        run: cp ../yarn.lock .
+      
+      - name: Copy node_modules from root
+        run: cp -r ../node_modules .
+      
+      - name: Copy package.json from root
+        run: cp ../package.json .
 
       # Step 8: 复制文件
       - name: Copy files and compress

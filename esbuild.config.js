@@ -33,9 +33,6 @@ build(buildOptions).then(() => {
   // 拷贝mainConfig
   copyFileSync('config.yml', 'dist/config.yml');
 
-  // 拷贝package.json
-  copyFileSync('package.json', 'dist/package.json');
-
   let config = load(readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }));
   config.hazel.moduleDirs.staticDir = "/boot/boot.js,/boot/boot_ws.js";
   writeFileSync("./dist/config.yml", dump(config, 'dist/config.yml') , { encoding: "utf-8" });
