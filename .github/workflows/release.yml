@@ -64,6 +64,6 @@ jobs:
           files: source.tar.gz
           name: Release ${{ github.ref }}
           generate_release_notes: true
-          tag_name: Tag ${{ github.ref }}
+          tag_name: nightly
           body: |
             Release for ${{ github.ref }}.
