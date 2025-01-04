@@ -4,8 +4,5 @@
     "target": "ESNext",
     "module": "ESNext",
     "allowSyntheticDefaultImports": true
-  },
-  "ts-node": {
-    "transpileOnly": true
   }
 }
