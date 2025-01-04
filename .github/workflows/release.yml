@@ -17,7 +17,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yarn
+          corepack enable
+          echo y | yarn
           yarn install
 
       - name: Run lint
