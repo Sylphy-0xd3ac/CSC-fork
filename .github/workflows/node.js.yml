@@ -39,10 +39,6 @@ jobs:
       - name: Compile TypeScript
         run: npm run build
 
-      # Step 3: 更改目录
-      - name: Change directory
-        run: cd dist
-
       - name: Copy package.json from root
         run: cp ../package.json .
 
@@ -54,6 +50,10 @@ jobs:
 
       - name: Copy .yarn to dist
         run: cp -r ./.yarn dist/
+
+      # Step 3: 更改目录
+      - name: Change directory
+        run: cd dist
 
       # Step 8: 复制文件
       - name: Copy files and compress
