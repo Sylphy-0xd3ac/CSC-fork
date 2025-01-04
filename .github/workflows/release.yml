@@ -62,8 +62,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: source.tar.gz
-          name: Release ${{ github.ref }}
+          name: Release ${{ github.sha }}
           generate_release_notes: true
-          tag_name: nightly
+          tag_name: ${{ github.sha }}
           body: |
-            Release for ${{ github.ref }}.
+            Release for ${{ github.sha }}.
