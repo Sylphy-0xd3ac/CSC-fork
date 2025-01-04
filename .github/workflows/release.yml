@@ -14,29 +14,41 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-      
-      - name: Compile TypeScript
-          run: npm run build
 
-      - name: Change directory
-        run: cd dist
-
+      # Step 3: 安装依赖
       - name: Install dependencies
         run: |
           corepack enable
           echo y | yarn
           yarn install
 
+      # Step 4: 运行 lint
       - name: Run lint
         run: npm run lint
 
+      # Step 5: 运行 format
       - name: Run format
         run: npm run format
 
-      - name: Delete TypeScript files
-        run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
+      # Step 6: 编译代码
+      - name: Compile TypeScript
+        run: npm run build
 
-      - name: Generate source.tar.gz
+      # Step 3: 更改目录
+      - name: Change directory
+        run: cd dist
+
+      - name: Copy yarn.lock from root
+        run: cp ../yarn.lock .
+
+      - name: Copy node_modules from root
+        run: cp -r ../node_modules .
+
+      - name: Copy package.json from root
+        run: cp ../package.json .
+
+      # Step 8: 复制文件
+      - name: Copy files and compress
         run: |
           mkdir -p source
           find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;

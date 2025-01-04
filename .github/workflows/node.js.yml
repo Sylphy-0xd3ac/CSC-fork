@@ -19,14 +19,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18" # 可根据需要选择 Node.js 版本
-      
+
       # Step 3: 安装依赖
       - name: Install dependencies
         run: |
           corepack enable
           echo y | yarn
           yarn install
-      
+
       # Step 4: 运行 lint
       - name: Run lint
         run: npm run lint
@@ -42,13 +42,13 @@ jobs:
       # Step 3: 更改目录
       - name: Change directory
         run: cd dist
-      
+
       - name: Copy yarn.lock from root
         run: cp ../yarn.lock .
-      
+
       - name: Copy node_modules from root
         run: cp -r ../node_modules .
-      
+
       - name: Copy package.json from root
         run: cp ../package.json .
 
