@@ -20,6 +20,14 @@ jobs:
         with:
           node-version: "18" # 可根据需要选择 Node.js 版本
 
+      # Step 6: 编译代码
+      - name: Compile TypeScript
+        run: npm run build
+
+      # Step 3: 更改目录
+      - name: Change directory
+        run: cd dist
+
       # Step 3: 安装依赖
       - name: Install dependencies
         run: npm install
@@ -31,10 +39,6 @@ jobs:
       # Step 5: 运行 format
       - name: Run format
         run: npm run format
-
-      # Step 6: 编译代码
-      - name: Compile TypeScript
-        run: npx tsc
 
       # Step 7: 删除所有 `.ts` 文件
       - name: Delete TypeScript files
