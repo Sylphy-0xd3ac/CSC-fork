@@ -14,6 +14,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
+      
+      - name: Compile TypeScript
+          run: npm run build
+
+      - name: Change directory
+        run: cd dist
 
       - name: Install dependencies
         run: |
@@ -26,9 +32,6 @@ jobs:
 
       - name: Run format
         run: npm run format
-
-      - name: Compile TypeScript
-        run: npx tsc
 
       - name: Delete TypeScript files
         run: find . -name "*.ts" -type f -not -path "./node_modules/*" -exec rm -f {} +
