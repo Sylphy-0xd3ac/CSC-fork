@@ -1,4 +1,4 @@
-name: Nightly Release
+name: Release
 
 on:
   workflow_dispatch:
@@ -37,10 +37,11 @@ jobs:
           tar -zcf source.tar source
           gzip -r source.tar
 
-      - name: Generate release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: generate_notes
-        run: |
-          gh release delete nightly
-          gh release create nightly -t "Nightly Release" source.tar.gz --generate-notes
+      - name: Generate Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: source.tar.gz
+          name: Release ${{ github.ref }}
+          generate_release_notes: true
+          body: |
+            Release for ${{ github.ref }}.
