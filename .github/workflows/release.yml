@@ -59,6 +59,8 @@ jobs:
           gzip -r source.tar
 
       - name: Generate Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete nightly --cleanup-tag -y -R ${{ github.repository }}
           gh release create nightly source.tar.gz --title "Nightly Build" -R ${{ github.repository }} --generate-notes
