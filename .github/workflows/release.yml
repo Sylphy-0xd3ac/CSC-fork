@@ -64,6 +64,6 @@ jobs:
           files: source.tar.gz
           name: Release ${{ github.ref }}
           generate_release_notes: true
-          tag_name: ${{ github.ref }}
+          tag_name: Tag ${{ github.ref }}
           body: |
             Release for ${{ github.ref }}.
