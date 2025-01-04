@@ -59,11 +59,6 @@ jobs:
           gzip -r source.tar
 
       - name: Generate Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: source.tar.gz
-          name: Release ${{ github.sha }}
-          generate_release_notes: true
-          tag_name: ${{ github.sha }}
-          body: |
-            Release for ${{ github.sha }}.
+        run: |
+          gh release delete nightly --cleanup-tag -y -R ${{ github.repository }}
+          gh release create nightly source.tar.gz --title "Nightly Build" -R ${{ github.repository }} --generate-notes
