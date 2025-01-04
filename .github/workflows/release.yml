@@ -16,7 +16,9 @@ jobs:
           node-version: "18"
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          yarn
+          yarn install
 
       - name: Run lint
         run: npm run lint
@@ -43,5 +45,6 @@ jobs:
           files: source.tar.gz
           name: Release ${{ github.ref }}
           generate_release_notes: true
+          tag_name: ${{ github.ref }}
           body: |
             Release for ${{ github.ref }}.
