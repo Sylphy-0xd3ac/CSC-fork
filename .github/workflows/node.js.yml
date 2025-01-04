@@ -46,12 +46,14 @@ jobs:
       - name: Copy package.json from root
         run: cp ../package.json .
 
-      # Step 3: 安装依赖
-      - name: Install dependencies
-        run: |
-          corepack enable
-          echo y | yarn
-          yarn install
+      - name: Copy yarn.lock to dist
+        run: cp ./yarn.lock dist/
+      
+      - name: Copy node_modules to dist
+        run: cp -r ./node_modules dist/
+
+      - name: Copy .yarn to dist
+        run: cp -r ./.yarn dist/
 
       # Step 8: 复制文件
       - name: Copy files and compress
