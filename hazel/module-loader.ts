@@ -1,4 +1,4 @@
-import recursiveReadDir from "./recursive-readdir";
+import recursiveReadDir from "./recursive-readdir.js";
 import path from "node:path";
 
 export async function importModule(filePath: string, loadID: string) {
