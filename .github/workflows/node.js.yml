@@ -51,21 +51,16 @@ jobs:
       - name: Copy .yarn to dist
         run: cp -r ./.yarn dist/
 
-      # Step 3: 更改目录
-      - name: Change directory
-        run: cd dist
-
       # Step 8: 复制文件
       - name: Copy files and compress
         run: |
           mkdir -p source
-          find . -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
+          find dist -mindepth 1 -maxdepth 1 -not -name 'source' -exec cp -r {} source/ \;
           tar -zcf source.tar source
-          gzip -r source.tar
 
       # Step 9: 上传文件
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: source
-          path: source.tar.gz
+          path: source.tar
