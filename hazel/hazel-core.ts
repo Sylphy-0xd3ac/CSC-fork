@@ -8,12 +8,14 @@ export default class Hazel extends EventEmitter2 {
   loadedInits: any[];
   moduleDir: Map<string, string>;
   loadHistory: Map<string, string[]>;
+  loadedStatics: any[];
 
   constructor(mainConfig: any) {
     super();
     this.mainConfig = mainConfig;
     this.loadedFunctions = new Map();
     this.loadedInits = [];
+    this.loadedStatics = [];
     this.moduleDir = new Map();
     this.loadHistory = new Map();
 
@@ -34,23 +36,7 @@ export default class Hazel extends EventEmitter2 {
   async initialize(forceInit) {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
 
-    if ((await this.loadModules(forceInit)) || forceInit) {
-      const staticDirs = this.mainConfig.hazel.moduleDirs.staticsDir.split(",");
-      for (const staticDir of staticDirs) {
-        await import("file:///" + this.mainConfig.baseDir + staticDir)
-          .then((module) => {
-            module.default(this, this.#core, this.#hold);
-          })
-          .catch((error) => {
-            this.emit("error", error);
-            console.error(error);
-            if (!forceInit) {
-              process.exit();
-            }
-          });
-        console.log(`√ Static function ${staticDir} executed.\n`);
-      }
-    } else {
+    if (!(await this.loadModules(forceInit)) || forceInit) {
       process.exit();
     }
     this.emit("initialized");
@@ -156,7 +142,7 @@ export default class Hazel extends EventEmitter2 {
       this,
       this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
       "init",
-      await this.randomLoadID(),
+      await this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedInits, existError: initsExistError } = result;
     if (!forceLoad && initsExistError) {
@@ -189,7 +175,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
         "function",
-        await this.randomLoadID(),
+        await this.randomLoadID,
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && functionExistError) {
       return false;
@@ -201,6 +187,35 @@ export default class Hazel extends EventEmitter2 {
       `√ Initialize functions ${this.loadedFunctions.size} complete!\n`,
     );
 
-    return !(initsExistError || functionExistError);
+    let staticsDir = this.mainConfig.hazel.moduleDirs.staticsDir.split(",");
+
+    let { moduleList: loadedStatics, existError: staticExistError } =
+      (await loadModule(
+        this,
+        this.mainConfig.baseDir + staticsDir,
+        "static",
+        await this.randomLoadID,
+      )) as { moduleList: any; existError: boolean };
+    if (!forceLoad && staticExistError) {
+      return false;
+    }
+
+    this.loadedStatics = loadedStatics;
+
+    this.loadedStatics.forEach((staticFunction) => {
+      staticFunction.run(this, this.#core, this.#hold).catch((error) => {
+        this.emit("error", error);
+        console.error(error);
+        if (!forceLoad) {
+          return false;
+        }
+      });
+    });
+
+    console.log(
+      `√ Initialize statics ${this.loadedStatics.length} complete!\n`,
+    );
+
+    return !(initsExistError || functionExistError || staticExistError);
   }
 }
