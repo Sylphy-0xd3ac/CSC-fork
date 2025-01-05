@@ -22,5 +22,5 @@ export async function run(hazel, core, hold) {
     resolve(true);
   });
 
-  hazel.emit("ws_initialized");
+  hazel.emit("initialized");
 }
