@@ -15,7 +15,7 @@ hazel:
   moduleDirs:
     initsDir: "/init"
     functionsDir: "/src"
-    staticsDir: "/boot/boot.ts,/boot/boot_ws.ts"
+    staticsDir: "/boot"
 
 # Log Directory
 logDir: "./logs"

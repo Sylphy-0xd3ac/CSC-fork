@@ -10,14 +10,14 @@ export default async function loadDir(
   hazel: any,
   dirName: string,
   loadType: string,
-  loadID: string,
+  loadID: Function,
 ) {
   let existError = false;
 
   let moduleList;
   if (loadType === "function") {
     moduleList = new Map();
-  } else if (loadType === "init") {
+  } else if (loadType === "init" || loadType === "static") {
     moduleList = [];
   }
 
@@ -39,7 +39,7 @@ export default async function loadDir(
       console.log("* Initializing " + filePath + " ...");
       let currentModule;
       try {
-        currentModule = await importModule(filePath, loadID);
+        currentModule = await importModule(filePath, loadID());
       } catch (error) {
         hazel.emit("error", error);
         console.error(error);
@@ -105,12 +105,21 @@ export default async function loadDir(
         const history = hazel.loadHistory.get(filePath) || [];
         history.push(await hazel.randomLoadID());
         hazel.loadHistory.set(filePath, history);
+      } else if (loadType === "static") {
+        moduleList.push(currentModule);
+        hazel.moduleDir.set(
+          path.basename(filePath, path.extname(filePath)),
+          filePath,
+        );
+        const history = hazel.loadHistory.get(filePath) || [];
+        history.push(await hazel.randomLoadID());
+        hazel.loadHistory.set(filePath, history);
       }
     }
   }
 
   if (loadType === "init") {
-    moduleList.sort((first, last) => first.priority - last.priority);
+    moduleList.sort((first, last) => last.priority - first.priority);
   }
 
   return { moduleList, existError };

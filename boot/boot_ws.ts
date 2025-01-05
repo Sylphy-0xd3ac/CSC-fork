@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 
-export default async function (hazel, core, hold) {
+export async function run(hazel, core, hold) {
   // 尽可能简单地创建一个 WebSocket 服务器
   hold.wsServer = new WebSocketServer({ port: hazel.mainConfig.port });
 
@@ -23,8 +23,4 @@ export default async function (hazel, core, hold) {
   });
 
   hazel.emit("ws_initialized");
-  let fileLogger = new core.fileLogger("BOOT").extend("WS");
-  fileLogger.info("WebSocket server initialized");
-  let consoleLogger = new core.consoleLogger("BOOT").extend("WS");
-  consoleLogger.info("WebSocket server initialized");
 }
