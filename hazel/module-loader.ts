@@ -23,11 +23,17 @@ export default async function loadDir(
 
   for (const filePath of recursiveReadDir(dirName)) {
     if (
-      (!filePath.includes("/_") &&
-        (filePath.endsWith(".js") ||
-          filePath.endsWith(".mjs") ||
-          filePath.endsWith(".ts"))) ||
-      filePath.endsWith(".cjs")
+      await (async () => {
+        if (hazel.mainConfig.runOnTS)
+          return !filePath.includes("/_") && filePath.endsWith(".ts");
+        else
+          return (
+            !filePath.includes("/_") &&
+            (filePath.endsWith(".js") ||
+              filePath.endsWith(".mjs") ||
+              filePath.endsWith(".cjs"))
+          );
+      })()
     ) {
       //if (!filePath.includes('/_') && (filePath.endsWith('.ts'))) {
       console.log("* Initializing " + filePath + " ...");

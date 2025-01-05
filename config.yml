@@ -7,12 +7,15 @@ port: 52764
 # Base Directory
 baseDir: ""
 
+# Running on Development TypeScript Mode
+runOnTS: true
+
 # Hazel Configuration
 hazel:
   moduleDirs:
     initsDir: "/init"
     functionsDir: "/src"
-    staticDir: "/boot/boot.ts,/boot/boot_ws.ts"
+    staticsDir: "/boot/boot.ts,/boot/boot_ws.ts"
 
 # Log Directory
 logDir: "./logs"
