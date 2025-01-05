@@ -133,7 +133,7 @@ export async function run(hazel, core, hold) {
     }
     try {
       writeFileSync(
-        hazel.mainConfig.logDir + "/" + Time.template("yyyy-MM-dd") + ".archive.txt",
+        hazel.mainConfig.logDir + "/" + Time.template("yyyy-MM-dd") + "-archive.txt",
         Time.template("yyyy-MM-dd hh:mm:ss.SSS ") + content,
         { encoding: "utf-8", flag: "a" },
       );
