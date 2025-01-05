@@ -44,7 +44,7 @@ jobs:
 
       - name: Copy yarn.lock to dist
         run: cp ./yarn.lock dist/
-      
+
       - name: Copy node_modules to dist
         run: cp -r ./node_modules dist/
 

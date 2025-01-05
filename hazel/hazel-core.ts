@@ -35,7 +35,7 @@ export default class Hazel extends EventEmitter2 {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
 
     if ((await this.loadModules(forceInit)) || forceInit) {
-      const staticDirs = this.mainConfig.hazel.moduleDirs.staticDir.split(",");
+      const staticDirs = this.mainConfig.hazel.moduleDirs.staticsDir.split(",");
       for (const staticDir of staticDirs) {
         await import("file:///" + this.mainConfig.baseDir + staticDir)
           .then((module) => {

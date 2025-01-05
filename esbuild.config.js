@@ -38,6 +38,7 @@ build(buildOptions)
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
     );
     config.hazel.moduleDirs.staticDir = "/boot/boot.js,/boot/boot_ws.js";
+    config.runOnTS = false;
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
