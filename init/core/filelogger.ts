@@ -327,7 +327,7 @@ export async function run(hazel, core, hold) {
       let textArray = text.split("\n");
       textArray.forEach((splitText) => {
         writeFileSync(
-          hazel.mainConfig.logDir + "/" + Time.template("yyyy-MM-dd") + ".log",
+          hazel.mainConfig.logDir + "/" + Time.template("yyyy-MM-dd") + "-log.txt",
           splitText + "\n",
           { encoding: "utf-8", flag: "a" },
         );
