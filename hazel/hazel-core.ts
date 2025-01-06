@@ -35,7 +35,6 @@ export default class Hazel extends EventEmitter2 {
 
   async initialize(forceInit) {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
-
     if (!(await this.loadModules(forceInit)) || forceInit) {
       process.exit();
     }
@@ -129,7 +128,7 @@ export default class Hazel extends EventEmitter2 {
     this.emit("reload-start");
     if (
       !forceReload &&
-      (await this.loadModules(forceReload || false)) == false
+      (await this.loadInitAndFunciton(forceReload || false)) == false
     ) {
       return false;
     }
@@ -217,5 +216,57 @@ export default class Hazel extends EventEmitter2 {
     );
 
     return !(initsExistError || functionExistError || staticExistError);
+  }
+  async loadInitAndFunciton(forceLoad: boolean) {
+    let result = (await loadModule(
+      this,
+      this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
+      "init",
+      await this.randomLoadID,
+    )) as { moduleList: any; existError: boolean };
+    let { moduleList: loadedInits, existError: initsExistError } = result;
+    if (!forceLoad && initsExistError) {
+      return false;
+    }
+
+    this.loadedInits = loadedInits;
+
+    this.removeAllListeners();
+    this.on("error", () => {});
+
+    for (let property in this.#core) {
+      delete this.#core[property];
+    }
+
+    this.loadedInits.forEach((initFunction) => {
+      initFunction.run(this, this.#core, this.#hold).catch((error) => {
+        this.emit("error", error);
+        console.error(error);
+        if (!forceLoad) {
+          return false;
+        }
+      });
+    });
+
+    console.log(`√ Initialize inits ${this.loadedInits.length} complete!\n`);
+
+    let { moduleList: loadedFunctions, existError: functionExistError } =
+      (await loadModule(
+        this,
+        this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
+        "function",
+        await this.randomLoadID,
+      )) as { moduleList: any; existError: boolean };
+    if (!forceLoad && functionExistError) {
+      return false;
+    }
+
+    this.loadedFunctions = loadedFunctions;
+
+    console.log(
+      `√ Initialize functions ${this.loadedFunctions.size} complete!\n`,
+    );
+
+    return !(initsExistError || functionExistError);
   }
 }
