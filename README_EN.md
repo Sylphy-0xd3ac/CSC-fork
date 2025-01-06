@@ -25,21 +25,14 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
    cd source
    ```
 
-2. **Install Dependencies**:
-   Run the following command in the backend directory:
-
-   ```bash
-   npm install
-   ```
-
-3. **Start the Backend**:
+4. **Start the Backend**:
    Execute:
 
    ```bash
    node main.js
    ```
 
-4. **Test the Backend**:
+5. **Test the Backend**:
    Open the `index.html` file in the `client` folder using your browser. If the homepage is displayed successfully, the backend is running correctly.
 
 ---
