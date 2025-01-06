@@ -29,7 +29,7 @@ export default class Hazel extends EventEmitter2 {
   };
   #hold = {};
 
-  async randomLoadID() {
+  randomLoadID() {
     return Math.random().toString(36).slice(4, 10);
   }
 
@@ -141,7 +141,7 @@ export default class Hazel extends EventEmitter2 {
       this,
       this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
       "init",
-      await this.randomLoadID,
+      this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedInits, existError: initsExistError } = result;
     if (!forceLoad && initsExistError) {
@@ -174,7 +174,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
         "function",
-        await this.randomLoadID,
+        this.randomLoadID,
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && functionExistError) {
       return false;
@@ -193,7 +193,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + staticsDir,
         "static",
-        await this.randomLoadID,
+        this.randomLoadID,
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && staticExistError) {
       return false;
@@ -222,7 +222,7 @@ export default class Hazel extends EventEmitter2 {
       this,
       this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.initsDir,
       "init",
-      await this.randomLoadID,
+      this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedInits, existError: initsExistError } = result;
     if (!forceLoad && initsExistError) {
@@ -255,7 +255,7 @@ export default class Hazel extends EventEmitter2 {
         this,
         this.mainConfig.baseDir + this.mainConfig.hazel.moduleDirs.functionsDir,
         "function",
-        await this.randomLoadID,
+        this.randomLoadID,
       )) as { moduleList: any; existError: boolean };
     if (!forceLoad && functionExistError) {
       return false;

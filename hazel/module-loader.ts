@@ -10,7 +10,7 @@ export default async function loadDir(
   hazel: any,
   dirName: string,
   loadType: string,
-  loadID: Function,
+  loadID: () => string,
 ) {
   let existError = false;
 
@@ -47,7 +47,7 @@ export default async function loadDir(
         continue;
       }
 
-      if (typeof currentModule.run != "function") {
+      if (typeof currentModule.run !== "function") {
         hazel.emit(
           "error",
           new Error(filePath + ' should export a function named "run".'),
