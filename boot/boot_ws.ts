@@ -21,6 +21,4 @@ export async function run(hazel, core, hold) {
     }, hazel.mainConfig.wsHeartbeatInterval);
     resolve(true);
   });
-
-  hazel.emit("initialized");
 }
