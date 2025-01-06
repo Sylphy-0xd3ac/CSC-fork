@@ -1,4 +1,5 @@
 import { stdout } from "supports-color";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;
@@ -323,6 +324,25 @@ export async function run(hazel, core, hold) {
       console.log(text + "\n");
     },
   });
-  core.consoleLogger = Logger;
+  Logger.targets.push({
+    showTime: "yyyy-MM-dd hh:mm:ss.SSS",
+    print: function (text) {
+      if (!existsSync(hazel.mainConfig.logDir)) {
+        mkdirSync(hazel.mainConfig.logDir);
+      }
+      let textArray = text.split("\n");
+      textArray.forEach((splitText) => {
+        writeFileSync(
+          hazel.mainConfig.logDir +
+            "/" +
+            Time.template("yyyy-MM-dd") +
+            "-log.txt",
+          splitText + "\n",
+          { encoding: "utf-8", flag: "a" },
+        );
+      });
+    },
+  });
+  core.logger = Logger;
 }
 export const priority = 0;
