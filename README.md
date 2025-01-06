@@ -18,7 +18,7 @@
 
 1. 下载Action最新版本释放文件包。
 
-2. 进入十字街后端源代码目录（CSC-main），并运行 `npm install` 安装依赖。
+2. 进入十字街后端源代码目录（CSC-main）。
 
 3. 运行 `node main.js` 启动十字街后端。
 
