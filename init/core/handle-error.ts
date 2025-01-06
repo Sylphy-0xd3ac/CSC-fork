@@ -24,18 +24,8 @@ export async function run(hazel, core, hold) {
                 id +
                 '"}}',
             );
-            // 将 socket 信息写入日志
-            let fileLogger = new core.fileLogger("HandleError");
-            fileLogger.error(
-              "SERVER ERROR #" +
-                id +
-                "\n" +
-                error.stack +
-                "\n" +
-                JSON.stringify(arg1, null, 2),
-            );
-            let consoleLogger = new core.consoleLogger("HandleError");
-            consoleLogger.error(
+            let logger = new core.logger("HandleError");
+            logger.error(
               "SERVER ERROR #" +
                 id +
                 "\n" +
@@ -47,19 +37,15 @@ export async function run(hazel, core, hold) {
         }
       } else {
         // 记日志
-        let fileLogger = new core.fileLogger("HandleError");
-        fileLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
-        let consoleLogger = new core.consoleLogger("HandleError");
-        consoleLogger.error("SERVER ERROR #" + id + "\n" + error.stack);
+        let logger = new core.logger("HandleError");
+        logger.error("SERVER ERROR #" + id + "\n" + error.stack);
       }
     } catch (error) {
       // 错误处理程序自身发生错误，打印错误内容
-      let fileLogger = new core.fileLogger("HandleError");
-      fileLogger.error("ERROR HANDLER ERROR" + "\n" + error.stack);
-      let consoleLogger = new core.consoleLogger("HandleError");
-      consoleLogger.error("ERROR HANDLER ERROR" + "\n" + error.stack);
+      let logger = new core.logger("HandleError");
+      logger.error("ERROR HANDLER ERROR" + "\n" + error.stack);
     }
   });
 }
 
-export const priority = -1;
+export const priority = 32;
