@@ -1,6 +1,4 @@
 // 日志记录器
-import { writeFileSync, existsSync, mkdirSync } from "node:fs";
-
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;
@@ -126,25 +124,9 @@ export async function run(hazel, core, hold) {
     content = content.replace(/\r/g, "\\r");
     content += "\n";
 
-    // 写入日志
-    // 如果日志目录不存在，则创建
-    if (!existsSync(hazel.mainConfig.logDir)) {
-      mkdirSync(hazel.mainConfig.logDir);
-    }
-    try {
-      writeFileSync(
-        hazel.mainConfig.logDir +
-          "/" +
-          Time.template("yyyy-MM-dd") +
-          "-archive.txt",
-        Time.template("yyyy-MM-dd hh:mm:ss.SSS ") + content,
-        { encoding: "utf-8", flag: "a" },
-      );
-    } catch (error) {
-      hazel.emit("error", error);
-    }
-    let consoleLogger = new core.consoleLogger("ARCHIVE");
-    consoleLogger.info(`${content.trim()}`);
+    // 输出到控制台和文件
+    let logger = new core.logger("ARCHIVE");
+    logger.info(`${content.trim()}`);
   };
 }
 
