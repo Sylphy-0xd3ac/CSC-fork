@@ -508,12 +508,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bun@npm:^1":
-  version: 1.1.14
-  resolution: "@types/bun@npm:1.1.14"
+"@types/bun@npm:^1.1.15":
+  version: 1.1.15
+  resolution: "@types/bun@npm:1.1.15"
   dependencies:
-    bun-types: "npm:1.1.37"
-  checksum: 10c0/37f5dacd501939096e15f3d3ba3cb4cb1fd05619e14240ed90a9dfe594803ffa6c5fd9579618ed3ad77e8d37c322a5732145ea1d72e238f4b15f23ba41251ab9
+    bun-types: "npm:1.1.42"
+  checksum: 10c0/af6a0dc50c6459e3c5b445e766aa98b593227ee2b71ba2623ddc0ef23d94ee8a922a56b1b4525410f2fe16d9c71f86b4b8f243c5165d6607e2a9d35427586cfd
   languageName: node
   linkType: hard
 
@@ -821,13 +821,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bun-types@npm:1.1.37":
-  version: 1.1.37
-  resolution: "bun-types@npm:1.1.37"
+"bun-types@npm:1.1.42":
+  version: 1.1.42
+  resolution: "bun-types@npm:1.1.42"
   dependencies:
     "@types/node": "npm:~20.12.8"
     "@types/ws": "npm:~8.5.10"
-  checksum: 10c0/130cfb11ac66ec52264158ba043fb38d693fa71796ecf082ca75a02733ee70dd5958340fa4c30374a9052e4d6eb2bd305470cbb76aaa4ad4da3fda61011aa62b
+  checksum: 10c0/8b5db9062be170799bb21bc671af0b1c5ac88f3cd6862ada9bd095172a7dbc11a0d43fed734b8803e6f815e996f4d456f4fa645d4a10b22317db8c95b0bd65c9
   languageName: node
   linkType: hard
 
@@ -960,7 +960,7 @@ __metadata:
   resolution: "crosst-chat-ts@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.17.0"
-    "@types/bun": "npm:^1"
+    "@types/bun": "npm:^1.1.15"
     "@types/deno": "npm:^2"
     "@types/js-yaml": "npm:^4"
     "@types/node": "npm:^22.10.5"
