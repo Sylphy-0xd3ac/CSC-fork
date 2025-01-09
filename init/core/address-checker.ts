@@ -1,6 +1,7 @@
 // 用于检查一个 IPv4 地址是否在指定的 CIDR 范围内
 
-import { readFileSync } from "node:fs";
+import pkg from 'fs-extra';
+const { readFileSync } = pkg;
 import { join } from "node:path";
 
 // 检查 IPv4 地址是否在允许的 CIDR 列表中

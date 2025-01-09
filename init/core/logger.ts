@@ -1,5 +1,6 @@
 import { stdout } from "supports-color";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import pkg from 'fs-extra';
+const { existsSync, mkdirSync, writeFileSync } = pkg;
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;

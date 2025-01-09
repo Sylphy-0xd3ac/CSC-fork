@@ -1,4 +1,5 @@
-import fs from "node:fs";
+import pkg from 'fs-extra';
+const { existsSync } = pkg;
 import path from "node:path";
 
 export async function reloadAll(hazel, core, hold, socket, line) {
@@ -32,7 +33,7 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   let modulePath = await hazel.getModulePath(moduleName);
   let reloadTime = Date.now();
 
-  if (!fs.existsSync(modulePath)) {
+  if (!existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
@@ -69,7 +70,7 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   let modulePath = await hazel.getModulePath(moduleName);
   let reloadTime = Date.now();
 
-  if (!fs.existsSync(modulePath)) {
+  if (!existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
@@ -133,7 +134,7 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
   let modulePath = await hazel.getModulePath(moduleName);
 
   // 检查模块是否存在
-  if (!fs.existsSync(modulePath)) {
+  if (!existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
