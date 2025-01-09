@@ -1,4 +1,5 @@
-import { readdirSync } from "node:fs";
+import pkg from 'fs-extra';
+const { readdirSync } = pkg;
 import { join } from "node:path";
 
 function readDir(baseDir, resultArray) {

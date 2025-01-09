@@ -1,4 +1,5 @@
-import { readFileSync, watch, writeFileSync } from "node:fs";
+import pkg from 'fs-extra';
+const { readFileSync, watch, writeFileSync } = pkg;
 import { join } from "node:path";
 import yaml from "js-yaml";
 
