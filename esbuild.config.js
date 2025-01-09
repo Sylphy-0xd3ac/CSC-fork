@@ -1,7 +1,10 @@
 import { build } from "esbuild";
 import { sync } from "glob";
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import pkg from 'fs-extra';
+const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 import { load, dump } from "js-yaml";
+import zip from "adm-zip";
+import path from "path";
 
 let globStartTimestamp = Date.now();
 // 使用glob获取当前目录及子目录下的所有ts文件
@@ -23,16 +26,16 @@ const buildOptions = {
 let buildStartTimestamp = Date.now();
 // 执行构建
 build(buildOptions)
-  .then(() => {
+  .then(async () => {
     // 创建dist/config目录
     mkdirSync("dist/config", { recursive: true });
 
     // 拷贝config
-    copyFileSync("config/config.yml", "dist/config/config.yml");
-    copyFileSync("config/allow.txt", "dist/config/allow.txt");
+    await copy("config/config.yml", "dist/config/config.yml");
+    await copy("config/allow.txt", "dist/config/allow.txt");
 
     // 拷贝mainConfig
-    copyFileSync("config.yml", "dist/config.yml");
+    await copy("config.yml", "dist/config.yml");
 
     let config = load(
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
@@ -42,6 +45,13 @@ build(buildOptions)
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
+    const zipFilePath = path.join(import.meta.dirname, 'client.zip');
+    const client = new zip(zipFilePath);
+    client.extractAllTo("dist/client", true, true);
+    await copy("package.json", "dist/package.json");
+    await copy("yarn.lock", "dist/yarn.lock");
+    await copy("node_modules", "dist/node_modules");
+    await copy(".yarn", "dist/.yarn");
   })
   .catch((err) => {
     console.error(err);
