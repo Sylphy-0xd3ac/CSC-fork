@@ -39,7 +39,7 @@
     "@types/ws": "^8.5.13",
     "adm-zip": "^0.5.16",
     "bun": "^1.1.43",
-    "deno": "^2.1.4",
+    "deno": "^2.1.5",
     "esbuild": "^0.24.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
