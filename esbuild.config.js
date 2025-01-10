@@ -4,7 +4,6 @@ import pkg from 'fs-extra';
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 import { load, dump } from "js-yaml";
 import zip from "adm-zip";
-import path from "path";
 
 let globStartTimestamp = Date.now();
 // 使用glob获取当前目录及子目录下的所有ts文件
