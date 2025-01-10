@@ -1,9 +1,9 @@
 import { build } from "esbuild";
-import { sync } from "glob";
 import pkg from "fs-extra";
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 import { load, dump } from "js-yaml";
 import zip from "adm-zip";
+import { sync } from "glob";
 
 let globStartTimestamp = Date.now();
 // 使用glob获取当前目录及子目录下的所有ts文件
