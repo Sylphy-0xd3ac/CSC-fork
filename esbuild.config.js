@@ -45,8 +45,7 @@ build(buildOptions)
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
-    const zipFilePath = path.join(import.meta.dirname, 'client.zip');
-    const client = new zip(zipFilePath);
+    const client = new zip('client.zip');
     client.extractAllTo("dist/client", true, true);
     await copy("package.json", "dist/package.json");
     await copy("yarn.lock", "dist/yarn.lock");
