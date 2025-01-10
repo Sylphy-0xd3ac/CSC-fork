@@ -508,7 +508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/adm-zip@npm:^0":
+"@types/adm-zip@npm:^0.5.7":
   version: 0.5.7
   resolution: "@types/adm-zip@npm:0.5.7"
   dependencies:
@@ -995,7 +995,7 @@ __metadata:
   resolution: "crosst-chat-ts@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.17.0"
-    "@types/adm-zip": "npm:^0"
+    "@types/adm-zip": "npm:^0.5.7"
     "@types/bun": "npm:^1.1.15"
     "@types/deno": "npm:^2"
     "@types/fs-extra": "npm:^11.0.4"
