@@ -1,6 +1,6 @@
 import { build } from "esbuild";
 import { sync } from "glob";
-import pkg from 'fs-extra';
+import pkg from "fs-extra";
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 import { load, dump } from "js-yaml";
 import zip from "adm-zip";
@@ -45,7 +45,7 @@ build(buildOptions)
       encoding: "utf-8",
     });
     let extractTimestamp = Date.now();
-    const client = new zip('client.zip');
+    const client = new zip("client.zip");
     client.extractAllTo("dist/client", true, true);
     console.log(`Extract finished in ${Date.now() - extractTimestamp}ms`);
     let copyTimestamp = Date.now();

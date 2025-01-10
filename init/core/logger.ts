@@ -1,5 +1,5 @@
 import { stdout } from "supports-color";
-import pkg from 'fs-extra';
+import pkg from "fs-extra";
 const { existsSync, mkdirSync, writeFileSync } = pkg;
 export class Time {
   static readonly millisecond = 1;
