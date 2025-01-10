@@ -1,4 +1,4 @@
-import pkg from 'fs-extra';
+import pkg from "fs-extra";
 const { readdirSync } = pkg;
 import { join } from "node:path";
 

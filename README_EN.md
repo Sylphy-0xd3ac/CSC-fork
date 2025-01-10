@@ -25,14 +25,14 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
    cd source
    ```
 
-4. **Start the Backend**:
+2. **Start the Backend**:
    Execute:
 
    ```bash
    node main.js
    ```
 
-5. **Test the Backend**:
+3. **Test the Backend**:
    Open the `index.html` file in the `client` folder using your browser. If the homepage is displayed successfully, the backend is running correctly.
 
 ---

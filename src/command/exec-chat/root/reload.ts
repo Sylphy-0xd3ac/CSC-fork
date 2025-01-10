@@ -1,4 +1,4 @@
-import pkg from 'fs-extra';
+import pkg from "fs-extra";
 const { existsSync } = pkg;
 import path from "node:path";
 
