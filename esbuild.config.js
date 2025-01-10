@@ -45,12 +45,16 @@ build(buildOptions)
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
+    let extractTimestamp = Date.now();
     const client = new zip('client.zip');
     client.extractAllTo("dist/client", true, true);
+    console.log(`Extract finished in ${Date.now() - extractTimestamp}ms`);
+    let copyTimestamp = Date.now();
     await copy("package.json", "dist/package.json");
     await copy("yarn.lock", "dist/yarn.lock");
     await copy("node_modules", "dist/node_modules");
     await copy(".yarn", "dist/.yarn");
+    console.log(`Copy finished in ${Date.now() - copyTimestamp}ms`);
   })
   .catch((err) => {
     console.error(err);
