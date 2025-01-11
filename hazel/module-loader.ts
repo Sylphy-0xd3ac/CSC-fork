@@ -1,5 +1,11 @@
-import recursiveReadDir from "./recursive-readdir.js";
+import { sync } from "glob";
 import path from "node:path";
+
+export function recursiveReadDir(baseDir) {
+  return sync(path.join(baseDir, "**/*.ts"), {
+    ignore: ["node_modules/**", "dist/**"],
+  });
+}
 
 export async function importModule(filePath: string, loadID: string) {
   const module = await import(`${filePath}?loadID=${loadID}`);
