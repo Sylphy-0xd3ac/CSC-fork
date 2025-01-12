@@ -30,7 +30,8 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
   let moduleName = args[1].trim();
-  let modulePath = await hazel.getModulePath(moduleName);
+  let module = await hazel.getModule(moduleName);
+  let modulePath = await hazel.getModulePath(module);
   let reloadTime = Date.now();
 
   if (!existsSync(modulePath)) {
@@ -40,17 +41,17 @@ export async function reloadModule(hazel, core, hold, socket, line) {
 
   moduleName = path.basename(modulePath, path.extname(modulePath));
 
-  // 重载指定模块
-  core.replyInfo("ROOT", `模块 ${moduleName} 重载请求已接收。`, socket);
-
   if (hazel.loadedFunctions.has(moduleName)) {
     await hazel.reloadModule(modulePath);
-  } else if (hazel.loadedStatics.has(moduleName)) {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法重载。", socket);
-    return;
-  } else {
+  } else if (hazel.loadedInits.find((init) => init === module)) {
     await hazel.reloadInit(modulePath);
+  } else {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。", socket);
+    return;
   }
+
+  // 重载指定模块
+  core.replyInfo("ROOT", `模块 ${moduleName} 重载请求已接收。`, socket);
 
   let reloadTimeUsed = Date.now() - reloadTime;
 
@@ -70,7 +71,8 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   let args = core.splitArgs(line);
   let moduleName = args[1].trim();
   let version = args[2].trim();
-  let modulePath = await hazel.getModulePath(moduleName);
+  let module = await hazel.getModule(moduleName);
+  let modulePath = await hazel.getModulePath(module);
   let reloadTime = Date.now();
 
   if (!existsSync(modulePath)) {
@@ -99,21 +101,21 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
     return;
   }
 
+  if (hazel.loadedFunctions.has(moduleName)) {
+    await hazel.reloadModuleByID(modulePath, version);
+  } else if (hazel.loadedInits.find((init) => init === module)) {
+    await hazel.reloadInitByID(modulePath, version);
+  } else {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。", socket);
+    return;
+  }
+
   // 重载指定模块到指定版本
   core.replyInfo(
     "ROOT",
     `模块 ${moduleName} 重载请求已接收，目标版本为 ${version}。`,
     socket,
   );
-
-  if (hazel.loadedFunctions.has(moduleName)) {
-    await hazel.reloadModuleByID(modulePath, version);
-  } else if (hazel.loadedStatics.has(moduleName)) {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法重载。", socket);
-    return;
-  } else {
-    await hazel.reloadInitByID(modulePath, version);
-  }
 
   let reloadTimeUsed = Date.now() - reloadTime;
 
@@ -137,7 +139,8 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
   // 解析参数
   let args = core.splitArgs(line);
   let moduleName = args[2].trim();
-  let modulePath = await hazel.getModulePath(moduleName);
+  let module = await hazel.getModule(moduleName);
+  let modulePath = await hazel.getModulePath(module);
 
   // 检查模块是否存在
   if (!existsSync(modulePath)) {
@@ -145,8 +148,8 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
     return;
   }
 
-  if (hazel.loadedStatics.has(moduleName)) {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法查看版本。", socket);
+  if (!(hazel.loadedInits.find((init) => init === module) || hazel.loadedFunctions.has(moduleName))) {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法查看版本。", socket);
     return;
   }
 
