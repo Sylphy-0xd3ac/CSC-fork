@@ -6,6 +6,7 @@ export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedFunctions: Map<string, any>;
   loadedInits: any[];
+  moduleMap: Map<string, any>;
   moduleDir: Map<string, string>;
   loadHistory: Map<string, string[]>;
   loadedStatics: any[];
@@ -15,9 +16,10 @@ export default class Hazel extends EventEmitter2 {
     this.mainConfig = mainConfig;
     this.loadedFunctions = new Map();
     this.loadedInits = [];
-    this.loadedStatics = [];
+    this.moduleMap = new Map();
     this.moduleDir = new Map();
     this.loadHistory = new Map();
+    this.loadedStatics = [];
 
     process.on("unhandledRejection", (error) => {
       this.emit("error", error);
@@ -44,8 +46,12 @@ export default class Hazel extends EventEmitter2 {
     );
   }
 
-  async getModulePath(moduleName: string) {
-    return this.moduleDir.get(moduleName);
+  async getModulePath(module: any) {
+    return this.moduleDir.get(module);
+  }
+
+  async getModule(moduleName: string) {
+    return this.moduleMap.get(moduleName);
   }
 
   async reloadModule(modulePath: string) {
