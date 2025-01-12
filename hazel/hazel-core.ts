@@ -7,7 +7,7 @@ export default class Hazel extends EventEmitter2 {
   loadedFunctions: Map<string, any>;
   loadedInits: any[];
   moduleMap: Map<string, any>;
-  moduleDir: Map<string, string>;
+  moduleDir: Map<any, string>;
   loadHistory: Map<string, string[]>;
   loadedStatics: any[];
 
