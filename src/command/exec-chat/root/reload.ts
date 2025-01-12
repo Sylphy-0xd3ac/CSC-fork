@@ -45,6 +45,9 @@ export async function reloadModule(hazel, core, hold, socket, line) {
 
   if (hazel.loadedFunctions.has(moduleName)) {
     await hazel.reloadModule(modulePath);
+  } else if (hazel.loadedStatics.has(moduleName)) {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法重载。", socket);
+    return;
   } else {
     await hazel.reloadInit(modulePath);
   }
@@ -105,6 +108,9 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
 
   if (hazel.loadedFunctions.has(moduleName)) {
     await hazel.reloadModuleByID(modulePath, version);
+  } else if (hazel.loadedStatics.has(moduleName)) {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法重载。", socket);
+    return;
   } else {
     await hazel.reloadInitByID(modulePath, version);
   }
@@ -136,6 +142,11 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
   // 检查模块是否存在
   if (!existsSync(modulePath)) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
+    return;
+  }
+
+  if (hazel.loadedStatics.has(moduleName)) {
+    core.replyWarn("ROOT", "模块 " + moduleName + " 是 Static 模块，无法查看版本。", socket);
     return;
   }
 
