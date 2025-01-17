@@ -5,6 +5,6 @@ updates:
     schedule:
       interval: "daily" # 每周检查更新
     assignees:
-      - "Hex-0xd3ac" # PR 指派给某人
+      - "Sylphy-0xd3ac" # PR 指派给某人
     labels:
       - "dependencies" # 为 PR 添加标签
