@@ -32,4 +32,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/hex-0xd3ac/crosst-backend:${{ github.sha }}
+          tags: ghcr.io/sylphy-0xd3ac/crosst-backend:${{ github.sha }}
