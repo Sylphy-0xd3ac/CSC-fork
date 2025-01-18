@@ -5,44 +5,44 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@deno/darwin-arm64@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/darwin-arm64@npm:2.1.5"
+"@deno/darwin-arm64@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/darwin-arm64@npm:2.1.6"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@deno/darwin-x64@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/darwin-x64@npm:2.1.5"
+"@deno/darwin-x64@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/darwin-x64@npm:2.1.6"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@deno/linux-arm64-glibc@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/linux-arm64-glibc@npm:2.1.5"
+"@deno/linux-arm64-glibc@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/linux-arm64-glibc@npm:2.1.6"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@deno/linux-x64-glibc@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/linux-x64-glibc@npm:2.1.5"
+"@deno/linux-x64-glibc@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/linux-x64-glibc@npm:2.1.6"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@deno/win32-arm64@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/win32-arm64@npm:2.1.5"
+"@deno/win32-arm64@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/win32-arm64@npm:2.1.6"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@deno/win32-x64@npm:2.1.5":
-  version: 2.1.5
-  resolution: "@deno/win32-x64@npm:2.1.5"
+"@deno/win32-x64@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@deno/win32-x64@npm:2.1.6"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -1006,7 +1006,7 @@ __metadata:
     adm-zip: "npm:^0.5.16"
     argon2: "npm:^0.41.1"
     bun: "npm:^1.1.45"
-    deno: "npm:^2.1.5"
+    deno: "npm:^2.1.6"
     esbuild: "npm:^0.24.2"
     eslint: "npm:^9.18.0"
     eslint-config-prettier: "npm:^10.0.1"
@@ -1053,16 +1053,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deno@npm:^2.1.5":
-  version: 2.1.5
-  resolution: "deno@npm:2.1.5"
+"deno@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "deno@npm:2.1.6"
   dependencies:
-    "@deno/darwin-arm64": "npm:2.1.5"
-    "@deno/darwin-x64": "npm:2.1.5"
-    "@deno/linux-arm64-glibc": "npm:2.1.5"
-    "@deno/linux-x64-glibc": "npm:2.1.5"
-    "@deno/win32-arm64": "npm:2.1.5"
-    "@deno/win32-x64": "npm:2.1.5"
+    "@deno/darwin-arm64": "npm:2.1.6"
+    "@deno/darwin-x64": "npm:2.1.6"
+    "@deno/linux-arm64-glibc": "npm:2.1.6"
+    "@deno/linux-x64-glibc": "npm:2.1.6"
+    "@deno/win32-arm64": "npm:2.1.6"
+    "@deno/win32-x64": "npm:2.1.6"
   dependenciesMeta:
     "@deno/darwin-arm64":
       optional: true
@@ -1078,7 +1078,7 @@ __metadata:
       optional: true
   bin:
     deno: bin.cjs
-  checksum: 10c0/026b5785917145edd4f2f7c6e30bf792052a6fe196e4084ca13b0aac4cc4896b17ebc21efdd1c5ffe4b8dea68bde084b7e54eec746ab8bfe42c145731246ec68
+  checksum: 10c0/c77efde43812b6e026a999dfe2814b36e1052ac91bc6c765a4f85670651e2ba3f46c31fe19c7dccac2cf51ee4c1504d168fa4fbd7dfc6debb9cb83538d1da824
   languageName: node
   linkType: hard
 
