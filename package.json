@@ -32,7 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@types/adm-zip": "^0.5.7",
-    "@types/bun": "^1.1.17",
+    "@types/bun": "^1.1.18",
     "@types/deno": "^2",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4",

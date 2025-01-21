@@ -518,12 +518,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bun@npm:^1.1.17":
-  version: 1.1.17
-  resolution: "@types/bun@npm:1.1.17"
+"@types/bun@npm:^1.1.18":
+  version: 1.1.18
+  resolution: "@types/bun@npm:1.1.18"
   dependencies:
     bun-types: "npm:1.1.44"
-  checksum: 10c0/6f794670cbb230ddb6a6cbf8b1eb077e9e96024fd9afca143e946e415cde14fb06d0f5e9b65b4b3f57370cc17afe5f94c88d259a055305266ee283cd9c29fbcf
+  checksum: 10c0/81a5eba3cdda8f5ebfafaf6eb7594f9f27d6a3e11b04be03c0b6e89f5e0f3cb0920babbad63f24564ab9ae834a9382ded012c872353ac134d6ebf42cc1a40d5d
   languageName: node
   linkType: hard
 
@@ -997,7 +997,7 @@ __metadata:
   dependencies:
     "@eslint/js": "npm:^9.18.0"
     "@types/adm-zip": "npm:^0.5.7"
-    "@types/bun": "npm:^1.1.17"
+    "@types/bun": "npm:^1.1.18"
     "@types/deno": "npm:^2"
     "@types/fs-extra": "npm:^11.0.4"
     "@types/js-yaml": "npm:^4"
