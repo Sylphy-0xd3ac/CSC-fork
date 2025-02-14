@@ -2,7 +2,7 @@ import { sync } from "glob";
 import path from "node:path";
 
 export function recursiveReadDir(baseDir) {
-  return sync(path.join(baseDir, "**/*.ts"), {
+  return sync(path.join(baseDir, "**/*"), {
     ignore: ["node_modules/**", "dist/**"],
   });
 }
