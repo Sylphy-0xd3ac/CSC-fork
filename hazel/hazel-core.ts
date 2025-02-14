@@ -26,9 +26,7 @@ export default class Hazel extends EventEmitter2 {
     });
   }
 
-  #core = {
-    version: "0.3.6",
-  };
+  #core = {};
   #hold = {};
 
   randomLoadID() {

@@ -1,3 +1,6 @@
+# Core Version
+coreVersion: "0.3.6"
+
 # Project Name
 projectName: "Crosst-Chat-TypeScript"
 
@@ -34,3 +37,9 @@ appConfigDir: "/config/config.yml"
 
 # Allow CIDR List Dir
 allowCIDRlistDir: "/config/allow.txt"
+
+# Deny CIDR List Dir
+denyCIDRlistDir: "/config/deny.txt"
+
+# CIDR Policy(allow or deny or close)
+cidrPolicy: "deny"

@@ -52,6 +52,10 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
 
 We extend our gratitude to the official CrosSt Street project for making the source code available.  
 [Official CrosSt Street Version](https://github.com/CrosSt-Chat/CSC-main/)
+Reggol
+[Reggol](https://github.com/shigma/reggol/)
+v6Match
+[v6Match](https://github.com/Henrize/v6match/)
 
 ---
 

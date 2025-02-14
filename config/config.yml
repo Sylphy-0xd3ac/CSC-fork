@@ -1,6 +1,6 @@
 # Crosst-Chat Config v1
 # Version: 2.0.0-ts-beta
-version: 2.0.0-ts-beta
+version: "2.0.0-ts-beta"
 
 # Root Passcode
 rootPasscode: "root"

@@ -1,3 +1,5 @@
+// 用于记录日志
+
 import { stdout } from "supports-color";
 import pkg from "fs-extra";
 const { existsSync, mkdirSync, writeFileSync } = pkg;

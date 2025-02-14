@@ -1,3 +1,5 @@
+// 用于重载十字街几乎所有模块
+
 import pkg from "fs-extra";
 const { existsSync } = pkg;
 import path from "node:path";
@@ -46,7 +48,11 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   } else if (hazel.loadedInits.find((init) => init === module)) {
     await hazel.reloadInit(modulePath);
   } else {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。", socket);
+    core.replyWarn(
+      "ROOT",
+      "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。",
+      socket,
+    );
     return;
   }
 
@@ -106,7 +112,11 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   } else if (hazel.loadedInits.find((init) => init === module)) {
     await hazel.reloadInitByID(modulePath, version);
   } else {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。", socket);
+    core.replyWarn(
+      "ROOT",
+      "模块 " + moduleName + " 不是 Init 或 Function 模块，无法重载。",
+      socket,
+    );
     return;
   }
 
@@ -148,8 +158,17 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
     return;
   }
 
-  if (!(hazel.loadedInits.find((init) => init === module) || hazel.loadedFunctions.has(moduleName))) {
-    core.replyWarn("ROOT", "模块 " + moduleName + " 不是 Init 或 Function 模块，无法查看版本。", socket);
+  if (
+    !(
+      hazel.loadedInits.find((init) => init === module) ||
+      hazel.loadedFunctions.has(moduleName)
+    )
+  ) {
+    core.replyWarn(
+      "ROOT",
+      "模块 " + moduleName + " 不是 Init 或 Function 模块，无法查看版本。",
+      socket,
+    );
     return;
   }
 

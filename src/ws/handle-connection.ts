@@ -34,6 +34,7 @@ export async function run(hazel, core, hold, ws_socket, request) {
   // 检查该地址是否在封禁列表中
   if (
     hold.bannedIPlist.includes(ws_socket.remoteAddress) ||
+    !ws_socket.isAllowedIP ||
     ws_socket.isDeniedIP
   ) {
     ws_socket.send(
