@@ -1,4 +1,4 @@
-// 日志记录器
+// 存档记录器
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;

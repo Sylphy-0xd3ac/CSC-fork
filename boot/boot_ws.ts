@@ -1,3 +1,5 @@
+// 用于启动 WebSocket 服务器
+
 import { WebSocketServer } from "ws";
 
 export async function run(hazel, core, hold) {

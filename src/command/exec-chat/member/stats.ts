@@ -9,7 +9,7 @@ export async function run(hazel, core, hold, socket) {
     "### 十字街 " +
     core.config.version +
     "\nPowered by Hazel Core " +
-    core.version;
+    hazel.mainConfig.coreVersion;
   statsText += "\n#### --- 运行状态 ---";
   statsText += "\n在线连接：" + hold.wsServer.clients.size;
   statsText += "\n聊天室数：" + hold.channel.size;

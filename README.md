@@ -33,6 +33,10 @@
 
 感谢十字街官方开放原代码.
 [十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
+Reggol
+[Reggol](https://github.com/shigma/reggol/)
+v6Match
+[v6Match](https://github.com/Henrize/v6match/)
 
 ## LICENSE
 

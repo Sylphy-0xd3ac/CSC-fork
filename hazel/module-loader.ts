@@ -105,18 +105,21 @@ export default async function loadDir(
         hazel.moduleMap.set(currentModule.name, currentModule);
       } else if (loadType === "init") {
         moduleList.push(currentModule);
-        hazel.moduleDir.set(
-          currentModule,
-          filePath,
-        );
+        hazel.moduleDir.set(currentModule, filePath);
         const history = hazel.loadHistory.get(filePath) || [];
         history.push(await hazel.randomLoadID());
         hazel.loadHistory.set(filePath, history);
-        hazel.moduleMap.set(path.basename(filePath, path.extname(filePath)), currentModule);
+        hazel.moduleMap.set(
+          path.basename(filePath, path.extname(filePath)),
+          currentModule,
+        );
       } else if (loadType === "static") {
         moduleList.push(currentModule);
         hazel.moduleDir.set(currentModule, filePath);
-        hazel.moduleMap.set(path.basename(filePath, path.extname(filePath)), currentModule);
+        hazel.moduleMap.set(
+          path.basename(filePath, path.extname(filePath)),
+          currentModule,
+        );
       }
     }
   }

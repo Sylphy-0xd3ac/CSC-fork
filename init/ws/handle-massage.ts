@@ -1,3 +1,5 @@
+// 用于处理消息
+
 export async function run(hazel, core, hold) {
   core.handleData = async function (socket, data) {
     // 检查该地址是否请求频率过高
