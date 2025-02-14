@@ -37,7 +37,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4",
     "@types/node": "^22.13.2",
-    "@types/ws": "^8.5.13",
+    "@types/ws": "^8.5.14",
     "adm-zip": "^0.5.16",
     "bun": "^1.2.2",
     "deno": "^2.1.9",
