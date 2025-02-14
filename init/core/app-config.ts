@@ -1,3 +1,5 @@
+// 用于加载和保存应用程序配置
+
 import pkg from "fs-extra";
 const { readFileSync, watch, writeFileSync } = pkg;
 import { join } from "node:path";

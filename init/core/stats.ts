@@ -1,3 +1,5 @@
+// 用于统计服务器状态
+
 export async function run(hazel, core, hold) {
   core.increaseState = function (key) {
     if (!hold.stats[key]) {

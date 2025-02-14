@@ -1,3 +1,5 @@
+// 用于查看当前可用的指令
+
 export async function run(hazel, core, hold, socket, data) {
   let noList = ["elevate", "help"];
 
