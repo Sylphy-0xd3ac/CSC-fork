@@ -32,6 +32,7 @@ build(buildOptions)
     // 拷贝config
     await copy("config/config.yml", "dist/config/config.yml");
     await copy("config/allow.txt", "dist/config/allow.txt");
+    await copy("config/deny.txt", "dist/config/deny.txt");
 
     // 拷贝mainConfig
     await copy("config.yml", "dist/config.yml");
