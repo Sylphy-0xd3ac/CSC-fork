@@ -42,4 +42,4 @@ allowCIDRlistDir: "/config/allow.txt"
 denyCIDRlistDir: "/config/deny.txt"
 
 # CIDR Policy(allow or deny or close)
-cidrPolicy: "deny"
+cidrPolicy: "close"
