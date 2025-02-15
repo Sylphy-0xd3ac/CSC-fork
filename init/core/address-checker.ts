@@ -401,17 +401,16 @@ export async function run(hazel, core, hold) {
    */
   core.checkIP = function (ip) {
     try {
-      const address = parseAddress(ip);
       switch (hazel.mainConfig.cidrPolicy) {
         case "deny":
           return [
-            !hold.denyTree.contains(address),
-            hold.denyTree.contains(address),
+            !hold.denyTree.contains(parseAddress(ip)),
+            hold.denyTree.contains(parseAddress(ip)),
           ];
         case "allow":
           return [
-            hold.allowTree.contains(address),
-            !hold.allowTree.contains(address),
+            hold.allowTree.contains(parseAddress(ip)),
+            !hold.allowTree.contains(parseAddress(ip)),
           ];
         case "close":
           return [true, false];
