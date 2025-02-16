@@ -2,13 +2,24 @@
 
 export async function run(hazel, core, hold) {
   hold.wsServer.clients.forEach((socket) => {
-    if (!socket.isAlive && socket.readyState === WebSocket.OPEN) {
-      socket.close();
-    } else {
-      if (socket.readyState === WebSocket.OPEN) {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.isAlive = false;
+      socket.ping();
+
+      // 设置一个 10000 毫秒的超时来检查响应
+      const timeout = setTimeout(() => {
+        if (!socket.isAlive) {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.terminate();
+          }
+        }
+      }, hazel.mainConfig.wsHeartbeatTimeout);
+
+      // 监听 pong 事件以确认客户端仍然活跃
+      socket.once("pong", () => {
+        clearTimeout(timeout);
         socket.isAlive = true;
-        socket.ping();
-      }
+      });
     }
   });
 }

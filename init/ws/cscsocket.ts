@@ -23,7 +23,7 @@ export class CSCWebSocket extends WebSocket {
   channel: string | undefined;
   isInvisible = false;
   lastWhisperFrom: string | undefined;
-  isAlive = true;
+  isAlive: boolean;
 }
 
 export async function run(hazel, core, hold) {
