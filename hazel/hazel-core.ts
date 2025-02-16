@@ -35,7 +35,7 @@ export default class Hazel extends EventEmitter2 {
 
   async initialize(forceInit) {
     console.log("Initializing " + this.mainConfig.projectName + "...\n");
-    if (!(await this.loadModules(forceInit)) || forceInit) {
+    if (!await this.loadModules(forceInit)) {
       process.exit();
     }
     this.emit("initialized");

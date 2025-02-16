@@ -61,11 +61,6 @@ export async function run(hazel, core, hold, ws_socket, request) {
     }
   });
 
-  // pong 事件
-  ws_socket.on("pong", (socket) => {
-    socket.alive = true;
-  });
-
   // error 事件
   ws_socket.on("error", (error) => {
     hazel.emit("error", error, ws_socket);
