@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node esbuild.config.js",
     "tscbuild": "tsc",
+    "typecheck": "tsc --noEmit --skipLibCheck",
     "dev": "deno run --allow-all --unstable-sloppy-imports --unstable-node-globals main.ts",
     "bundev": "bun run main.ts",
     "start": "node main.js",
