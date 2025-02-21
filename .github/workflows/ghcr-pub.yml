@@ -1,28 +1,29 @@
 name: Build and Push Docker Image
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
-      id-token: write
-      actions: write
-      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/sylphy-0xd3ac/crosst-backend:latest .
+        run: docker build . -t ghcr.io/sylphy-0xd3ac/crosst-backend:latest
 
       - name: Push Docker image
         run: docker push ghcr.io/sylphy-0xd3ac/crosst-backend:latest
