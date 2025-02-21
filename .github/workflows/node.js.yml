@@ -5,6 +5,9 @@ on:
     branches:
       - main # 你也可以根据需要改成任何你想监控的分支
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
