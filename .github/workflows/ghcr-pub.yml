@@ -21,7 +21,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_id }}/crosst-backend:latest .
+        run: docker build -t ghcr.io/sylphy-0xd3ac/crosst-backend:latest .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository_id }}/crosst-backend:latest
+        run: docker push ghcr.io/sylphy-0xd3ac/crosst-backend:latest
