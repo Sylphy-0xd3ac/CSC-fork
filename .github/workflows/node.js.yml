@@ -12,11 +12,11 @@ jobs:
     steps:
       # Step 1: 检出代码
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Step 2: 设置 Node.js 版本
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18" # 可根据需要选择 Node.js 版本
 
