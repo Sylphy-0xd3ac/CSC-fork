@@ -15,7 +15,7 @@ jobs:
     steps:
       # Step 1: 检出代码
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       # Step 2: 设置 Node.js 版本
       - name: Setup Node.js
