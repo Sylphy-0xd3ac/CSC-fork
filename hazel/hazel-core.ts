@@ -1,5 +1,5 @@
 import loadModule, { importModule } from "./module-loader.js";
-import EventEmitter2 from "node:events";
+import EventEmitter2 from "eventemitter2";
 import process from "node:process";
 
 export default class Hazel extends EventEmitter2 {
