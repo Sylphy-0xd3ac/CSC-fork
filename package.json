@@ -43,7 +43,7 @@
     "adm-zip": "^0.5.16",
     "bun": "^1.2.4",
     "deno": "^2.2.3",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.25.1",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
