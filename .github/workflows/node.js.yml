@@ -19,7 +19,7 @@ jobs:
 
       # Step 2: 设置 Node.js 版本
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.2.0
         with:
           node-version: "18" # 可根据需要选择 Node.js 版本
 
