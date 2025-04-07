@@ -1,4 +1,4 @@
-import HazelCore from "./hazel/hazel-core.js";
+import HazelCore from "./hazel/hazel-core";
 import pkg from "fs-extra";
 const { readFileSync } = pkg;
 import { fileURLToPath } from "node:url";
