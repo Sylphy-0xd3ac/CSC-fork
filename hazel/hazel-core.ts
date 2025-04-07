@@ -1,4 +1,4 @@
-import loadModule, { importModule } from "./module-loader.js";
+import loadModule, { importModule } from "./module-loader";
 import EventEmitter2 from "eventemitter2";
 import process from "node:process";
 
