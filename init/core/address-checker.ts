@@ -270,7 +270,7 @@ export function parseCIDR(cidr) {
 /**
  * 前缀树类，用于高效匹配 IP 地址
  */
-class AddressTree {
+export class AddressTree {
   #root;
 
   constructor() {
@@ -306,10 +306,6 @@ class AddressTree {
 }
 
 export async function run(hazel, core, hold) {
-  // 初始化允许和拒绝的前缀树
-  hold.allowTree = new AddressTree();
-  hold.denyTree = new AddressTree();
-
   /**
    * 加载允许的 CIDR 列表
    */
