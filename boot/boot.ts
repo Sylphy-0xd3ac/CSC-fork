@@ -12,6 +12,11 @@ export async function run(hazel, core, hold) {
   // 保存一些服务器的运行数据
   hold.stats = {};
 
+  // 初始化允许和拒绝的前缀树
+  const AddressTree = hazel.moduleMap.get("address-checker").AddressTree;
+  hold.allowTree = new AddressTree();
+  hold.denyTree = new AddressTree();
+
   // CIDR 列表
   core.loadAllowCIDR();
   core.loadDenyCIDR();
