@@ -36,7 +36,7 @@
     "@types/bun": "^1.2.2",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.14.1",
     "@types/ws": "^8.5.14",
     "adm-zip": "^0.5.16",
     "esbuild": "^0.25.0",
