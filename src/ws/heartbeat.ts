@@ -6,7 +6,7 @@ export async function run(hazel, core, hold) {
       socket.isAlive = false;
       socket.ping();
 
-      // 设置一个 10000 毫秒的超时来检查响应
+      // 设置超时来检查响应
       const timeout = setTimeout(() => {
         if (!socket.isAlive) {
           if (socket.readyState === WebSocket.OPEN) {
