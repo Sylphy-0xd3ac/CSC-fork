@@ -9,7 +9,7 @@ export function recursiveReadDir(baseDir) {
 
 export async function importModule(filePath: string, loadID: string) {
   const module = await import(`${filePath}?loadID=${loadID}`);
-  return module;
+  return Object.assign({}, module);
 }
 
 export default async function loadDir(
@@ -98,14 +98,14 @@ export default async function loadDir(
 
       if (loadType === "function") {
         moduleList.set(currentModule.name, currentModule);
-        hazel.moduleDir.set(currentModule, filePath);
+        currentModule.filePath = filePath;
         const history = hazel.loadHistory.get(filePath) || [];
         history.push(await hazel.randomLoadID());
         hazel.loadHistory.set(filePath, history);
         hazel.moduleMap.set(currentModule.name, currentModule);
       } else if (loadType === "init") {
         moduleList.push(currentModule);
-        hazel.moduleDir.set(currentModule, filePath);
+        currentModule.filePath = filePath;
         const history = hazel.loadHistory.get(filePath) || [];
         history.push(await hazel.randomLoadID());
         hazel.loadHistory.set(filePath, history);
@@ -115,7 +115,7 @@ export default async function loadDir(
         );
       } else if (loadType === "static") {
         moduleList.push(currentModule);
-        hazel.moduleDir.set(currentModule, filePath);
+        currentModule.filePath = filePath;
         hazel.moduleMap.set(
           path.basename(filePath, path.extname(filePath)),
           currentModule,
