@@ -41,7 +41,6 @@ sitePolicy: {}
 # Salts
 salts:
   auth: "TEMPORARYSALT"
-  client: "TEMPORARYSALT"
   secret: "TEMPORARYSECRET"
 
 # Log Level
