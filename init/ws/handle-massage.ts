@@ -24,7 +24,8 @@ export async function run(hazel, core, hold) {
       data = JSON.parse(data);
     } catch (error) {
       // 记录在日志中
-      core.log(
+      const logger = new core.logger("Handle-message");
+      logger.info(
         core.LOG_LEVEL.WARN,
         ["Malformed JSON data received from ", socket.remoteAddress, data],
         "Handle-Message",
@@ -51,7 +52,8 @@ export async function run(hazel, core, hold) {
 
       if (key === "__proto__" || key === "prototype" || key === "constructor") {
         // 记录攻击行为
-        core.log(core.LOG_LEVEL.WARN, [
+        const logger = new core.logger("Handle-message");
+        logger.info(core.LOG_LEVEL.WARN, [
           "Malformed JSON data received from ",
           socket.remoteAddress,
           JSON.stringify(data),
@@ -131,4 +133,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 32;
+export const name = "handle-message";
+export const dependencies :string[] = ["ws-reply"];

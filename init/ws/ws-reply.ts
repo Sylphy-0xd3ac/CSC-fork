@@ -50,4 +50,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 16;
+export const name = "ws-reply";
+export const dependencies :string[] = [];

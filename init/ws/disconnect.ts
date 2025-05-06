@@ -30,4 +30,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 32;
+export const name = "disconnect";
+export const dependencies :string[] = ["server"];
