@@ -16,4 +16,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 32;
+export const name = "stats";
+export const dependencies :string[] = [];

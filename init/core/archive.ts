@@ -32,4 +32,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 2;
+export const name = "archive";
+export const dependencies :string[] = ["logger"];

@@ -48,4 +48,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 1;
+export const name = "app-config";
+export const dependencies :string[] = [];

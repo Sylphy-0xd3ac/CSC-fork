@@ -417,4 +417,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 16;
+export const name = "address-checker";
+export const dependencies :string[] = ["app-config"];

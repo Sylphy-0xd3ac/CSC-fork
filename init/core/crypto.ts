@@ -41,4 +41,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 0;
+export const name = "crypto";
+export const dependencies :string[] = ["app-config"];

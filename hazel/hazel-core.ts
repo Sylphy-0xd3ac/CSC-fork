@@ -2,10 +2,18 @@ import loadModule, { importModule } from "./module-loader";
 import EventEmitter2 from "eventemitter2";
 import process from "node:process";
 
+interface InitModule {
+  name: string;
+  priority?: number;
+  dependencies?: string[];
+  run: Function;
+  filePath: string;
+}
+
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedFunctions: Map<string, any>;
-  loadedInits: any[];
+  loadedInits: InitModule[];
   moduleMap: Map<string, any>;
   loadHistory: Map<string, string[]>;
   loadedStatics: any[];
@@ -24,8 +32,9 @@ export default class Hazel extends EventEmitter2 {
     });
   }
 
-  #core = {};
-  #hold = {};
+
+  #core: any = {};
+  #hold: any = {};
 
   randomLoadID() {
     return Math.random().toString(36).slice(4, 10);
@@ -155,15 +164,23 @@ export default class Hazel extends EventEmitter2 {
       delete this.#core[property];
     }
 
-    this.loadedInits.forEach((initFunction) => {
-      initFunction.run(this, this.#core, this.#hold).catch((error) => {
-        this.emit("error", error);
-        console.error(error);
-        if (!forceLoad) {
-          return false;
-        }
+   try {
+      this.loadedInits.forEach((initFunction) => {
+          initFunction.run(this, this.#core, this.#hold).catch((error) => {
+            this.emit("error", error);
+            console.error(error);
+            if (!forceLoad) {
+              return false;
+            }
+          });
       });
-    });
+    } catch (error) {
+      this.emit("error", error);
+      console.error(`Error running init function:`, error);
+      if (!forceLoad) {
+        return false;
+      }
+    }
 
     console.log(`√ Initialize inits ${this.loadedInits.length} complete!\n`);
 
@@ -215,6 +232,7 @@ export default class Hazel extends EventEmitter2 {
 
     return !(initsExistError || functionExistError || staticExistError);
   }
+
   async loadInitAndFunciton(forceLoad: boolean) {
     let result = (await loadModule(
       this,
@@ -226,6 +244,7 @@ export default class Hazel extends EventEmitter2 {
     if (!forceLoad && initsExistError) {
       return false;
     }
+    forceLoad = true;
 
     this.loadedInits = loadedInits;
 

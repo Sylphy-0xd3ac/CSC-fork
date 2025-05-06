@@ -38,4 +38,5 @@ export async function run(hazel, core, hold) {
   });
 }
 
-export const priority = 8;
+export const name = "cscsocket";
+export const dependencies :string[] = [];

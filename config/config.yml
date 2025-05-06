@@ -28,9 +28,14 @@ dataMaximumLength: 32768
 
 # Rate Limiter
 rateLimiter:
-  globalTimeRange: 10000
-  halfScoreTime: 30000
-  limit: 26
+  perIp:
+    limit: 5
+    halfScoreTime: 5
+    rlTokens: 5
+    rlInterval: 5
+  global:
+    globalTimeRange: 30000
+
 
 # Alert Frequency
 alertFrequency: 180

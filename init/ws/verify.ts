@@ -32,4 +32,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 0;
+export const name = "verify";
+export const dependencies :string[] = ["server"];
