@@ -16,7 +16,7 @@ interface InitModule {
     name: string;
     priority?: number;
     dependencies?: string[];
-    run: Function;
+    run: (...args: any[]) => any;
     filePath: string;
 }
 
@@ -132,7 +132,7 @@ export default async function loadDir(
     hazel: any,
     dirName: string,
     loadType: string,
-    loadID: () => string,
+    loadID: (...args: any[]) => string,
 ) {
     let existError = false;
 
