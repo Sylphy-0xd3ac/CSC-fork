@@ -20,12 +20,10 @@ interface InitModule {
 }
 
 function topologicalSort(modules: InitModule[]): InitModule[] {
-    // Create module map
     const moduleMap = new Map<string, InitModule>();
     const sorted: Set<InitModule> = new Set();
-    const state = new Uint8Array(modules.length);  // 0:未访问, 1:在路径中, 2:已访问
+    const state = new Uint8Array(modules.length); 
 
-    // Initialize module map
     modules.forEach((module, index) => {
         moduleMap.set(module.name, module);
     });
@@ -34,8 +32,7 @@ function topologicalSort(modules: InitModule[]): InitModule[] {
         const moduleIndex = modules.findIndex(m => m.name === moduleName);
         if (moduleIndex === -1) return;
 
-        // Check state
-        if (state[moduleIndex] === 1) {  // 在路径中
+        if (state[moduleIndex] === 1) {
             console.error(`Circular dependency detected: ${[...path, moduleName].join(" -> ")}`);
             throw new Error("Circular dependency detected!");
         }
@@ -43,13 +40,9 @@ function topologicalSort(modules: InitModule[]): InitModule[] {
         const module = moduleMap.get(moduleName)!;
         const dependencies = module.dependencies;
 
-        // Mark as in path
         state[moduleIndex] = 1;
         path.push(moduleName);
 
-        // Process dependencies
-        // If there are no dependencies, this loop will be skipped
-        // This is correct because modules without dependencies should be processed first
         for (const dependency of dependencies) {
             const depModule = moduleMap.get(dependency);
             if (!depModule) {
@@ -59,20 +52,16 @@ function topologicalSort(modules: InitModule[]): InitModule[] {
             dfs(dependency, [...path]);
         }
 
-        // Mark as completed and add to sorted
         state[moduleIndex] = 2;
         sorted.add(module);
     }
 
-    // Start DFS from each module
-    // Only start from modules that haven't been visited yet
     for (const module of modules) {
         const moduleIndex = modules.findIndex(m => m.name === module.name);
-        if (state[moduleIndex] === 2) continue;  // 如果已经访问过，跳过
+        if (state[moduleIndex] === 2) continue;  
         dfs(module.name);
     }
 
-    // Check for duplicate module names
     if (sorted.size !== modules.length) {
         console.error("Duplicate module names detected!");
         throw new Error("Duplicate module names detected!");
