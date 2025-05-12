@@ -2,7 +2,7 @@
 
 The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street version](https://github.com/CrosSt-Chat/CSC-main/). This fork primarily converts the original JavaScript implementation to TypeScript.
 
-![Alt](https://repobeats.axiom.co/api/embed/62e128c0232fd379c2494ea34922538dd50387c4.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/c12ebbe4f71d8b8f2dea4cef1dd4e3c1fcda5a40.svg "Repobeats analytics image")
 
 ---
 
