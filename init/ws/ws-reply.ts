@@ -51,4 +51,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "ws-reply";
-export const dependencies :string[] = [];
+export const dependencies :string[] = ["server"];

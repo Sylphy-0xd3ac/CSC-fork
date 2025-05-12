@@ -14,118 +14,71 @@ export async function importModule(filePath: string, loadID: string) {
 
 interface InitModule {
     name: string;
-    priority?: number;
-    dependencies?: string[];
+    dependencies: string[];
     run: (...args: any[]) => any;
     filePath: string;
 }
 
 function topologicalSort(modules: InitModule[]): InitModule[] {
-    // Remove duplicate modules
-    const uniqueModules = new Map<string, InitModule>();
-    modules.forEach(module => {
-        uniqueModules.set(module.name, module);
-    });
-    modules = Array.from(uniqueModules.values());
+    // Create module map
+    const moduleMap = new Map<string, InitModule>();
+    const sorted: Set<InitModule> = new Set();
+    const state = new Uint8Array(modules.length);  // 0:未访问, 1:在路径中, 2:已访问
 
-    const graph: { [key: string]: string[] } = {};
-    const moduleMap: { [key: string]: InitModule } = {};
-    const visited: { [key: string]: boolean } = {};
-    const stack: { [key: string]: boolean } = {}; // 用于检测当前递归栈中的节点
-    const sorted: InitModule[] = [];
-
-    modules.forEach(module => {
-        graph[module.name] = module.dependencies || [];
-        moduleMap[module.name] = module;
-        visited[module.name] = false;
-        stack[module.name] = false;
+    // Initialize module map
+    modules.forEach((module, index) => {
+        moduleMap.set(module.name, module);
     });
 
-function detectCycle(moduleName: string, path: string[] = []): boolean {
-        visited[moduleName] = true;
-        stack[moduleName] = true;
-    
-        const dependencies = graph[moduleName];
+    function dfs(moduleName: string, path: string[] = []): void {
+        const moduleIndex = modules.findIndex(m => m.name === moduleName);
+        if (moduleIndex === -1) return;
+
+        // Check state
+        if (state[moduleIndex] === 1) {  // 在路径中
+            console.error(`Circular dependency detected: ${[...path, moduleName].join(" -> ")}`);
+            throw new Error("Circular dependency detected!");
+        }
+
+        const module = moduleMap.get(moduleName)!;
+        const dependencies = module.dependencies;
+
+        // Mark as in path
+        state[moduleIndex] = 1;
+        path.push(moduleName);
+
+        // Process dependencies
+        // If there are no dependencies, this loop will be skipped
+        // This is correct because modules without dependencies should be processed first
         for (const dependency of dependencies) {
-            if (!visited[dependency]) {
-                const newPath = [...path, moduleName];
-                if (detectCycle(dependency, newPath)) {
-                    return true;
-                }
-            } else if (stack[dependency]) {
-                const cyclePath = [...path, moduleName, dependency];
-                console.error(`Circular dependency detected: ${cyclePath.join(" -> ")}`);
-                return true;
-            }
-        }
-    
-        stack[moduleName] = false;
-        return false;
-    }
-
-    for (const module of modules) {
-        if (!visited[module.name]) {
-            if (detectCycle(module.name)) {
-                throw new Error("Circular dependency detected!");
-            }
-        }
-    }
-
-    // Kahn's Algorithm for Topological Sorting (if no cycle is detected)
-    const inDegree: { [key: string]: number } = {};
-    modules.forEach(module => {
-        inDegree[module.name] = 0;
-    });
-
-    modules.forEach(module => {
-        module.dependencies?.forEach(dependency => {
-            if (moduleMap[dependency]) {
-                inDegree[dependency]++;
-            } else {
+            const depModule = moduleMap.get(dependency);
+            if (!depModule) {
                 console.warn(`Dependency "${dependency}" of module "${module.name}" not found.`);
+                continue;
             }
-        });
-    });
-
-    const queue: string[] = [];
-    modules.forEach(module => {
-        if (inDegree[module.name] === 0) {
-            queue.push(module.name);
+            dfs(dependency, [...path]);
         }
-    });
 
-    let count = 0;
-    while (queue.length > 0) {
-        const moduleName = queue.shift();
-        const module = moduleMap[moduleName];
-        sorted.push(module);
-
-        graph[moduleName].forEach(dependency => {
-            if (moduleMap[dependency]) {
-                inDegree[dependency]--;
-                if (inDegree[dependency] === 0) {
-                    queue.push(dependency);
-                }
-            }
-        });
-        count++;
+        // Mark as completed and add to sorted
+        state[moduleIndex] = 2;
+        sorted.add(module);
     }
 
-    if (count !== modules.length) {
-        console.error("Circular dependency detected (Kahn's algorithm)!");
-        modules.forEach(module => {
-            console.log(`Module: ${module.name}, Dependencies: ${module.dependencies}`);
-        });
-        throw new Error("Circular dependency detected (Kahn's algorithm)!");
+    // Start DFS from each module
+    // Only start from modules that haven't been visited yet
+    for (const module of modules) {
+        const moduleIndex = modules.findIndex(m => m.name === module.name);
+        if (state[moduleIndex] === 2) continue;  // 如果已经访问过，跳过
+        dfs(module.name);
     }
 
-    // Sort by dependency count (least dependencies first)
-    sorted.sort((a, b) => (a.dependencies?.length || 0) - (b.dependencies?.length || 0));
+    // Check for duplicate module names
+    if (sorted.size !== modules.length) {
+        console.error("Duplicate module names detected!");
+        throw new Error("Duplicate module names detected!");
+    }
 
-    // Then sort by priority (highest priority first)
-    sorted.sort((a, b) => (b.priority || 0) - (a.priority || 0));
-
-    return sorted;
+    return Array.from(sorted);
 }
 
 export default async function loadDir(
