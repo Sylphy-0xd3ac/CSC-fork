@@ -1,2 +1,4 @@
 export async function run(hazel, core, hold) {}
 export const priority = 0;
+export const name = "";
+export const dependencies :string[] = [];

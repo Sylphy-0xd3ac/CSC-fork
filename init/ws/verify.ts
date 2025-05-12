@@ -33,4 +33,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "verify";
-export const dependencies :string[] = ["server"];
+export const dependencies :string[] = [];
