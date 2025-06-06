@@ -35,4 +35,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/sylphy-0xd3ac/crosst-backend:latest
+          tags: ghcr.io/sylphy-0xd3ac/csc-fork:latest
