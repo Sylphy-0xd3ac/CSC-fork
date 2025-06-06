@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Push GHCR Image
 
 on:
   push:
@@ -13,7 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Crosst-Chat-TS
 
     steps:
       - name: Checkout repository
@@ -27,13 +26,13 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.3.0
         with:
-          registry: docker.io
-          username: reaj408
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          registry: ghcr.io
+          username: sylphy-0xd3ac
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.14.0
         with:
           context: .
           push: true
-          tags: reaj408/crosst-backend:latest
+          tags: ghcr.io/sylphy-0xd3ac/crosst-backend:latest
