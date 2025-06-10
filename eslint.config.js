@@ -7,7 +7,7 @@ import tsParser from "@typescript-eslint/parser";
 export default [
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
-    ignores: ["node_modules/**", "eslint.config.js"], // 忽略特定文件夹
+    ignores: ["node_modules/**", "eslint.config.js", "dist/**"], // 忽略特定文件
     languageOptions: {
       parser: tsParser, // 使用 @typescript-eslint/parser 作为解析器
       parserOptions: {
