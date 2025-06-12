@@ -652,7 +652,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.5.14, @types/ws@npm:~8.5.10":
+"@types/ws@npm:^8.18.1":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:~8.5.10":
   version: 8.5.14
   resolution: "@types/ws@npm:8.5.14"
   dependencies:
@@ -1046,7 +1055,7 @@ __metadata:
     "@types/fs-extra": "npm:^11.0.4"
     "@types/js-yaml": "npm:^4"
     "@types/node": "npm:^22.14.1"
-    "@types/ws": "npm:^8.5.14"
+    "@types/ws": "npm:^8.18.1"
     adm-zip: "npm:^0.5.16"
     argon2: "npm:^0.41.1"
     esbuild: "npm:^0.25.4"
@@ -1062,7 +1071,7 @@ __metadata:
     tsx: "npm:^4.19.4"
     typescript: "npm:^5.7.3"
     typescript-eslint: "npm:^8.34.0"
-    ws: "npm:^8.12.0"
+    ws: "npm:^8.18.2"
   languageName: unknown
   linkType: soft
 
@@ -2727,9 +2736,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.12.0":
-  version: 8.18.1
-  resolution: "ws@npm:8.18.1"
+"ws@npm:^8.18.2":
+  version: 8.18.2
+  resolution: "ws@npm:8.18.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -2738,7 +2747,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/e498965d6938c63058c4310ffb6967f07d4fa06789d3364829028af380d299fe05762961742971c764973dce3d1f6a2633fe8b2d9410c9b52e534b4b882a99fa
+  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
   languageName: node
   linkType: hard
 
