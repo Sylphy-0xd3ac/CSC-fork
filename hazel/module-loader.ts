@@ -17,57 +17,72 @@ interface InitModule {
     dependencies: string[];
     run: (...args: any[]) => any;
     filePath: string;
+    priority?: number;
 }
 
 function topologicalSort(modules: InitModule[]): InitModule[] {
     const moduleMap = new Map<string, InitModule>();
-    const sorted: Set<InitModule> = new Set();
+    const sorted: InitModule[] = [];
     const state = new Uint8Array(modules.length); 
+    const added = new Set<string>();
 
-    modules.forEach((module, index) => {
+    const moduleNames = new Set<string>();
+    for (const module of modules) {
+        if (moduleNames.has(module.name)) {
+            throw new Error(`Duplicate module name detected: ${module.name}`);
+        }
+        moduleNames.add(module.name);
+    }
+
+    modules.forEach((module) => {
         moduleMap.set(module.name, module);
     });
 
     function dfs(moduleName: string, path: string[] = []): void {
         const moduleIndex = modules.findIndex(m => m.name === moduleName);
         if (moduleIndex === -1) return;
-
         if (state[moduleIndex] === 1) {
-            console.error(`Circular dependency detected: ${[...path, moduleName].join(" -> ")}`);
             throw new Error("Circular dependency detected!");
         }
-
         const module = moduleMap.get(moduleName)!;
-        const dependencies = module.dependencies;
-
+        const dependencies = module.dependencies || [];
         state[moduleIndex] = 1;
         path.push(moduleName);
-
-        for (const dependency of dependencies) {
+        const sortedDependencies = dependencies.sort((a, b) => {
+            const depA = moduleMap.get(a);
+            const depB = moduleMap.get(b);
+            if (!depA || !depB) return 0;
+            const priorityA = depA.priority ?? Number.MAX_SAFE_INTEGER;
+            const priorityB = depB.priority ?? Number.MAX_SAFE_INTEGER;
+            return priorityA - priorityB;
+        });
+        for (const dependency of sortedDependencies) {
             const depModule = moduleMap.get(dependency);
             if (!depModule) {
-                console.warn(`Dependency "${dependency}" of module "${module.name}" not found.`);
                 continue;
             }
             dfs(dependency, [...path]);
         }
-
         state[moduleIndex] = 2;
-        sorted.add(module);
+        if (!added.has(module.name)) {
+            sorted.push(module);
+            added.add(module.name);
+        }
     }
-
-    for (const module of modules) {
+    const sortedModules = [...modules].sort((a, b) => {
+        const priorityA = a.priority ?? Number.MAX_SAFE_INTEGER;
+        const priorityB = b.priority ?? Number.MAX_SAFE_INTEGER;
+        return priorityA - priorityB;
+    });
+    for (const module of sortedModules) {
         const moduleIndex = modules.findIndex(m => m.name === module.name);
         if (state[moduleIndex] === 2) continue;  
         dfs(module.name);
     }
-
-    if (sorted.size !== modules.length) {
-        console.error("Duplicate module names detected!");
-        throw new Error("Duplicate module names detected!");
+    if (sorted.length !== modules.length) {
+        throw new Error("Module count mismatch after topological sort!");
     }
-
-    return Array.from(sorted);
+    return sorted;
 }
 
 export default async function loadDir(
