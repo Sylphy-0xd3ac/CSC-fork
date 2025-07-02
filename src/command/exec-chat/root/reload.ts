@@ -1,7 +1,4 @@
 // 用于重载十字街几乎所有模块
-
-import pkg from "fs-extra";
-const { existsSync } = pkg;
 import path from "node:path";
 
 export async function reloadAll(hazel, core, hold, socket, line) {
@@ -33,13 +30,12 @@ export async function reloadModule(hazel, core, hold, socket, line) {
   let args = core.splitArgs(line);
   let moduleName = args[1].trim();
   let module = await hazel.getModule(moduleName);
-  let modulePath = module.filePath;
-  let reloadTime = Date.now();
-
-  if (!existsSync(modulePath)) {
+  if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
+  let modulePath = module.filePath;
+  let reloadTime = Date.now();
 
   moduleName = path.basename(modulePath, path.extname(modulePath));
 
@@ -78,13 +74,12 @@ export async function reloadModuleByID(hazel, core, hold, socket, line) {
   let moduleName = args[1].trim();
   let version = args[2].trim();
   let module = await hazel.getModule(moduleName);
-  let modulePath = module.filePath;
-  let reloadTime = Date.now();
-
-  if (!existsSync(modulePath)) {
+  if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
+  let modulePath = module.filePath;
+  let reloadTime = Date.now();
 
   moduleName = path.basename(modulePath, path.extname(modulePath));
 
@@ -150,13 +145,11 @@ export async function listModulesVersion(hazel, core, hold, socket, line) {
   let args = core.splitArgs(line);
   let moduleName = args[2].trim();
   let module = await hazel.getModule(moduleName);
-  let modulePath = module.filePath;
-
-  // 检查模块是否存在
-  if (!existsSync(modulePath)) {
+  if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
     return;
   }
+  let modulePath = module.filePath;
 
   if (
     !(
