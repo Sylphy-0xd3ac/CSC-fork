@@ -32,7 +32,6 @@ export default class Hazel extends EventEmitter2 {
     });
   }
 
-
   #core: any = {};
   #hold: any = {};
 
@@ -164,15 +163,15 @@ export default class Hazel extends EventEmitter2 {
       delete this.#core[property];
     }
 
-   try {
+    try {
       this.loadedInits.forEach((initFunction) => {
-          initFunction.run(this, this.#core, this.#hold).catch((error) => {
-            this.emit("error", error);
-            console.error(error);
-            if (!forceLoad) {
-              return false;
-            }
-          });
+        initFunction.run(this, this.#core, this.#hold).catch((error) => {
+          this.emit("error", error);
+          console.error(error);
+          if (!forceLoad) {
+            return false;
+          }
+        });
       });
     } catch (error) {
       this.emit("error", error);

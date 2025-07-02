@@ -33,4 +33,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "archive";
-export const dependencies :string[] = ["logger"];
+export const dependencies: string[] = ["logger"];

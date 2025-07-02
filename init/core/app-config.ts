@@ -49,4 +49,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "app-config";
-export const dependencies :string[] = [];
+export const dependencies: string[] = [];

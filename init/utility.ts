@@ -138,4 +138,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "utility";
-export const dependencies :string[] = [];
+export const dependencies: string[] = [];

@@ -418,4 +418,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "address-checker";
-export const dependencies :string[] = ["app-config"];
+export const dependencies: string[] = ["app-config"];
