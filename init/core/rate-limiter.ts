@@ -58,4 +58,5 @@ export async function run(hazel, core, hold) {
   };
 }
 
-export const priority = 3;
+export const name = "rate-limiter";
+export const dependencies: string[] = [];
