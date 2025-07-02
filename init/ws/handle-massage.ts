@@ -134,4 +134,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "handle-message";
-export const dependencies :string[] = ["ws-reply"];
+export const dependencies: string[] = ["ws-reply"];

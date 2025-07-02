@@ -32,7 +32,6 @@ rateLimiter:
   halfScoreTime: 30000
   limit: 26
 
-
 # Alert Frequency
 alertFrequency: 180
 

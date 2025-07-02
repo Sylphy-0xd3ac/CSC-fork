@@ -348,4 +348,4 @@ export async function run(hazel, core, hold) {
   core.logger = Logger;
 }
 export const name = "logger";
-export const dependencies :string[] = [];
+export const dependencies: string[] = [];

@@ -49,5 +49,5 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "handle-error";
-export const dependencies :string[] = ["logger"];
+export const dependencies: string[] = ["logger"];
 export const priority = -1;
