@@ -14,7 +14,7 @@ export async function run(hazel, core, hold, socket, data) {
       {
         cmd: "info",
         code: "NOTICE_REMOVED_ALL",
-        text: `用户 ${socket.nick} 删除了所有公告。`,
+        text: `${socket.nick} 删除了所有公告。`,
       },
       core.findSocketByLevel(core.config.level.user),
     );
@@ -33,7 +33,7 @@ export async function run(hazel, core, hold, socket, data) {
       {
         cmd: "info",
         code: "NOTICE_REMOVED",
-        text: `用户 ${socket.nick} 删除了一个公告, 编号为 ${data.id}。`,
+        text: `${socket.nick} 删除了一个公告, 编号为 ${data.id}。`,
       },
       core.findSocketByLevel(core.config.level.user),
     );
