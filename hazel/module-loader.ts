@@ -1,5 +1,6 @@
 import { sync } from "glob";
 import path from "node:path";
+import type { InitModule } from "./hazel-core";
 
 export function recursiveReadDir(baseDir) {
   return sync(path.join(baseDir, "**/*"), {
@@ -12,31 +13,20 @@ export async function importModule(filePath: string, loadID: string) {
   return Object.assign({}, module);
 }
 
-interface InitModule {
-  name: string;
-  dependencies: string[];
-  run: (...args: any[]) => any;
-  filePath: string;
-  priority?: number;
-}
-
-function topologicalSort(modules: InitModule[]): InitModule[] {
-  const moduleMap = new Map<string, InitModule>();
+function topologicalSort(moduleMap: Map<string, InitModule>): Map<string, InitModule> {
   const sorted: InitModule[] = [];
-  const state = new Uint8Array(modules.length);
+  const state = new Uint8Array(moduleMap.size);
   const added = new Set<string>();
 
   const moduleNames = new Set<string>();
-  for (const module of modules) {
+  const modules = [];
+  for (const module of moduleMap.values()) {
     if (moduleNames.has(module.name)) {
       throw new Error(`Duplicate module name detected: ${module.name}`);
     }
     moduleNames.add(module.name);
+    modules.push(module)
   }
-
-  modules.forEach((module) => {
-    moduleMap.set(module.name, module);
-  });
 
   function dfs(moduleName: string, path: string[] = []): void {
     const moduleIndex = modules.findIndex((m) => m.name === moduleName);
@@ -82,7 +72,10 @@ function topologicalSort(modules: InitModule[]): InitModule[] {
   if (sorted.length !== modules.length) {
     throw new Error("Module count mismatch after topological sort!");
   }
-  return sorted;
+  
+  return new Map(sorted.map(module => {
+    return [module.name, module];
+  }));
 }
 
 export default async function loadDir(
@@ -92,11 +85,10 @@ export default async function loadDir(
   loadID: (...args: any[]) => string,
 ) {
   let existError = false;
-
   let moduleList;
-  if (loadType === "function") {
+  if (loadType === "function" || loadType === "init") {
     moduleList = new Map();
-  } else if (loadType === "init" || loadType === "static") {
+  } else if (loadType === "static") {
     moduleList = [];
   }
 
@@ -180,27 +172,14 @@ export default async function loadDir(
       if (loadType === "function") {
         moduleList.set(currentModule.name, currentModule);
         currentModule.filePath = filePath;
-        const history = hazel.loadHistory.get(filePath) || [];
-        history.push(await hazel.randomLoadID());
-        hazel.loadHistory.set(filePath, history);
-        hazel.moduleMap.set(currentModule.name, currentModule);
+        currentModule.loadHistory = [loadID()];
       } else if (loadType === "init") {
-        moduleList.push(currentModule);
+        moduleList.set(currentModule.name, currentModule);
         currentModule.filePath = filePath;
-        const history = hazel.loadHistory.get(filePath) || [];
-        history.push(await hazel.randomLoadID());
-        hazel.loadHistory.set(filePath, history);
-        hazel.moduleMap.set(
-          path.basename(filePath, path.extname(filePath)),
-          currentModule,
-        );
+        currentModule.loadHistory = [loadID()];
       } else if (loadType === "static") {
         moduleList.push(currentModule);
         currentModule.filePath = filePath;
-        hazel.moduleMap.set(
-          path.basename(filePath, path.extname(filePath)),
-          currentModule,
-        );
       }
     }
   }

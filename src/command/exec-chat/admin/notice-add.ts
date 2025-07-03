@@ -15,7 +15,7 @@ export async function run(hazel, core, hold, socket, data) {
     {
       cmd: "info",
       code: "NOTICE_ADDED",
-      text: `用户 ${socket.nick} 添加了一个公告, 编号为 ${hold.noticeList.length}, 内容为: ${data.text}。`,
+      text: `${socket.nick} 添加了一个公告, 编号为 ${hold.noticeList.length}, 内容为: ${data.text}。`,
     },
     core.findSocketByLevel(core.config.level.user),
   );

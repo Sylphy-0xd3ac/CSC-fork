@@ -18,31 +18,32 @@ export async function run(hazel, core, hold) {
     return output;
   };
 
-  // 获取内存使用情况
+  // 获取内存使用情况（本进程，百分比）
   core.getMemoryUsage = function () {
-    return ((100 * os.freemem()) / os.totalmem()).toFixed(2);
+    const mem = process.memoryUsage();
+    const percent = (100 * mem.rss / os.totalmem()).toFixed(2);
+    return percent;
   };
 
-  // CPU占用率
+  // CPU占用率（本进程，定时采样+缓存，毫秒级同步读取）
+  let lastCpuUsage = '0.00';
+  async function sampleCpu() {
+    while (true) {
+      const startUsage = process.cpuUsage();
+      const startTime = process.hrtime();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const elapUsage = process.cpuUsage(startUsage);
+      const elapTime = process.hrtime(startTime);
+      const elapTimeMS = elapTime[0] * 1000 + elapTime[1] / 1e6;
+      const elapUserMS = elapUsage.user / 1000;
+      const elapSystMS = elapUsage.system / 1000;
+      const cpuPercent = ((elapUserMS + elapSystMS) / elapTimeMS) * 100;
+      lastCpuUsage = cpuPercent.toFixed(2);
+    }
+  }
+  sampleCpu(); // 启动后台采样
   core.getCpuUsage = function () {
-    const cpus = os.cpus();
-
-    let totalIdle = 0,
-      totalTick = 0;
-
-    cpus.forEach((cpu) => {
-      for (let type in cpu.times) {
-        totalTick += cpu.times[type];
-      }
-      totalIdle += cpu.times.idle;
-    });
-
-    const idle = totalIdle / cpus.length;
-    const total = totalTick / cpus.length;
-
-    const usage = 100 - (100 * idle) / total;
-
-    return usage.toFixed(2);
+    return lastCpuUsage;
   };
 
   // 格式化时间

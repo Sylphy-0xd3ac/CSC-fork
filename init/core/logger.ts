@@ -2,6 +2,8 @@
 import { stdout } from "supports-color";
 import pkg from "fs-extra";
 const { existsSync, mkdirSync, writeFileSync } = pkg;
+import path from "node:path";
+
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;
@@ -330,7 +332,7 @@ export async function run(hazel, core, hold) {
     showTime: "yyyy-MM-dd hh:mm:ss.SSS",
     print: function (text) {
       if (!existsSync(hazel.mainConfig.logDir)) {
-        mkdirSync(hazel.mainConfig.logDir);
+        mkdirSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.logDir));
       }
       let textArray = text.split("\n");
       textArray.forEach((splitText) => {

@@ -13,7 +13,7 @@ export async function run(hazel, core, hold) {
   hold.stats = {};
 
   // 初始化允许和拒绝的前缀树
-  const AddressTree = hazel.moduleMap.get("address-checker").AddressTree;
+  const AddressTree = (await hazel.getModule("address-checker")).AddressTree;
   hold.allowTree = new AddressTree();
   hold.denyTree = new AddressTree();
 

@@ -16,12 +16,12 @@ runOnTS: true
 # Hazel Configuration
 hazel:
   moduleDirs:
-    initsDir: "/init"
-    functionsDir: "/src"
-    staticsDir: "/boot"
+    initsDir: "init"
+    functionsDir: "src"
+    staticsDir: "boot"
 
 # Log Directory
-logDir: "./logs"
+logDir: "logs"
 
 # Behind Reverse Proxy
 behindReverseProxy: false
@@ -33,13 +33,13 @@ wsHeartbeatInterval: 16000
 wsHeartbeatTimeout: 10000
 
 # App Config Dir
-appConfigDir: "/config/config.yml"
+appConfigDir: "config/config.yml"
 
 # Allow CIDR List Dir
-allowCIDRlistDir: "/config/allow.txt"
+allowCIDRlistDir: "config/allow.txt"
 
 # Deny CIDR List Dir
-denyCIDRlistDir: "/config/deny.txt"
+denyCIDRlistDir: "config/deny.txt"
 
 # CIDR Policy(allow or deny or close)
 cidrPolicy: "close"
