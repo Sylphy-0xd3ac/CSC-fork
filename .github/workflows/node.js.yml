@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4.2.0
         with:
-          node-version: "18" # 可根据需要选择 Node.js 版本
+          node-version: "20"
 
       # Step 3: 安装依赖
       - name: Install dependencies
@@ -39,19 +39,7 @@ jobs:
 
       # Step 6: 编译代码
       - name: Compile TypeScript
-        run: npm run build
-
-      - name: Copy package.json from root
-        run: cp ./package.json dist/
-
-      - name: Copy yarn.lock to dist
-        run: cp ./yarn.lock dist/
-
-      - name: Copy node_modules to dist
-        run: cp -r ./node_modules dist/
-
-      - name: Copy .yarn to dist
-        run: cp -r ./.yarn dist/
+        run: npm run build:esbuild
 
       # Step 8: 复制文件
       - name: Copy files and compress
