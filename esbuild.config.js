@@ -5,12 +5,10 @@ import { load, dump } from "js-yaml";
 import zip from "adm-zip";
 import { sync } from "glob";
 
-let globStartTimestamp = Date.now();
 // 使用glob获取当前目录及子目录下的所有ts文件
 const tsFiles = sync("**/*.ts", {
   ignore: ["node_modules/**", "dist/**"], // 忽略node_modules和dist目录
 });
-console.log(`Glob finished in ${Date.now() - globStartTimestamp}ms`);
 
 // 构建配置
 const buildOptions = {
@@ -22,10 +20,13 @@ const buildOptions = {
   outdir: "dist", // 输出目录
 };
 
-let buildStartTimestamp = Date.now();
+let buildStartTime = Date.now();
+
 // 执行构建
 build(buildOptions)
   .then(async () => {
+    console.log("开始后处理...");
+    
     // 创建dist/config目录
     mkdirSync("dist/config", { recursive: true });
 
@@ -45,20 +46,19 @@ build(buildOptions)
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
-    let extractTimestamp = Date.now();
+    
+    // 解压客户端文件
     const client = new zip("client.zip");
     client.extractAllTo("dist/client", true, true);
-    console.log(`Extract finished in ${Date.now() - extractTimestamp}ms`);
-    let copyTimestamp = Date.now();
+    console.log("客户端文件解压完成");
+    
+    // 拷贝运行时文件
     await copy("package.json", "dist/package.json");
     await copy("yarn.lock", "dist/yarn.lock");
-    await copy("node_modules", "dist/node_modules");
-    await copy(".yarn", "dist/.yarn");
-    console.log(`Copy finished in ${Date.now() - copyTimestamp}ms`);
+    const totalTime = Date.now() - buildStartTime;
+    console.log(`\n✔ Finished in ${totalTime.toFixed(2)} ms`);
   })
   .catch((err) => {
     console.error(err);
     process.exit(1);
   });
-
-console.log(`Build finished in ${Date.now() - buildStartTimestamp}ms`);

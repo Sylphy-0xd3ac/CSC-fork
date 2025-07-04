@@ -9,7 +9,7 @@ node_modules/
 .idea
 
 # Yarn
-yarn.lock
+.yarn
 
 # DS_Store
 .DS_Store
