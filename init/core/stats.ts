@@ -17,4 +17,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "stats";
-export const dependencies: string[] = [];
+export const dependencies: string[] = ["boot"];

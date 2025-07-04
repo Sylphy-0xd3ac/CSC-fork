@@ -1,6 +1,9 @@
 // 初始化服务器
-
 export async function run(hazel, core, hold) {
+  // 如果已经加载过，则不重新加载
+  if (hold.dataLoaded) {
+    return;
+  }
   // 冻结对象和函数的原型链
   Object.freeze(Object.prototype);
   Object.freeze(Function.prototype);
@@ -40,4 +43,10 @@ export async function run(hazel, core, hold) {
   // 写日志，保存服务器启动时间，上次重读时间
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
+
+  // 标记为已加载
+  hold.dataLoaded = true;
 }
+
+export const name = "data";
+export const dependencies = [];

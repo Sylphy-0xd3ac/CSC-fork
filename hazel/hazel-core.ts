@@ -19,24 +19,16 @@ export interface FunctionModule {
   loadHistory: string[];
 }
 
-export interface StaticModule {
-  name: string;
-  run: (...args: any[]) => any;
-  filePath: string;
-}
-
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedFunctions: Map<string, FunctionModule>;
   loadedInits: Map<string, InitModule>;
-  loadedStatics: StaticModule[];
 
   constructor(mainConfig: any) {
     super();
     this.mainConfig = mainConfig;
     this.loadedFunctions = new Map();
     this.loadedInits = new Map();
-    this.loadedStatics = [];
 
     process.on("unhandledRejection", (error) => {
       this.emit("error", error);
@@ -153,7 +145,7 @@ export default class Hazel extends EventEmitter2 {
     this.emit("reload-start");
     if (
       !forceReload &&
-      (await this.reloadInitAndFunction(forceReload || false)) == false
+      (await this.loadModules(forceReload || false)) == false
     ) {
       return false;
     }
@@ -213,98 +205,6 @@ export default class Hazel extends EventEmitter2 {
       return false;
     }
 
-    this.loadedFunctions = loadedFunctions;
-
-    console.log(
-      `√ Initialize functions ${this.loadedFunctions.size} complete!\n`,
-    );
-
-    let { moduleList: loadedStatics, existError: staticExistError } =
-      (await loadModule(
-        this,
-        path.join(this.mainConfig.baseDir, this.mainConfig.hazel.moduleDirs.staticsDir),
-        "static",
-        this.randomLoadID,
-      )) as { moduleList: any; existError: boolean };
-    if (!forceLoad && staticExistError) {
-      return false;
-    }
-
-    this.loadedStatics = loadedStatics;
-
-    this.loadedStatics.forEach((staticFunction) => {
-      staticFunction.run(this, this.#core, this.#hold).catch((error) => {
-        this.emit("error", error);
-        console.error(error);
-        if (!forceLoad) {
-          return false;
-        }
-      });
-    });
-
-    console.log(
-      `√ Initialize statics ${this.loadedStatics.length} complete!\n`,
-    );
-
-    return !(initsExistError || functionExistError || staticExistError);
-  }
-
-  async reloadInitAndFunction(forceLoad: boolean) {
-    let result = (await loadModule(
-      this,
-      path.join(this.mainConfig.baseDir, this.mainConfig.hazel.moduleDirs.initsDir),
-      "init",
-      this.randomLoadID,
-    )) as { moduleList: any; existError: boolean };
-    let { moduleList: loadedInits, existError: initsExistError } = result;
-    if (!forceLoad && initsExistError) {
-      return false;
-    }
-    forceLoad = true;
-
-    loadedInits.forEach((init, name) => {
-      const old = this.loadedInits.get(name);
-      if (old && Array.isArray(old.loadHistory)) {
-        init.loadHistory = [...old.loadHistory, init.loadHistory[init.loadHistory.length - 1]];
-      }
-    });
-    this.loadedInits = loadedInits;
-
-    this.removeAllListeners();
-    this.on("error", () => {});
-    for (let property in this.#core) {
-      delete this.#core[property];
-    }
-
-    this.loadedInits.forEach((initFunction) => {
-      initFunction.run(this, this.#core, this.#hold).catch((error) => {
-        this.emit("error", error);
-        console.error(error);
-        if (!forceLoad) {
-          return false;
-        }
-      });
-    });
-
-    console.log(`√ Initialize inits ${this.loadedInits.size} complete!\n`);
-
-    let { moduleList: loadedFunctions, existError: functionExistError } =
-      (await loadModule(
-        this,
-        path.join(this.mainConfig.baseDir, this.mainConfig.hazel.moduleDirs.functionsDir),
-        "function",
-        this.randomLoadID,
-      )) as { moduleList: any; existError: boolean };
-    if (!forceLoad && functionExistError) {
-      return false;
-    }
-
-    loadedFunctions.forEach((func, name) => {
-      const old = this.loadedFunctions.get(name);
-      if (old && Array.isArray(old.loadHistory)) {
-        func.loadHistory = [...old.loadHistory, func.loadHistory[func.loadHistory.length - 1]];
-      }
-    });
     this.loadedFunctions = loadedFunctions;
 
     console.log(
