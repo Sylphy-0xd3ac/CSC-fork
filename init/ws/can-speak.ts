@@ -5,6 +5,14 @@ export async function run(hazel, core, hold) {
     if (typeof socket.channel == "undefined") {
       return false;
     }
+    
+    // 检查聊天室是否存在
+    if (!hold.channel.has(socket.channel)) {
+      // 如果聊天室不存在，将用户的 channel 设置为 undefined
+      socket.channel = undefined;
+      return false;
+    }
+    
     // 检查用户是否被禁言
     if (hold.muteUntil.has(socket.remoteAddress)) {
       // 如果禁言时间已过

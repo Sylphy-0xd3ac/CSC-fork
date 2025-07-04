@@ -1,227 +1,32 @@
-// 负责查找 socket、对 socket 发送消息、广播消息等操作
+// 用于启动 WebSocket 服务器
+
+import { WebSocketServer } from "ws";
 
 export async function run(hazel, core, hold) {
-  // 向指定的 socket 发送消息
-  core.reply = function (payload, socket) {
-    try {
-      if (socket.readyState === 1 /* OPEN */) {
-        socket.send(JSON.stringify(payload));
-      }
-    } catch (error) {
-      hazel.emit("error", error, socket);
-    }
-  };
+  // 如果 WebSocket 服务器已经启动，则不重新启动
+  if (hold.wsServer) {
+    return;
+  }
+  // 尽可能简单地创建一个 WebSocket 服务器
+  hold.wsServer = new WebSocketServer({ port: hazel.mainConfig.port });
+  // 绑定 WebSocket 服务器的事件
+  hold.wsServer.on("error", (error) => {
+    hazel.emit("error", error);
+  });
+  hold.wsServer.on("connection", (ws, request) => {
+    hazel.runFunction("handle-connection", ws, request);
+  });
+  // hold.wsServer.on('close', () => { hazel.runFunction('handle-close'); });
+  // hold.wsServer.on('headers', ( headers, request ) => { hazel.runFunction('handle-headers', headers, request); });
 
-  // 添加 prompt 方法
-  core.prompt = function (socket) {
-    return new Promise((resolve) => {
-      const messageHandler = (message) => {
-        // 处理消息并解析
-        const data = JSON.parse(message);
-        // 移除事件监听器
-        socket.off("message", messageHandler);
-        // 解析并返回数据
-        resolve(data);
-      };
-
-      // 添加事件监听器
-      socket.on("message", messageHandler);
-      socket.handlePrompt = true;
-    });
-  };
-
-  core.extendedFindSockets = function (filter, sockets) {
-    const filterAttrs = Object.keys(filter);
-    const reqCount = filterAttrs.length;
-    let matches: any = [];
-    let socketList: any = sockets || hold.wsServer.clients;
-
-    socketList.forEach((socket) => {
-      let curMatch = 0;
-
-      for (let loop = 0; loop < reqCount; loop += 1) {
-        const filterAttr = filterAttrs[loop];
-        const filterAttrValue = filter[filterAttr];
-        let socketAttrValue = socket;
-
-        // 支持深层属性
-        const attrs = filterAttr.split(".");
-        for (const attr of attrs) {
-          if (socketAttrValue[attr] !== undefined) {
-            socketAttrValue = socketAttrValue[attr];
-          } else {
-            socketAttrValue = undefined;
-            break;
-          }
-        }
-
-        if (socketAttrValue !== undefined) {
-          // 区分值的类型进行比较
-          switch (typeof filterAttrValue) {
-            case "object":
-              if (Array.isArray(filterAttrValue)) {
-                if (filterAttrValue.includes(socketAttrValue)) {
-                  curMatch++;
-                }
-              } else if (socketAttrValue === filterAttrValue) {
-                curMatch++;
-              }
-              break;
-            case "function":
-              if (filterAttrValue(socketAttrValue)) {
-                curMatch++;
-              }
-              break;
-            default:
-              if (
-                socketAttrValue === filterAttrValue ||
-                (typeof filterAttrValue === "number" &&
-                  socketAttrValue > filterAttrValue)
-              ) {
-                curMatch++;
-              }
-              break;
-          }
-        }
-      }
-
-      if (curMatch === reqCount) {
-        matches.push(socket);
-      }
-    });
-
-    return matches;
-  };
-  // 寻找符合条件的 socket
-  // 本函数高度来源于 https://github.com/hack-chat/main/blob/master/server/src/serverLib/MainServer.js#L353
-  // 功能太强一般用不到，先注释掉
-  core.hackchatFindSockets = function (filter) {
-    const filterAttrs = Object.keys(filter);
-    const reqCount = filterAttrs.length;
-    let curMatch = 0;
-    let matches: any = [];
-    let socketList: any = hold.wsServer.clients;
-    socketList.forEach((socket) => {
-      curMatch = 0;
-      for (let loop = 0; loop < reqCount; loop += 1) {
-        let filterAttrValue = filter[filterAttrs[loop]];
-        if (typeof socket[filterAttrValue] !== "undefined") {
-          switch (typeof filter[filterAttrValue]) {
-            // 这里暂时删除根据数组匹配的功能
-            case "object": {
-              if (Array.isArray(filter[filterAttrs[loop]])) {
-                if (
-                  filter[filterAttrs[loop]].indexOf(
-                    socket[filterAttrs[loop]],
-                  ) !== -1
-                ) {
-                  curMatch += 1;
-                }
-              } else if (
-                socket[filterAttrs[loop]] === filter[filterAttrs[loop]]
-              ) {
-                curMatch += 1;
-              }
-              break;
-            }
-
-            case "function": {
-              if (filter[filterAttrValue](socket[filterAttrValue])) {
-                curMatch += 1;
-              }
-              break;
-            }
-
-            default: {
-              if (socket[filterAttrValue] === filter[filterAttrValue]) {
-                curMatch += 1;
-              }
-              break;
-            }
-          }
-        }
-      }
-
-      if (curMatch === reqCount) {
-        matches.push(socket);
-      }
-    });
-
-    return matches;
-  };
-
-  // 使用属性为字符串的过滤条件查找 socket
-  core.findSocket = function (filter, sockets) {
-    //检查属性
-    if (typeof filter !== "object" || filter === null) {
-      return [];
-    }
-    let attrCount = Object.keys(filter).length;
-    let curMatch = 0;
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
-    socketList.forEach((socket) => {
-      curMatch = 0;
-      for (let attr in filter) {
-        if (socket[attr] === filter[attr]) {
-          curMatch += 1;
-        }
-      }
-
-      if (curMatch === attrCount) {
-        matches.push(socket);
-      }
-    });
-    return matches;
-  };
-
-  // 使用一个属性作为过滤条件查找 socket
-  core.findSocketTiny = function (attr, value) {
-    let matches: any = [];
-    hold.wsServer.clients.forEach((socket: any) => {
-      if (socket[attr] === value) {
-        matches.push(socket);
-      }
-    });
-    return matches;
-  };
-
-  // 根据给定的用户等级查找 socket
-  core.findSocketByLevel = function (level, sockets) {
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
-    socketList.forEach((socket) => {
-      if (socket.level >= level) {
-        matches.push(socket);
-      }
-    });
-    return matches;
-  };
-
-  core.findSocketByLevelDown = function (level, sockets) {
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
-    socketList.forEach((socket) => {
-      if (socket.level <= level) {
-        matches.push(socket);
-      }
-    });
-    return matches;
-  };
-
-  // 向指定的一些 socket 广播消息
-  core.broadcast = function (payload, sockets) {
-    sockets.forEach((socket) => {
-      try {
-        if (socket.readyState === 1 /* OPEN */) {
-          socket.send(JSON.stringify(payload));
-        }
-      } catch (error) {
-        hazel.emit("error", error, socket);
-      }
-    });
-  };
+  // 启动 WebSocket Heartbeat
+  await new Promise((resolve) => {
+    setInterval(() => {
+      hazel.runFunction("heartbeat");
+    }, hazel.mainConfig.wsHeartbeatInterval);
+    resolve(true);
+  });
 }
 
-export const name = "server";
-export const dependencies: string[] = [];
+export const name = "ws-server";
+export const dependencies = [];

@@ -88,8 +88,6 @@ export default async function loadDir(
   let moduleList;
   if (loadType === "function" || loadType === "init") {
     moduleList = new Map();
-  } else if (loadType === "static") {
-    moduleList = [];
   }
 
   for (const filePath of recursiveReadDir(dirName)) {
@@ -177,9 +175,6 @@ export default async function loadDir(
         moduleList.set(currentModule.name, currentModule);
         currentModule.filePath = filePath;
         currentModule.loadHistory = [loadID()];
-      } else if (loadType === "static") {
-        moduleList.push(currentModule);
-        currentModule.filePath = filePath;
       }
     }
   }
