@@ -26,7 +26,7 @@ let buildStartTime = Date.now();
 build(buildOptions)
   .then(async () => {
     console.log("开始后处理...");
-    
+
     // 创建dist/config目录
     mkdirSync("dist/config", { recursive: true });
 
@@ -41,17 +41,16 @@ build(buildOptions)
     let config = load(
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
     );
-    config.hazel.moduleDirs.staticDir = "/boot/boot.js,/boot/boot_ws.js";
     config.runOnTS = false;
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });
-    
+
     // 解压客户端文件
     const client = new zip("client.zip");
     client.extractAllTo("dist/client", true, true);
     console.log("客户端文件解压完成");
-    
+
     // 拷贝运行时文件
     await copy("package.json", "dist/package.json");
     await copy("yarn.lock", "dist/yarn.lock");

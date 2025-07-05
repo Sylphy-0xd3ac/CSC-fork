@@ -16,8 +16,7 @@ runOnTS: true
 # Hazel Configuration
 hazel:
   moduleDirs:
-    initsDir: "init"
-    functionsDir: "src"
+    modulesDir: "modules"
 
 # Log Directory
 logDir: "logs"
