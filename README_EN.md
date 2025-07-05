@@ -32,14 +32,14 @@ The TypeScript version of CrosSt Street is a fork of the [official CrosSt Street
    yarn install
    ```
 
-2. **Start the Backend**:
+3. **Start the Backend**:
    Execute:
 
    ```bash
    node main.js
    ```
 
-3. **Test the Backend**:
+4. **Test the Backend**:
    Open the `index.html` file in the `client` folder using your browser. If the homepage is displayed successfully, the backend is running correctly.
 
 ---

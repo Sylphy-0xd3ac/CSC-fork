@@ -1,6 +1,6 @@
 import { sync } from "glob";
 import path from "node:path";
-import type { InitModule } from "./hazel-core";
+import type { Module } from "./hazel-core";
 
 export function recursiveReadDir(baseDir) {
   return sync(path.join(baseDir, "**/*"), {
@@ -13,8 +13,8 @@ export async function importModule(filePath: string, loadID: string) {
   return Object.assign({}, module);
 }
 
-function topologicalSort(moduleMap: Map<string, InitModule>): Map<string, InitModule> {
-  const sorted: InitModule[] = [];
+function topologicalSort(moduleMap: Map<string, Module>): Map<string, Module> {
+  const sorted: Module[] = [];
   const state = new Uint8Array(moduleMap.size);
   const added = new Set<string>();
 
@@ -25,7 +25,7 @@ function topologicalSort(moduleMap: Map<string, InitModule>): Map<string, InitMo
       throw new Error(`Duplicate module name detected: ${module.name}`);
     }
     moduleNames.add(module.name);
-    modules.push(module)
+    modules.push(module);
   }
 
   function dfs(moduleName: string, path: string[] = []): void {
@@ -72,10 +72,12 @@ function topologicalSort(moduleMap: Map<string, InitModule>): Map<string, InitMo
   if (sorted.length !== modules.length) {
     throw new Error("Module count mismatch after topological sort!");
   }
-  
-  return new Map(sorted.map(module => {
-    return [module.name, module];
-  }));
+
+  return new Map(
+    sorted.map((module) => {
+      return [module.name, module];
+    }),
+  );
 }
 
 export default async function loadDir(
@@ -85,10 +87,7 @@ export default async function loadDir(
   loadID: (...args: any[]) => string,
 ) {
   let existError = false;
-  let moduleList;
-  if (loadType === "function" || loadType === "init") {
-    moduleList = new Map();
-  }
+  let moduleList = new Map();
 
   for (const filePath of recursiveReadDir(dirName)) {
     if (
@@ -125,68 +124,44 @@ export default async function loadDir(
         continue;
       }
 
-      if (loadType === "function" && typeof currentModule.name != "string") {
+      if (typeof currentModule.name != "string") {
+        hazel.emit(
+          "error",
+          new Error(filePath + ' should export a string named "name".'),
+        );
+        console.error(filePath + ' should export a string named "name".');
+        existError = true;
+        continue;
+      }
+      if (
+        typeof currentModule.dependencies !== "undefined" &&
+        !Array.isArray(currentModule.dependencies)
+      ) {
         hazel.emit(
           "error",
           new Error(
-            filePath +
-              ' should export a string named "name" as the function name.',
+            filePath + ' should export a string array named "dependencies".',
           ),
         );
         console.error(
-          filePath +
-            ' should export a string named "name" as the function name.',
+          filePath + ' should export a string array named "dependencies".',
         );
         existError = true;
         continue;
-      } else if (loadType === "init") {
-        if (typeof currentModule.name != "string") {
-          hazel.emit(
-            "error",
-            new Error(filePath + ' should export a string named "name".'),
-          );
-          console.error(filePath + ' should export a string named "name".');
-          existError = true;
-          continue;
-        }
-        if (
-          typeof currentModule.dependencies !== "undefined" &&
-          !Array.isArray(currentModule.dependencies)
-        ) {
-          hazel.emit(
-            "error",
-            new Error(
-              filePath + ' should export a string array named "dependencies".',
-            ),
-          );
-          console.error(
-            filePath + ' should export a string array named "dependencies".',
-          );
-          existError = true;
-          continue;
-        }
       }
 
-      if (loadType === "function") {
-        moduleList.set(currentModule.name, currentModule);
-        currentModule.filePath = filePath;
-        currentModule.loadHistory = [loadID()];
-      } else if (loadType === "init") {
-        moduleList.set(currentModule.name, currentModule);
-        currentModule.filePath = filePath;
-        currentModule.loadHistory = [loadID()];
-      }
+      moduleList.set(currentModule.name, currentModule);
+      currentModule.filePath = filePath;
+      currentModule.loadHistory = [loadID()];
     }
   }
 
-  if (loadType === "init") {
-    try {
-      moduleList = topologicalSort(moduleList);
-    } catch (error) {
-      hazel.emit("error", error);
-      existError = true;
-      throw error;
-    }
+  try {
+    moduleList = topologicalSort(moduleList);
+  } catch (error) {
+    hazel.emit("error", error);
+    existError = true;
+    throw error;
   }
 
   return { moduleList, existError };

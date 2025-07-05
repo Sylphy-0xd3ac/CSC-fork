@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           corepack enable
-          echo y | yarn
+          echo y | yarn install --immutable
 
       # Step 4: 运行 lint
       - name: Run lint

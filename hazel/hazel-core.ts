@@ -3,7 +3,7 @@ import EventEmitter2 from "eventemitter2";
 import process from "node:process";
 import path from "node:path";
 
-export interface InitModule {
+export interface Module {
   name: string;
   priority?: number;
   dependencies?: string[];
@@ -12,23 +12,14 @@ export interface InitModule {
   loadHistory: string[];
 }
 
-export interface FunctionModule {
-  name: string;
-  run: (...args: any[]) => any;
-  filePath: string;
-  loadHistory: string[];
-}
-
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
-  loadedFunctions: Map<string, FunctionModule>;
-  loadedInits: Map<string, InitModule>;
+  loadedModules: Map<string, Module>;
 
   constructor(mainConfig: any) {
     super();
     this.mainConfig = mainConfig;
-    this.loadedFunctions = new Map();
-    this.loadedInits = new Map();
+    this.loadedModules = new Map();
 
     process.on("unhandledRejection", (error) => {
       this.emit("error", error);
@@ -54,10 +45,8 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async getModule(moduleName: string) {
-    if (this.loadedInits.has(moduleName)) {
-      return this.loadedInits.get(moduleName);
-    } else if (this.loadedFunctions.has(moduleName)) {
-      return this.loadedFunctions.get(moduleName);
+    if (this.loadedModules.has(moduleName)) {
+      return this.loadedModules.get(moduleName);
     } else {
       return null;
     }
@@ -70,19 +59,8 @@ export default class Hazel extends EventEmitter2 {
     module.loadHistory = currentModule.loadHistory;
     module.loadHistory.push(loadID);
     module.filePath = currentModule.filePath;
-    this.loadedFunctions.delete(moduleName);
-    this.loadedFunctions.set(moduleName, module);
-  }
-
-  async reloadInit(moduleName: string) {
-    let loadID = this.randomLoadID(); 
-    let currentModule = await this.getModule(moduleName);
-    let module = await importModule(currentModule.filePath, loadID);
-    module.loadHistory = currentModule.loadHistory;
-    module.loadHistory.push(loadID);
-    module.filePath = currentModule.filePath;
-    this.loadedInits.delete(moduleName);
-    this.loadedInits.set(moduleName, module);
+    this.loadedModules.delete(moduleName);
+    this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
       console.error(error);
@@ -90,55 +68,17 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async reloadModuleByID(moduleName: string, loadID: string) {
-    let currentModule = await this.getModule(moduleName); 
-    let module = await importModule(currentModule.filePath, loadID);
-    module.loadHistory = currentModule.loadHistory;
-    module.loadHistory.push(loadID);
-    module.filePath = currentModule.filePath;
-    this.loadedFunctions.delete(moduleName);
-    this.loadedFunctions.set(module.name, module);
-  }
-
-  async reloadInitByID(moduleName: string, loadID: string) {
     let currentModule = await this.getModule(moduleName);
     let module = await importModule(currentModule.filePath, loadID);
     module.loadHistory = currentModule.loadHistory;
     module.loadHistory.push(loadID);
     module.filePath = currentModule.filePath;
-    this.loadedInits.delete(moduleName);
-    this.loadedInits.set(moduleName, module);
+    this.loadedModules.delete(moduleName);
+    this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
       console.error(error);
     });
-  }
-
-  async runFunction(functionName, ...functionArgs) {
-    if (!this.loadedFunctions.has(functionName)) {
-      this.emit(
-        "error",
-        new Error("The function name '" + functionName + "' do not exist."),
-      );
-      console.error("The function name '" + functionName + "' do not exist.");
-      return false;
-    }
-
-    let result;
-    let targetFunction = this.loadedFunctions.get(functionName).run;
-    try {
-      result = await targetFunction(
-        this,
-        this.#core,
-        this.#hold,
-        ...functionArgs,
-      );
-    } catch (error) {
-      this.emit("error", error);
-      console.error(error);
-      return false;
-    }
-
-    return result;
   }
 
   async reloadModules(forceReload) {
@@ -156,16 +96,19 @@ export default class Hazel extends EventEmitter2 {
   async loadModules(forceLoad: boolean) {
     let result = (await loadModule(
       this,
-      path.join(this.mainConfig.baseDir, this.mainConfig.hazel.moduleDirs.initsDir),
-      "init",
+      path.join(
+        this.mainConfig.baseDir,
+        this.mainConfig.hazel.moduleDirs.modulesDir,
+      ),
+      "module",
       this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
-    let { moduleList: loadedInits, existError: initsExistError } = result;
-    if (!forceLoad && initsExistError) {
+    let { moduleList: loadedModules, existError: modulesExistError } = result;
+    if (!forceLoad && modulesExistError) {
       return false;
     }
 
-    this.loadedInits = new Map(loadedInits);
+    this.loadedModules = new Map(loadedModules);
 
     this.removeAllListeners();
     this.on("error", () => {});
@@ -175,8 +118,8 @@ export default class Hazel extends EventEmitter2 {
     }
 
     try {
-      this.loadedInits.forEach((initFunction, modulePath) => {
-        initFunction.run(this, this.#core, this.#hold).catch((error) => {
+      this.loadedModules.forEach((moduleFunction, modulePath) => {
+        moduleFunction.run(this, this.#core, this.#hold).catch((error) => {
           this.emit("error", error);
           console.error(error);
           if (!forceLoad) {
@@ -186,31 +129,14 @@ export default class Hazel extends EventEmitter2 {
       });
     } catch (error) {
       this.emit("error", error);
-      console.error(`Error running init function:`, error);
+      console.error(`Error running module function:`, error);
       if (!forceLoad) {
         return false;
       }
     }
 
-    console.log(`√ Initialize inits ${this.loadedInits.size} complete!\n`);
+    console.log(`√ Initialize modules ${this.loadedModules.size} complete!\n`);
 
-    let { moduleList: loadedFunctions, existError: functionExistError } =
-      (await loadModule(
-        this,
-        path.join(this.mainConfig.baseDir, this.mainConfig.hazel.moduleDirs.functionsDir),
-        "function",
-        this.randomLoadID,
-      )) as { moduleList: any; existError: boolean };
-    if (!forceLoad && functionExistError) {
-      return false;
-    }
-
-    this.loadedFunctions = loadedFunctions;
-
-    console.log(
-      `√ Initialize functions ${this.loadedFunctions.size} complete!\n`,
-    );
-
-    return !(initsExistError || functionExistError);
+    return !modulesExistError;
   }
 }
