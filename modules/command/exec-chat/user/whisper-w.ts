@@ -31,7 +31,6 @@ export async function action(hazel, core, hold, socket, line) {
   await core.whisper(socket, { nick, text });
 }
 
-// 自动注册到 commandService
 export async function run(hazel, core, hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {

@@ -83,7 +83,6 @@ function topologicalSort(moduleMap: Map<string, Module>): Map<string, Module> {
 export default async function loadDir(
   hazel: any,
   dirName: string,
-  loadType: string,
   loadID: (...args: any[]) => string,
 ) {
   let existError = false;

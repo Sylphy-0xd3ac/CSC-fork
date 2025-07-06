@@ -57,7 +57,6 @@ export async function action(hazel, core, hold, socket, line) {
   core.archive("RMA", socket, data.trip);
 }
 
-// 自动注册到 commandService
 export async function run(hazel, core, hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {

@@ -97,7 +97,6 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("MSG", socket, data.text);
 }
 
-// 自动注册到 commandService
 export async function run(hazel, core, hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {

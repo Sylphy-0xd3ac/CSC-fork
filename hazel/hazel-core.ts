@@ -98,9 +98,8 @@ export default class Hazel extends EventEmitter2 {
       this,
       path.join(
         this.mainConfig.baseDir,
-        this.mainConfig.hazel.moduleDirs.modulesDir,
+        this.mainConfig.hazel.modulesDir,
       ),
-      "module",
       this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
     let { moduleList: loadedModules, existError: modulesExistError } = result;

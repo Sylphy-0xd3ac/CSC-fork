@@ -42,7 +42,6 @@ export async function action(hazel, core, hold, socket, line) {
   core.archive("BIP", socket, data.ip);
 }
 
-// 自动注册到 commandService
 export async function run(hazel, core, hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {

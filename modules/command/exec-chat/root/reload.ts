@@ -149,7 +149,6 @@ async function runInner(hazel, core, hold, socket, line) {
   }
 }
 
-// 自动注册到 commandService
 export async function run(hazel, core, hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
