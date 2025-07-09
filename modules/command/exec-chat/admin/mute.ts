@@ -1,24 +1,13 @@
 // 禁言某用户
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let [nick, mins] = core.splitArgs(line.slice(5));
-    // 检查昵称是否正确
-    if (!nick) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    if (!core.verifyNickname(nick)) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    // 未指定时间默认为 10 分钟
-    if (!mins) {
-      mins = "10";
-    }
-    data = { nick, mins };
-  } else {
-    data = line;
+export async function action(hazel, core, hold, socket, data) {
+  // 检查昵称是否正确
+  if (!core.verifyNickname(data.nick)) {
+    core.replyMalformedCommand(socket);
+    return;
+  }
+  // 未指定时间默认为 10 分钟
+  if (!data.mins) {
+    data.mins = "10";
   }
 
   let muteMins = parseInt(data.mins);
@@ -61,6 +50,12 @@ export async function action(hazel, core, hold, socket, line) {
     return;
   }
 
+  // 检查是否越权
+  if (targetSocket.level >= socket.level) {
+    core.replyWarn("PERMISSION_DENIED", "越权操作。", socket);
+    return;
+  }
+
   // 记录禁言时间
   hold.muteUntil.set(
     targetSocket.remoteAddress,
@@ -100,12 +95,11 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "mute";
 export const requiredLevel = 4;
-export const requiredData = [
-  { nick: { description: "用户昵称" } },
-  { mins: { description: "禁言时长" } },
-];
+export const requiredData = {
+  nick: { description: "用户昵称" },
+  mins: { description: "禁言时长" },
+};
 export const description = "禁言聊天室中某人";
 export const dependencies = ["command-service", "ws-reply", "data"];

@@ -1,16 +1,16 @@
 // 用于重载十字街几乎所有模块
 import path from "node:path";
 
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   // 进行严格的频率限制
   if (await core.checkAddress(socket.remoteAddress, 3)) {
     core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
     return;
   }
-  await runInner(hazel, core, hold, socket, line);
+  await runInner(hazel, core, hold, socket, data);
 }
 
-async function reloadAll(hazel, core, hold, socket, line) {
+async function reloadAll(hazel, core, hold, socket, data) {
   let reloadTime = Date.now();
   core.replyInfo("ROOT", "全部命令重载请求已接收。", socket);
   await hazel.reloadModules(false);
@@ -24,9 +24,8 @@ async function reloadAll(hazel, core, hold, socket, line) {
   core.archive("RLD", socket, reloadTimeUsed + "ms");
 }
 
-async function reloadModule(hazel, core, hold, socket, line) {
-  let args = core.splitArgs(line);
-  let moduleName = args[1].trim();
+async function reloadModule(hazel, core, hold, socket, data) {
+  let moduleName = data.module;
   let module = await hazel.getModule(moduleName);
   if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
@@ -49,10 +48,9 @@ async function reloadModule(hazel, core, hold, socket, line) {
   core.archive("RLD", socket, moduleName, reloadTimeUsed + "ms");
 }
 
-async function reloadModuleByID(hazel, core, hold, socket, line) {
-  let args = core.splitArgs(line);
-  let moduleName = args[1].trim();
-  let version = args[2].trim();
+async function reloadModuleByID(hazel, core, hold, socket, data) {
+  let moduleName = data.module;
+  let version = data.version;
   let module = await hazel.getModule(moduleName);
   if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
@@ -97,9 +95,8 @@ async function reloadModuleByID(hazel, core, hold, socket, line) {
   );
 }
 
-async function listModulesVersion(hazel, core, hold, socket, line) {
-  let args = core.splitArgs(line);
-  let moduleName = args[2].trim();
+async function listModulesVersion(hazel, core, hold, socket, data) {
+  let moduleName = data.module;
   let module = await hazel.getModule(moduleName);
   if (module == undefined) {
     core.replyInfo("ROOT", "模块 " + moduleName + " 不存在。", socket);
@@ -124,28 +121,15 @@ async function listModulesVersion(hazel, core, hold, socket, line) {
   core.archive("RLS", socket, moduleName);
 }
 
-async function runInner(hazel, core, hold, socket, line) {
-  let args = core.splitArgs(line);
-  if (args[0] === "/reload" && args[1] === "list" && args[2] !== undefined) {
-    await listModulesVersion(hazel, core, hold, socket, line);
-    return;
-  }
-  if (args[0] === "/reload" && args[1] === undefined) {
-    await reloadAll(hazel, core, hold, socket, line);
-  } else if (
-    args[0] === "/reload" &&
-    args[1] !== undefined &&
-    args[2] === undefined
-  ) {
-    await reloadModule(hazel, core, hold, socket, line);
-  } else if (
-    args[0] === "/reload" &&
-    args[1] !== undefined &&
-    args[2] !== undefined
-  ) {
-    await reloadModuleByID(hazel, core, hold, socket, line);
+async function runInner(hazel, core, hold, socket, data) {
+  if (data.module && data.version && data.version !== "list") {
+    await reloadModuleByID(hazel, core, hold, socket, data);
+  } else if (data.module && data.version === "list") {
+    await listModulesVersion(hazel, core, hold, socket, data);
+  } else if (data.module) {
+    await reloadModule(hazel, core, hold, socket, data);
   } else {
-    core.replyMalformedCommand(socket);
+    await reloadAll(hazel, core, hold, socket, data);
   }
 }
 
@@ -160,6 +144,9 @@ export async function run(hazel, core, hold) {
 
 export const name = "reload";
 export const requiredLevel = 10;
-export const requiredData = [];
+export const requiredData = {
+  module: { description: "模块名", optional: true },
+  version: { description: "版本号", optional: true },
+};
 export const description = "重载十字街";
 export const dependencies = ["command-service", "ws-reply", "archive"];

@@ -1,23 +1,12 @@
 // 锁定房间，禁止非成员进入
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let lockroomType = line.slice(9).trim();
-    if (lockroomType.length == 0) {
-      lockroomType = "kick";
-    }
-    data = { type: lockroomType };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   let targetChannel = socket.channel;
   // kick: 锁房后将所有非成员踢出房间
-  // no-kick: 锁房后不踢出非成员
+  // no_kick: 锁房后不踢出非成员
   let lockroomType = data.type;
 
-  // 如果锁房类型不是 kick 或 no-kick，则报错
-  if (lockroomType != "kick" && lockroomType != "no-kick") {
+  // 如果锁房类型不是 kick 或 no_kick，则报错
+  if (lockroomType != "kick" && lockroomType != "no_kick") {
     core.replyMalformedCommand(socket);
     return;
   }
@@ -65,19 +54,13 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "lockroom";
 export const requiredLevel = 4;
-export const requiredData = [
-  {
-    type: {
-      description: "锁定类型",
-      value: [
-        { kick: "锁定后踢出非成员" },
-        { "no-kick": "锁定后不踢出非成员" },
-      ],
-    },
+export const requiredData = {
+  type: {
+    description: "锁定类型",
+    value: [{ kick: "锁定后踢出非成员" }, { no_kick: "锁定后不踢出非成员" }],
   },
-];
+};
 export const description = "锁定聊天室, 禁止非成员进入";
 export const dependencies = ["command-service", "ws-reply", "data", "archive"];

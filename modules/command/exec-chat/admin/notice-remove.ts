@@ -1,20 +1,5 @@
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let id = core.splitArgs(line)[1].trim(); // 公告编号
-    if (id === "undefined") {
-      data = { removeAll: true };
-    } else {
-      data = {
-        id: parseInt(id),
-        removeAll: false,
-      };
-    }
-  } else {
-    data = line;
-  }
-
-  if (data.removeAll) {
+export async function action(hazel, core, hold, socket, data) {
+  if (data.id === "all") {
     // 删除所有公告
     hold.noticeList = [];
     core.reply(
@@ -64,9 +49,10 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "rm-notice";
 export const requiredLevel = 4;
-export const requiredData = [{ id: { description: "公告编号" } }];
+export const requiredData = {
+  id: { description: "公告编号" },
+};
 export const description = "删除公告";
 export const dependencies = ["command-service", "socket"];

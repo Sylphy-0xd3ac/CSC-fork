@@ -1,17 +1,5 @@
 // 站长添加管理员
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let trip = line.slice(9).trim();
-    if (!core.verifyTrip(trip)) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { trip };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 验证输入的 trip
   if (!core.verifyTrip(data.trip)) {
     core.replyWarn("INVALID_TRIP", "请检查您输入的识别码。", socket);
@@ -74,6 +62,8 @@ export async function run(hazel, core, hold) {
 
 export const name = "add-admin";
 export const requiredLevel = 10;
-export const requiredData = [{ trip: { description: "识别码" } }];
+export const requiredData = {
+  trip: { description: "识别码" },
+};
 export const description = "添加管理员";
 export const dependencies = ["command-service", "ws-reply", "archive"];

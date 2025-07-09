@@ -1,12 +1,5 @@
 // 提权至 root 权限
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    data = { passcode: line.slice(8).trim() };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 验证输入的 root 密码
   if (data.passcode !== core.config.rootPasscode) {
     // 进行严格的频率限制
@@ -37,6 +30,8 @@ export async function run(hazel, core, hold) {
 
 export const name = "elevate";
 export const requiredLevel = 1;
-export const requiredData = [{ passcode: { description: "提权密码" } }];
+export const requiredData = {
+  passcode: { description: "提权密码" },
+};
 export const description = "提权至 root 权限";
 export const dependencies = ["command-service", "ws-reply", "archive"];

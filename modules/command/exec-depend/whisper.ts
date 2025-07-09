@@ -1,5 +1,5 @@
 // 在聊天室内发送私聊消息
-export async function run(hazel, core, hold, socket, data) {
+export async function run(hazel, core, hold) {
   core.whisper = async (socket, data) => {
     // 频率限制器计数
     core.checkAddress(socket.remoteAddress, 3);
@@ -94,5 +94,4 @@ export async function run(hazel, core, hold, socket, data) {
 
 export const name = "whisper";
 export const requiredLevel = 1;
-export const moduleType = "ws-command-depend";
 export const dependencies = ["socket", "server", "archive"];

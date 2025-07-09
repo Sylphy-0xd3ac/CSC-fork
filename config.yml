@@ -1,6 +1,3 @@
-# Core Version
-coreVersion: "0.3.6"
-
 # Project Name
 projectName: "Crosst-Chat-TypeScript"
 
@@ -11,7 +8,7 @@ port: 52764
 baseDir: ""
 
 # Running on Development TypeScript Mode
-runOnTS: true
+DevMode: true
 
 # Hazel Configuration
 hazel:

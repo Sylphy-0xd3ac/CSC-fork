@@ -1,15 +1,9 @@
 // 踢人命令
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let targetNick = core.splitArgs(line)[1];
-    if (!core.verifyNickname(targetNick)) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { nick: targetNick };
-  } else {
-    data = line;
+export async function action(hazel, core, hold, socket, data) {
+  let targetNick = data.nick;
+  if (!core.verifyNickname(targetNick)) {
+    core.replyMalformedCommand(socket);
+    return;
   }
 
   // 先检查昵称
@@ -35,6 +29,12 @@ export async function action(hazel, core, hold, socket, line) {
       "在这个聊天室找不到您指定的用户。",
       socket,
     );
+    return;
+  }
+
+  // 检查是否越权
+  if (targetSocket.level >= socket.level) {
+    core.replyWarn("PERMISSION_DENIED", "越权操作。", socket);
     return;
   }
 
@@ -77,10 +77,9 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "kick";
 export const requiredLevel = 4;
-export const requiredData = [{ nick: { description: "用户昵称" } }];
+export const requiredData = { nick: { description: "用户昵称" } };
 export const description = "踢出聊天室中某人";
 export const dependencies = [
   "command-service",

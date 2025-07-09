@@ -1,5 +1,5 @@
 // 解锁全站
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   // 检查全站是否已经被锁定
   if (!hold.lockAllChannels) {
     core.replyWarn("SITE_ALREADY_UNLOCKED", "全部房间未被锁定", socket);
@@ -28,6 +28,6 @@ export async function run(hazel, core, hold) {
 
 export const name = "unlocksite";
 export const requiredLevel = 4;
-export const requiredData = [];
+export const requiredData = {};
 export const description = "解锁全站";
 export const dependencies = ["command-service", "ws-reply", "archive"];

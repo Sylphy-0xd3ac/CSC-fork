@@ -1,12 +1,5 @@
 // 管理员封禁某个 IP
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    data = { ip: line.slice(6).trim() };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   let IPV4_REGEXP =
     /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
@@ -51,9 +44,8 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "ban-ip";
 export const requiredLevel = 4;
-export const requiredData = [{ ip: { description: "IP 地址" } }];
+export const requiredData = { ip: { description: "IP 地址" } };
 export const description = "封禁某个 IP";
 export const dependencies = ["command-service", "ws-reply", "data", "archive"];

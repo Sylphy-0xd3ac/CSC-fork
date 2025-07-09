@@ -1,5 +1,5 @@
 // 解封全部 IP 地址
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   // 清空封禁列表
   hold.bannedIPlist = [];
 
@@ -24,10 +24,9 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "unbanall";
 export const requiredLevel = 4;
-export const requiredData = [];
+export const requiredData = {};
 export const description = "解封全部 IP 地址";
 export const dependencies = [
   "command-service",

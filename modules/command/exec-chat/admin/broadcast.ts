@@ -1,15 +1,8 @@
 // 向在线的所有用户广播消息
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let text = core.splitArgs(line)[1].trim();
-    if (text.length == 0) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { text, level: core.config.level.user };
-  } else {
-    data = line;
+export async function action(hazel, core, hold, socket, data) {
+  if (data.text.length == 0) {
+    core.replyMalformedCommand(socket);
+    return;
   }
 
   core.broadcast(
@@ -35,10 +28,9 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "broadcast";
 export const requiredLevel = 4;
-export const requiredData = [{ text: { description: "消息内容" } }];
+export const requiredData = { text: { description: "消息内容" } };
 export const description = "向在线的所有用户广播消息";
 export const dependencies = [
   "command-service",

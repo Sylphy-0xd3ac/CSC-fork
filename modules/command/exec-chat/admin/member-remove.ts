@@ -1,17 +1,5 @@
 // 管理员删除成员
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let trip = line.slice(7).trim();
-    if (!core.verifyTrip(trip)) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { trip };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 验证输入的 trip
   if (!core.verifyTrip(data.trip)) {
     core.replyWarn("INVALID_TRIP", "请检查您输入的识别码。", socket);
@@ -24,7 +12,7 @@ export async function action(hazel, core, hold, socket, line) {
     return;
   }
 
-  // 检查识别码是否已经是管理员
+  // 检查识别码是否是管理员
   if (core.config.adminList.includes(data.trip)) {
     core.replyWarn("PERMISSION_DENIED", "越权操作。", socket);
     return;
@@ -72,10 +60,11 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "del-member";
 export const requiredLevel = 4;
-export const requiredData = [{ trip: { description: "识别码" } }];
+export const requiredData = {
+  trip: { description: "识别码" },
+};
 export const description = "删除成员";
 export const dependencies = [
   "command-service",

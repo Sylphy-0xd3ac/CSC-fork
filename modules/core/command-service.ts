@@ -1,11 +1,19 @@
 // 初始化命令服务
 export async function run(hazel, core, hold) {
-  // 如果已经加载过，则不重新加载
-  if (core.commandService) return;
+  // 保存现有的 actions 和 slashCommands
+  const existingActions = core.commandService?.actions;
+  const existingSlashCommands = core.commandService?.slashCommands;
+
   core.commandService = {
     // 命令服务
-    actions: new Map<string, any>(),
-    slashCommands: new Map<string, any>(),
+    actions:
+      existingActions && existingActions.size > 0
+        ? existingActions
+        : new Map<string, any>(),
+    slashCommands:
+      existingSlashCommands && existingSlashCommands.size > 0
+        ? existingSlashCommands
+        : new Map<string, any>(),
 
     /**
      * 向 commandService 注册新的 action。
@@ -83,35 +91,34 @@ export async function run(hazel, core, hold) {
         }
 
         // requiredData 参数校验
-        if (Array.isArray(meta.requiredData) && meta.requiredData.length > 0) {
+        if (meta.requiredData && typeof meta.requiredData === "object") {
           const args = line.trim().split(" ").slice(1);
+          const entries = Object.entries(meta.requiredData);
 
-          // 计算必需参数的数量（排除可选参数）
-          const requiredParamCount = meta.requiredData.filter((paramDef) => {
-            const paramName = Object.keys(paramDef)[0];
-            const paramInfo = paramDef[paramName];
-            return paramInfo.optional !== true;
-          }).length;
+          // 计算必需参数的数量
+          const requiredParamCount = entries.filter(
+            ([paramName, paramInfo]) => {
+              return (paramInfo as any).optional !== true;
+            },
+          ).length;
 
-          // 数量校验 - 只检查必需参数的数量
+          // 数量校验
           if (args.length < requiredParamCount) {
             core.replyMalformedCommand?.(socket);
             return;
           }
 
-          // 值校验（如果有 value 属性）
-          for (let i = 0; i < meta.requiredData.length; i++) {
-            const paramDef = meta.requiredData[i];
-            const paramName = Object.keys(paramDef)[0];
-            const paramInfo = paramDef[paramName];
-
-            // 如果参数有 optional 属性且为 true，则跳过该参数的检查
-            if (paramInfo.optional === true) {
+          // 值校验
+          for (let i = 0; i < entries.length && i < args.length; i++) {
+            const [_paramName, paramInfo] = entries[i];
+            const param = paramInfo as any;
+            // 如果参数有 optional 属性且为 true，则跳过
+            if (param.optional === true) {
               continue;
             }
 
-            const allowed = Array.isArray(paramInfo.value)
-              ? paramInfo.value.map((v) => Object.keys(v)[0])
+            const allowed = Array.isArray(param.value)
+              ? param.value.map((v) => Object.keys(v)[0])
               : null;
 
             if (allowed && allowed.length > 0) {
@@ -123,8 +130,21 @@ export async function run(hazel, core, hold) {
           }
         }
 
+        // 如果参数校验通过，则构造参数对象
+        const args = line.trim().split(" ").slice(1);
+        const data = {};
+        if (meta.requiredData && typeof meta.requiredData === "object") {
+          Object.entries(meta.requiredData).forEach(
+            ([paramName, paramInfo], index) => {
+              if (index < args.length) {
+                data[paramName] = args[index];
+              }
+            },
+          );
+        }
+
         try {
-          await handler(hazel, core, hold, socket, line);
+          await handler(hazel, core, hold, socket, data);
         } catch (error) {
           hazel.emit("error", error, socket);
         }

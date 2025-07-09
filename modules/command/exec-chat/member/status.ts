@@ -1,6 +1,6 @@
 // 查看服务器的一些运行状态
 
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 3);
 
@@ -9,7 +9,7 @@ export async function action(hazel, core, hold, socket, line) {
     "### 十字街 " +
     core.config.version +
     "\nPowered by Hazel Core " +
-    hazel.mainConfig.coreVersion;
+    hazel.version;
   statsText += "\n#### --- 运行状态 ---";
   statsText += "\n在线连接：" + hold.wsServer.clients.size;
   statsText += "\n聊天室数：" + hold.channel.size;
@@ -56,7 +56,7 @@ export async function run(hazel, core, hold) {
 
 export const name = "status";
 export const requiredLevel = 2;
-export const requiredData = [];
+export const requiredData = {};
 export const description = "查看服务器状态";
 export const dependencies = [
   "command-service",

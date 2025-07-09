@@ -1,22 +1,11 @@
 // 锁定全站，禁止非成员进入
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let lockType = line.slice(9).trim();
-    if (lockType.length == 0) {
-      lockType = "kick";
-    }
-    data = { type: lockType };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // kick: 锁站后将所有非成员踢出站
-  // no-kick: 锁站后不踢出非成员
+  // no_kick: 锁站后不踢出非成员
   let lockType = data.type;
 
-  // 如果锁房类型不是 kick 或 no-kick，则报错
-  if (lockType != "kick" && lockType != "no-kick") {
+  // 如果锁房类型不是 kick 或 no_kick，则报错s
+  if (lockType != "kick" && lockType != "no_kick") {
     core.replyMalformedCommand(socket);
     return;
   }
@@ -62,19 +51,13 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "locksite";
 export const requiredLevel = 4;
-export const requiredData = [
-  {
-    type: {
-      description: "锁定类型",
-      value: [
-        { kick: "锁定后踢出非成员" },
-        { "no-kick": "锁定后不踢出非成员" },
-      ],
-    },
+export const requiredData = {
+  type: {
+    description: "锁定类型",
+    value: [{ kick: "锁定后踢出非成员" }, { no_kick: "锁定后不踢出非成员" }],
   },
-];
+};
 export const description = "锁定全站，禁止非成员进入";
 export const dependencies = ["command-service", "ws-reply", "data", "archive"];

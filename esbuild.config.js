@@ -41,7 +41,7 @@ build(buildOptions)
     let config = load(
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
     );
-    config.runOnTS = false;
+    config.DevMode = false;
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",
     });

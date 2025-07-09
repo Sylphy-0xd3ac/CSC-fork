@@ -1,13 +1,5 @@
 // 解封某个 IP 地址
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let address = line.slice(6).trim();
-    data = { address };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 如果该 IP 地址不在封禁列表中
   if (!hold.bannedIPlist.includes(data.address)) {
     core.replyMalformedCommand(socket);
@@ -38,10 +30,11 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "unban";
 export const requiredLevel = 4;
-export const requiredData = [{ address: { description: "IP 地址" } }];
+export const requiredData = {
+  address: { description: "IP 地址" },
+};
 export const description = "解封某个 IP 地址";
 export const dependencies = [
   "command-service",

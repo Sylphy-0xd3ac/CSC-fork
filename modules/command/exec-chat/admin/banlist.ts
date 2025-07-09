@@ -1,9 +1,9 @@
-export async function action(hazel, core, hold, socket, line) {
-  let text = "历史封禁 IP 列表：\n";
-  hold.banList.forEach((ban) => {
-    text += `${ban}\n`;
+export async function action(hazel, core, hold, socket, data) {
+  let text = "历史封禁列表：\n";
+  hold.bannedIPlist.forEach((ip) => {
+    text += `${ip}\n`;
   });
-  core.replyInfo(text, socket);
+  core.replyInfo("BAN_LIST", text, socket);
 }
 
 export async function run(hazel, core, hold) {
@@ -15,7 +15,6 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "banlist";
 export const requiredLevel = 0;
 export const requiredData = {};

@@ -1,5 +1,5 @@
 // 解锁房间
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   // 检查房间是否已经被锁定
   if (!hold.channel.get(socket.channel).isLocked) {
     core.replyWarn("CHANNEL_ALREADY_UNLOCKED", "房间未锁定", socket);
@@ -28,6 +28,6 @@ export async function run(hazel, core, hold) {
 
 export const name = "unlockroom";
 export const requiredLevel = 4;
-export const requiredData = [];
+export const requiredData = {};
 export const description = "解锁聊天室";
 export const dependencies = ["command-service", "ws-reply", "archive"];

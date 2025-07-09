@@ -1,5 +1,5 @@
 // 返回房间以及房间内的用户列表
-export async function action(hazel, core, hold, socket, line) {
+export async function action(hazel, core, hold, socket, data) {
   let result = "";
 
   // 遍历 hold.channel
@@ -35,9 +35,8 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "roomlist";
 export const requiredLevel = 4;
-export const requiredData = [];
+export const requiredData = {};
 export const description = "返回房间以及房间内的用户列表";
 export const dependencies = ["command-service", "ws-reply", "data"];

@@ -1,16 +1,4 @@
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let text = core.splitArgs(line)[1].trim();
-    if (text.length == 0) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { text };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // push 到公告列表
   data.text = data.text.trim();
   hold.noticeList.push(data.text);
@@ -42,9 +30,10 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "add-notice";
 export const requiredLevel = 4;
-export const requiredData = [{ text: { description: "公告内容" } }];
+export const requiredData = {
+  text: { description: "公告内容" },
+};
 export const description = "添加公告";
 export const dependencies = ["command-service", "ws-reply", "data"];

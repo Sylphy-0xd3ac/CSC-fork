@@ -1,19 +1,5 @@
 // 私聊的 /r 快捷方式
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    // 先把 /r 去掉
-    let text = line.slice(3).trim();
-    // 如果没有参数，回复错误
-    if (text.length == 0) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { text };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 如果没有上一条私聊消息，回复错误
   if (typeof socket.lastWhisperFrom == "undefined") {
     core.replyWarn(
@@ -42,6 +28,8 @@ export async function run(hazel, core, hold) {
 
 export const name = "r";
 export const requiredLevel = 1;
-export const requiredData = [{ text: { description: "消息内容" } }];
+export const requiredData = {
+  text: { description: "消息内容" },
+};
 export const description = "回复私聊消息";
 export const dependencies = ["command-service", "ws-reply"];

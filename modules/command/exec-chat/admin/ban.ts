@@ -1,18 +1,5 @@
 // 管理员封禁聊天室中某人的 IP
-export async function action(hazel, core, hold, socket, line) {
-  let data;
-  if (typeof line === "string") {
-    let nick = line.slice(4).trim();
-    // 检查昵称
-    if (!core.verifyNickname(nick)) {
-      core.replyMalformedCommand(socket);
-      return;
-    }
-    data = { nick };
-  } else {
-    data = line;
-  }
-
+export async function action(hazel, core, hold, socket, data) {
   // 检查昵称
   if (!core.verifyNickname(data.nick)) {
     core.replyWarn(
@@ -36,6 +23,12 @@ export async function action(hazel, core, hold, socket, line) {
       "在这个聊天室找不到您指定的用户。",
       socket,
     );
+    return;
+  }
+
+  // 检查是否越权
+  if (targetSocket.level >= socket.level) {
+    core.replyWarn("PERMISSION_DENIED", "越权操作。", socket);
     return;
   }
 
@@ -82,10 +75,9 @@ export async function run(hazel, core, hold) {
   });
 }
 
-// 常量全部放底部
 export const name = "ban";
 export const requiredLevel = 4;
-export const requiredData = [{ nick: { description: "用户昵称" } }];
+export const requiredData = { nick: { description: "用户昵称" } };
 export const description = "封禁聊天室中某人的 IP";
 export const dependencies = [
   "command-service",
