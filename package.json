@@ -3,7 +3,7 @@
   "description": "A minimal, distraction-free chat TypeScript application based on Hazel Core TypeScript and hack.chat.",
   "version": "2.0.0-ts-beta",
   "scripts": {
-    "build:esbuild": "node esbuild.config.js",
+    "build": "node esbuild.config.js",
     "build:tsc": "tsc",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "dev": "tsx main.ts",
