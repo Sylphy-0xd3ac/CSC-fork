@@ -162,7 +162,11 @@ export async function action(hazel, core, hold, socket, data) {
             return false;
           }
 
-          // 如果客户端名称中没有暗示为官方客户端的关键字.
+          // 如果客户端名称中没有暗示为官方客户端的关键字
+          if (data.clientName.indexOf("十字街官方") === -1) {
+            return false;
+          }
+
           return true;
         })()
       ) {
@@ -341,7 +345,13 @@ export async function run(hazel, core, hold) {
 
 export const name = "join";
 export const requiredLevel = 0;
-export const requiredData = ["channel", "nick"];
+export const requiredData = {
+  channel: { description: "加入的聊天室" },
+  nick: { description: "用户昵称" },
+  password: { description: "密码", optional: true },
+  trip: { description: "trip", optional: true },
+  clientName: { description: "客户端名称", optional: true },
+};
 export const dependencies = [
   "command-service",
   "archive",

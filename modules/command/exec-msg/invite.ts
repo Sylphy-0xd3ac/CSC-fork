@@ -84,7 +84,10 @@ export async function run(hazel, core, hold) {
 
 export const name = "invite";
 export const requiredLevel = 1;
-export const requiredData = ["nick"];
+export const requiredData = {
+  nick: { description: "邀请目标用户" },
+  channel: { description: "邀请目标聊天室", optional: true },
+};
 export const dependencies = [
   "command-service",
   "stats",

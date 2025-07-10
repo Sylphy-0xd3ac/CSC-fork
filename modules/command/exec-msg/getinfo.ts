@@ -35,7 +35,7 @@ export async function run(hazel, core, hold) {
 
 export const name = "getinfo";
 export const requiredLevel = 0;
-export const requiredData = [];
+export const requiredData = {};
 export const dependencies = [
   "command-service",
   "stats",

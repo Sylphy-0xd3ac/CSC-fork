@@ -107,7 +107,7 @@ export async function run(hazel, core, hold) {
 
 export const name = "chat";
 export const requiredLevel = 1;
-export const requiredData = ["text"];
+export const requiredData = { text: { description: "聊天内容" } };
 export const dependencies = [
   "command-service",
   "stats",
