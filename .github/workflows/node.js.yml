@@ -3,7 +3,7 @@ name: Compile and Push
 on:
   push:
     branches:
-      - main # 你也可以根据需要改成任何你想监控的分支
+      - main 
 
 permissions:
   contents: read

@@ -13,11 +13,12 @@ const tsFiles = sync("**/*.ts", {
 // 构建配置
 const buildOptions = {
   entryPoints: tsFiles,
-  bundle: false,
   target: "esnext",
   format: "esm",
   platform: "node",
-  outdir: "dist", // 输出目录
+  outdir: "dist",
+  minify: true,
+  bundle: false,
 };
 
 let buildStartTime = Date.now();
@@ -55,7 +56,7 @@ build(buildOptions)
     await copy("package.json", "dist/package.json");
     await copy("yarn.lock", "dist/yarn.lock");
     const totalTime = Date.now() - buildStartTime;
-    console.log(`\n✔ Finished in ${totalTime.toFixed(2)} ms`);
+    console.log(`✔ Finished in ${totalTime.toFixed(2)} ms`);
   })
   .catch((err) => {
     console.error(err);

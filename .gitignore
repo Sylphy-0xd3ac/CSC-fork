@@ -3,6 +3,7 @@ logs/*
 
 # Dependency directories
 node_modules/
+.yarn
 
 # Customize
 .vscode
@@ -13,6 +14,3 @@ node_modules/
 
 # DS_Store
 .DS_Store
-
-# Other
-ConventionalCommit.md

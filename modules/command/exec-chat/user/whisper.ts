@@ -4,12 +4,12 @@
 // /whisper 你好  - 回复上次私聊
 export async function action(hazel, core, hold, socket, data) {
   let nick, text;
-  
+
   if (data.nick) {
     // 有nick参数：指定用户私聊
     nick = data.nick;
     text = data.text;
-    
+
     // 验证昵称
     if (!core.verifyNickname(nick)) {
       core.replyMalformedCommand(socket);
@@ -28,7 +28,7 @@ export async function action(hazel, core, hold, socket, data) {
     nick = socket.lastWhisperFrom;
     text = data.text;
   }
-  
+
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 3);
 
@@ -123,7 +123,14 @@ export const name = "whisper";
 export const requiredLevel = 1;
 export const requiredData = {
   text: { description: "消息内容" },
-  nick: { description: "用户昵称", optional: true }
+  nick: { description: "用户昵称", optional: true },
 };
 export const description = "发送私聊消息，如果无用户昵称则回复上次私聊";
-export const dependencies = ["command-service", "ws-reply", "verify", "socket", "can-speak", "archive"]; 
+export const dependencies = [
+  "command-service",
+  "ws-reply",
+  "verify",
+  "socket",
+  "can-speak",
+  "archive",
+];

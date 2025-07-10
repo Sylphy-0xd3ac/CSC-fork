@@ -163,7 +163,7 @@ export async function run(hazel, core, hold) {
             // 命名参数 --option value
             const optionName = args[i].slice(2); // 去掉前缀
             const optionValue = args[i + 1];
-            
+
             if (paramNames.includes(optionName) && optionValue !== undefined) {
               data[optionName] = optionValue;
               i++; // 跳过下一个参数（值）
@@ -182,17 +182,17 @@ export async function run(hazel, core, hold) {
         if (meta.requiredData && typeof meta.requiredData === "object") {
           const entries = Object.entries(meta.requiredData);
           let pos = 0;
-          
+
           // 按参数定义顺序依次匹配位置参数
           for (let i = 0; i < entries.length; i++) {
             const [paramName, paramInfo] = entries[i];
             const param = paramInfo as any;
-            
+
             // 如果参数已经被命名参数指定，跳过
             if (paramName in data) {
               continue;
             }
-            
+
             // 如果还有位置参数可用
             if (pos < positionalArgs.length) {
               const currentArg = positionalArgs[pos];

@@ -1,6 +1,6 @@
 import { sync } from "glob";
 import path from "node:path";
-import type { Module } from "./hazel-core";
+import type { Module } from "./hazel-core.js";
 
 export function recursiveReadDir(baseDir) {
   return sync(path.join(baseDir, "**/*"), {

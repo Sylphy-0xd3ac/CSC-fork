@@ -1,10 +1,11 @@
-import HazelCore from "./hazel/hazel-core";
+import HazelCore from "./hazel/hazel-core.js";
 import pkg from "fs-extra";
 const { readFileSync } = pkg;
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 import process from "node:process";
 import yml from "js-yaml";
+import path from "node:path";
 
 let mainConfig: any;
 async function main() {
@@ -18,7 +19,10 @@ async function main() {
     process.exit(1);
   }
 
-  mainConfig.baseDir = dirname(fileURLToPath(import.meta.url)) as any;
+  mainConfig.baseDir = path.join(
+    dirname(fileURLToPath(import.meta.url)),
+    mainConfig.baseDir,
+  );
 
   const hazel = new HazelCore(mainConfig);
   await hazel.initialize(process.argv.includes("--force"));
