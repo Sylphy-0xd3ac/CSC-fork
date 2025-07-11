@@ -713,15 +713,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"argon2@npm:^0.41.1":
-  version: 0.41.1
-  resolution: "argon2@npm:0.41.1"
+"argon2@npm:^0.43.0":
+  version: 0.43.0
+  resolution: "argon2@npm:0.43.0"
   dependencies:
     "@phc/format": "npm:^1.0.0"
-    node-addon-api: "npm:^8.1.0"
+    node-addon-api: "npm:^8.3.1"
     node-gyp: "npm:latest"
-    node-gyp-build: "npm:^4.8.1"
-  checksum: 10c0/69f8f7e00f3d487a2cd7b3151fee6f5feb13e627e8f0551bac18f5d2dba50b1a521245d9c55140b80d7bfde1416bace520277627eb2d57c9e71403af4a4977d7
+    node-gyp-build: "npm:^4.8.4"
+  checksum: 10c0/4dbfbb5b3e03bf690a81b9de326ac9cc5500bee20c4159349d37d05f7432fef5c97b4f3c2a6d827f2f7ac6387650aa4532b88fe66e17d76d115fe39b9071b905
   languageName: node
   linkType: hard
 
@@ -856,7 +856,7 @@ __metadata:
     "@types/node": "npm:^24.0.12"
     "@types/ws": "npm:^8.5.14"
     adm-zip: "npm:^0.5.16"
-    argon2: "npm:^0.41.1"
+    argon2: "npm:^0.43.0"
     esbuild: "npm:^0.25.4"
     eslint: "npm:^9.20.1"
     eslint-config-prettier: "npm:^10.1.0"
@@ -1858,7 +1858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-addon-api@npm:^8.1.0":
+"node-addon-api@npm:^8.3.1":
   version: 8.4.0
   resolution: "node-addon-api@npm:8.4.0"
   dependencies:
@@ -1867,7 +1867,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-gyp-build@npm:^4.8.1":
+"node-gyp-build@npm:^4.8.4":
   version: 4.8.4
   resolution: "node-gyp-build@npm:4.8.4"
   bin:
