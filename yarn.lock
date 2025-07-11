@@ -478,21 +478,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^24.0.12":
   version: 24.0.12
   resolution: "@types/node@npm:24.0.12"
   dependencies:
     undici-types: "npm:~7.8.0"
   checksum: 10c0/333777c3416b758bbdb72a09e9db5599ff7789dca519d3fcf8150a1c56c79d808e0009e92d52016e80033b3c52724def08aad2c5b396e28f00dbdfe40a1756a4
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^22.14.1":
-  version: 22.16.2
-  resolution: "@types/node@npm:22.16.2"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10c0/4b5e34ca73cceb2630ae2ca46cc8fe1173e0026edb24dcd203cb7cfa788f0bab84b0d8599c32aedbc506a519acc5027177ce8b47a4f63e4f7887808499fec6a3
   languageName: node
   linkType: hard
 
@@ -862,7 +853,7 @@ __metadata:
     "@types/adm-zip": "npm:^0.5.7"
     "@types/fs-extra": "npm:^11.0.4"
     "@types/js-yaml": "npm:^4"
-    "@types/node": "npm:^22.14.1"
+    "@types/node": "npm:^24.0.12"
     "@types/ws": "npm:^8.5.14"
     adm-zip: "npm:^0.5.16"
     argon2: "npm:^0.41.1"
@@ -2360,13 +2351,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
