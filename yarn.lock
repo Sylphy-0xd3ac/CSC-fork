@@ -478,12 +478,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.0.14":
-  version: 24.0.14
-  resolution: "@types/node@npm:24.0.14"
+"@types/node@npm:^24.1.0":
+  version: 24.1.0
+  resolution: "@types/node@npm:24.1.0"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10c0/536b5a816554ad1522e9e0c1d517b317f8478798bd76a332d83690aa42b19b5b263eb295ee25f9d0badb430ee6e36412ee9070cb5e3359f6bdcf7e08f94302f1
+  checksum: 10c0/6c4686bc144f6ce7bffd4cadc3e1196e2217c1da4c639c637213719c8a3ee58b6c596b994befcbffeacd9d9eb0c3bff6529d2bc27da5d1cb9d58b1da0056f9f4
   languageName: node
   linkType: hard
 
@@ -854,7 +854,7 @@ __metadata:
     "@types/adm-zip": "npm:^0.5.7"
     "@types/fs-extra": "npm:^11.0.4"
     "@types/js-yaml": "npm:^4"
-    "@types/node": "npm:^24.0.14"
+    "@types/node": "npm:^24.1.0"
     "@types/ws": "npm:^8.5.14"
     adm-zip: "npm:^0.5.16"
     argon2: "npm:^0.43.1"
