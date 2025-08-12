@@ -46,7 +46,7 @@
     "prettier": "^3.5.1",
     "tsx": "^4.19.4",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.38.0"
+    "typescript-eslint": "^8.39.1"
   },
   "packageManager": "yarn@4.9.2"
 }
