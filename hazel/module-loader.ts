@@ -1,11 +1,11 @@
-import { sync } from "glob";
+import { globSync } from "glob";
 import path from "node:path";
 import type { Module } from "./hazel-core.js";
 
 export function recursiveReadDir(baseDir) {
-  return sync(path.join(baseDir, "**/*"), {
-    ignore: ["node_modules/**", "dist/**"],
-  });
+  return globSync(path.join(baseDir, "**/*")).filter(
+    (file) => !file.includes("dist") && !file.includes("node_modules"),
+  );
 }
 
 export async function importModule(filePath: string, loadID: string) {

@@ -23,12 +23,11 @@
     "argon2": "^0.43.1",
     "eventemitter2": "^6.4.9",
     "fs-extra": "^11.3.0",
-    "glob": "^11.0.2",
     "js-yaml": "^4.1.0",
     "ws": "^8.12.0"
   },
   "engines": {
-    "node": ">= 18.x.x"
+    "node": ">= 22.x.x"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
@@ -48,5 +47,5 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.38.0"
   },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "yarn@4.9.3"
 }

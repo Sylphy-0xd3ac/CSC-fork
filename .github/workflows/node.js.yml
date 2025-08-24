@@ -3,7 +3,7 @@ name: Compile and Push
 on:
   push:
     branches:
-      - main 
+      - main
 
 permissions:
   contents: read
