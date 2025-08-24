@@ -39,7 +39,7 @@
     "@types/ws": "^8.5.14",
     "adm-zip": "^0.5.16",
     "esbuild": "^0.25.8",
-    "eslint": "^9.32.0",
+    "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
