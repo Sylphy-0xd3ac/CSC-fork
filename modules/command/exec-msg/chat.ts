@@ -21,11 +21,12 @@ export async function action(hazel, core, hold, socket, data) {
 
   // 如果消息以 / 开头，视为命令
   if (data.text[0] == "/") {
-    // 使用核心 commandService 处理命令
+    // 检查是否存在命令服务
     if (
       core.commandService &&
       typeof core.commandService.handle === "function"
     ) {
+      // 处理命令
       await core.commandService.handleSlash(socket, data.text);
     }
     return;
@@ -90,6 +91,33 @@ export async function action(hazel, core, hold, socket, data) {
     );
   }
 
+  // 记录聊天室历史记录
+  if (!hold.history.get(socket.channel)) {
+    hold.history.set(socket.channel, []);
+  }
+  const history = hold.history.get(socket.channel);
+  if (history.length >= core.config.historyMaximumLength) {
+    history.shift();
+  }
+  if (typeof socket.trip == "string") {
+    history.push({
+      nick: socket.nick,
+      trip: socket.trip,
+      level: socket.level,
+      utype: socket.permission,
+      member: socket.level >= core.config.level.member,
+      admin: socket.level >= core.config.level.admin,
+      text: data.text,
+    });
+  } else {
+    history.push({
+      nick: socket.nick,
+      level: socket.level,
+      utype: socket.permission,
+      text: data.text,
+    });
+  }
+
   // 记录 stats
   core.increaseState("messages-sent");
 
@@ -115,4 +143,5 @@ export const dependencies = [
   "address-checker",
   "socket",
   "can-speak",
+  "data",
 ];

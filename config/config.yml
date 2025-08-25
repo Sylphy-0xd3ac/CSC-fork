@@ -26,6 +26,9 @@ memberList: []
 # Data Maximum Length
 dataMaximumLength: 32768
 
+# History Maximum Length
+historyMaximumLength: 20
+
 # Rate Limiter
 rateLimiter:
   globalTimeRange: 10000

@@ -230,18 +230,6 @@ export async function action(hazel, core, hold, socket, data) {
   // 返回用户列表等信息
   if (typeof data.password == "string") {
     const generatedKey = await core.generateKeys(data.password);
-    if (hold.noticeList.length > 0) {
-      hold.noticeList.forEach((notice) => {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE",
-            text: notice,
-          },
-          socket,
-        );
-      });
-    }
     core.reply(
       {
         cmd: "onlineSet",
@@ -253,18 +241,6 @@ export async function action(hazel, core, hold, socket, data) {
       socket,
     );
   } else {
-    if (hold.noticeList.length > 0) {
-      hold.noticeList.forEach((notice) => {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE",
-            text: notice,
-          },
-          socket,
-        );
-      });
-    }
     core.reply(
       {
         cmd: "onlineSet",
@@ -273,6 +249,37 @@ export async function action(hazel, core, hold, socket, data) {
       },
       socket,
     );
+  }
+
+  // 如果公告列表不为空，则发送公告
+  if (hold.noticeList.length > 0) {
+    hold.noticeList.forEach((notice) => {
+      core.reply(
+        {
+          cmd: "info",
+          code: "NOTICE",
+          text: notice,
+        },
+        socket,
+      );
+    });
+  }
+
+  // 如果聊天室历史记录不为空，则发送历史记录
+  if (hold.history.get(data.channel)) {
+    hold.history.get(data.channel).forEach((item) => {
+      core.reply({
+        cmd: "chat",
+        type: "chat",
+        nick: item.nick,
+        trip: item.trip,
+        level: item.level,
+        utype: item.utype,
+        member: item.member,
+        admin: item.admin,
+        text: item.text,
+      }, socket);
+    });
   }
 
   // 广播用户上线信息

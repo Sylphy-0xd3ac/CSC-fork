@@ -1,7 +1,7 @@
 // 初始化服务器
 export async function run(hazel, core, hold) {
   // 如果已经加载过，则不重新加载
-  if (hold.dataLoaded) {
+  if (Object.keys(hold).length > 0) {
     return;
   }
   // 冻结对象和函数的原型链
@@ -37,15 +37,15 @@ export async function run(hazel, core, hold) {
   hold.channel = new Map();
   hold.lockAllChannels = false;
 
+  // 聊天室历史记录
+  hold.history = new Map();
+
   // 禁言时间列表
   hold.muteUntil = new Map();
 
   // 写日志，保存服务器启动时间，上次重读时间
   hold.startTime = Date.now();
   hold.lastReloadTime = Date.now();
-
-  // 标记为已加载
-  hold.dataLoaded = true;
 }
 
 export const name = "data";
