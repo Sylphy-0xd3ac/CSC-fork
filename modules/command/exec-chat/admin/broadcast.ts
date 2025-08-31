@@ -1,6 +1,6 @@
 // 向在线的所有用户广播消息
-export async function action(hazel, core, hold, socket, data) {
-  if (data.text.length == 0) {
+export async function action(_hazel, core, _hold, socket, data) {
+  if (data.text.length === 0) {
     core.replyMalformedCommand(socket);
     return;
   }
@@ -19,7 +19,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("BOD", socket, data.text);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,
@@ -32,9 +32,4 @@ export const name = "broadcast";
 export const requiredLevel = 4;
 export const requiredData = { text: { description: "消息内容" } };
 export const description = "向在线的所有用户广播消息";
-export const dependencies = [
-  "command-service",
-  "ws-reply",
-  "app-config",
-  "archive",
-];
+export const dependencies = ["command-service", "ws-reply", "app-config", "archive"];

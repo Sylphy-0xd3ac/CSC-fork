@@ -1,5 +1,5 @@
 // 解锁房间
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, _data) {
   // 检查房间是否已经被锁定
   if (!hold.channel.get(socket.channel).isLocked) {
     core.replyWarn("CHANNEL_ALREADY_UNLOCKED", "房间未锁定", socket);
@@ -17,7 +17,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("ULR", socket, "");
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

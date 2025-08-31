@@ -1,11 +1,11 @@
 // 用于处理用户发送的聊天消息
 function getChatTimeStr() {
-  let now = new Date();
-  let hour = now.getHours();
-  let min = now.getMinutes();
-  return (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min);
+  const now = new Date();
+  const hour = now.getHours();
+  const min = now.getMinutes();
+  return `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}`;
 }
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 3);
 
@@ -20,12 +20,9 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 如果消息以 / 开头，视为命令
-  if (data.text[0] == "/") {
+  if (data.text[0] === "/") {
     // 检查是否存在命令服务
-    if (
-      core.commandService &&
-      typeof core.commandService.handle === "function"
-    ) {
+    if (core.commandService && typeof core.commandService.handle === "function") {
       // 处理命令
       await core.commandService.handleSlash(socket, data.text);
     }
@@ -36,7 +33,7 @@ export async function action(hazel, core, hold, socket, data) {
   data.text = data.text.trim();
 
   // 如果是空消息，不处理
-  if (data.text.length == 0) {
+  if (data.text.length === 0) {
     return;
   }
 
@@ -46,7 +43,7 @@ export async function action(hazel, core, hold, socket, data) {
   // data.text = data.text.replace(/\r\n{3,}/g, '\r\n\r\n');
 
   // 如果该聊天室三分钟前未发送过消息，发送时间
-  let timeNow = Date.now();
+  const timeNow = Date.now();
   if (hold.channel.get(socket.channel).lastActive + 180000 < timeNow) {
     core.broadcast(
       {
@@ -62,7 +59,7 @@ export async function action(hazel, core, hold, socket, data) {
   hold.channel.get(socket.channel).lastActive = timeNow;
 
   // 在聊天室广播消息
-  if (typeof socket.trip == "string") {
+  if (typeof socket.trip === "string") {
     core.broadcast(
       {
         cmd: "chat",
@@ -99,7 +96,7 @@ export async function action(hazel, core, hold, socket, data) {
   if (history.length >= core.config.historyMaximumLength) {
     history.shift();
   }
-  if (typeof socket.trip == "string") {
+  if (typeof socket.trip === "string") {
     history.push({
       nick: socket.nick,
       trip: socket.trip,
@@ -125,7 +122,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("MSG", socket, data.text);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,

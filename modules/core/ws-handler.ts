@@ -6,12 +6,11 @@ export async function run(hazel, core, hold) {
    * @param ws_socket WebSocket
    * @param request   HTTP 请求
    */
-  core.handle_connection = async function (ws_socket: any, request: any) {
+  core.handle_connection = async (ws_socket: any, request: any) => {
     /* 前置检查 */
     // 获取客户端地址
     if (hazel.mainConfig.behindReverseProxy) {
-      ws_socket.remoteAddress =
-        request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+      ws_socket.remoteAddress = request.headers["x-forwarded-for"] || request.socket.remoteAddress;
     } else {
       ws_socket.remoteAddress = request.socket.remoteAddress;
     }
@@ -58,7 +57,7 @@ export async function run(hazel, core, hold) {
     });
 
     // close 事件
-    ws_socket.on("close", function () {
+    ws_socket.on("close", () => {
       // 如果用户加入了聊天室，则从聊天室中移除
       if (typeof ws_socket.channel !== "undefined") {
         core.removeSocket?.(ws_socket);

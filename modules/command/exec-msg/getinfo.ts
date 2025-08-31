@@ -1,6 +1,6 @@
 // 现在的用途是：在首页显示服务器信息
 // 之后大概率会被废弃
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, _data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 2);
 
@@ -25,7 +25,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("VHP", null, socket.remoteAddress);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,
@@ -36,10 +36,4 @@ export async function run(hazel, core, hold) {
 export const name = "getinfo";
 export const requiredLevel = 0;
 export const requiredData = {};
-export const dependencies = [
-  "command-service",
-  "stats",
-  "archive",
-  "address-checker",
-  "socket",
-];
+export const dependencies = ["command-service", "stats", "archive", "address-checker", "socket"];

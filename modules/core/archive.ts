@@ -1,21 +1,14 @@
 // 存档记录器
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   // 记录聊天和操作记录存档
-  core.archive = function (logType, socket, ...logText: string[]) {
+  core.archive = (logType, socket, ...logText: string[]) => {
     // 生成日志内容
-    let content = logType + " ";
+    let content = `${logType} `;
     if (socket) {
-      if (typeof socket.trip == "string") {
-        content +=
-          socket.channel +
-          " [" +
-          socket.trip +
-          "]" +
-          socket.nick +
-          " " +
-          logText.join(" ");
+      if (typeof socket.trip === "string") {
+        content += `${socket.channel} [${socket.trip}]${socket.nick} ${logText.join(" ")}`;
       } else {
-        content += socket.channel + " []" + socket.nick + ": " + logText;
+        content += `${socket.channel} []${socket.nick}: ${logText}`;
       }
     } else {
       content += logText;
@@ -27,7 +20,7 @@ export async function run(hazel, core, hold) {
     content += "\n";
 
     // 输出到控制台和文件
-    let logger = new core.logger("ARCHIVE");
+    const logger = new core.logger("ARCHIVE");
     logger.info(`${content.trim()}`);
   };
 }

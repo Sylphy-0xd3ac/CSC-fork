@@ -1,8 +1,8 @@
 // 判断一个 socket 现在是否可以发言
-export async function run(hazel, core, hold) {
-  core.canSpeak = function (socket) {
+export async function run(_hazel, core, hold) {
+  core.canSpeak = (socket) => {
     // 检查用户是否在聊天室内
-    if (typeof socket.channel == "undefined") {
+    if (typeof socket.channel === "undefined") {
       return false;
     }
 
@@ -22,12 +22,10 @@ export async function run(hazel, core, hold) {
       } else {
         // 否则禁止发言
         // 发送禁言提示
-        let time = hold.muteUntil.get(socket.remoteAddress) - Date.now();
+        const time = hold.muteUntil.get(socket.remoteAddress) - Date.now();
         core.replyWarn(
           "MUTED",
-          "您已经被管理员禁言，将于 " +
-            Math.ceil(time / 60000) +
-            " 分钟后解除禁言。",
+          `您已经被管理员禁言，将于 ${Math.ceil(time / 60000)} 分钟后解除禁言。`,
           socket,
           { time },
         );

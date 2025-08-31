@@ -2,8 +2,9 @@
 // /whisper text [nick]  - 按顺序：消息内容 [用户昵称]
 // /whisper --nick 张三 --text 你好  - 命名参数
 // /whisper 你好  - 回复上次私聊
-export async function action(hazel, core, hold, socket, data) {
-  let nick, text;
+export async function action(_hazel, core, _hold, socket, data) {
+  let nick;
+  let text;
 
   if (data.nick) {
     // 有nick参数：指定用户私聊
@@ -17,12 +18,8 @@ export async function action(hazel, core, hold, socket, data) {
     }
   } else {
     // 没有nick参数：回复上次私聊
-    if (typeof socket.lastWhisperFrom == "undefined") {
-      core.replyWarn(
-        "NO_LAST_WHISPER",
-        "没有您之前的私聊记录，请指定用户昵称。",
-        socket,
-      );
+    if (typeof socket.lastWhisperFrom === "undefined") {
+      core.replyWarn("NO_LAST_WHISPER", "没有您之前的私聊记录，请指定用户昵称。", socket);
       return;
     }
     nick = socket.lastWhisperFrom;
@@ -46,29 +43,25 @@ export async function action(hazel, core, hold, socket, data) {
   text = text.trim();
 
   // 如果是空消息
-  if (text.length == 0) {
+  if (text.length === 0) {
     core.replyMalformedCommand(socket);
     return;
   }
 
   // 查找目标用户
-  let [targetSocket] = core.findSocket({
+  const [targetSocket] = core.findSocket({
     channel: socket.channel,
     nick: nick,
   });
 
   // 如果目标用户不存在
   if (!targetSocket) {
-    core.replyWarn(
-      "USER_NOT_FOUND",
-      "在这个聊天室找不到您指定的用户。",
-      socket,
-    );
+    core.replyWarn("USER_NOT_FOUND", "在这个聊天室找不到您指定的用户。", socket);
     return;
   }
 
   // 如果目标用户是自己
-  if (targetSocket == socket) {
+  if (targetSocket === socket) {
     core.replyWarn("WHISPER_SELF", "您不能给自己发私聊消息。", socket);
     return;
   }
@@ -81,7 +74,7 @@ export async function action(hazel, core, hold, socket, data) {
       from: socket.nick,
       level: socket.level,
       utype: socket.permission,
-      nick: "【收到私聊】 " + socket.nick,
+      nick: `【收到私聊】 ${socket.nick}`,
       trip: socket.trip || " ",
       text: text,
     },
@@ -96,7 +89,7 @@ export async function action(hazel, core, hold, socket, data) {
     {
       cmd: "chat",
       type: "whisper",
-      nick: "【发送私聊】 " + targetSocket.nick,
+      nick: `【发送私聊】 ${targetSocket.nick}`,
       trip: targetSocket.trip || " ",
       text: text,
     },
@@ -107,10 +100,10 @@ export async function action(hazel, core, hold, socket, data) {
   socket.lastWhisperFrom = targetSocket.nick;
 
   // 写入存档
-  core.archive("WHI", socket, "-> " + targetSocket.nick + " " + text);
+  core.archive("WHI", socket, `-> ${targetSocket.nick} ${text}`);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

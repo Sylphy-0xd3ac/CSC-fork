@@ -6,10 +6,7 @@ export async function run(hazel, core, hold) {
 
   core.commandService = {
     // 命令服务
-    actions:
-      existingActions && existingActions.size > 0
-        ? existingActions
-        : new Map<string, any>(),
+    actions: existingActions && existingActions.size > 0 ? existingActions : new Map<string, any>(),
     slashCommands:
       existingSlashCommands && existingSlashCommands.size > 0
         ? existingSlashCommands
@@ -21,11 +18,7 @@ export async function run(hazel, core, hold) {
      * @param handler 处理函数
      * @param meta 额外元数据（例如 requiredLevel 等）
      */
-    registerAction(
-      name: string,
-      handler: (...args: any[]) => any,
-      meta: any = {},
-    ) {
+    registerAction(name: string, handler: (...args: any[]) => any, meta: any = {}) {
       if (typeof meta.requiredLevel !== "number") {
         throw new Error(`Command ${name} must set requiredLevel`);
       }
@@ -35,11 +28,7 @@ export async function run(hazel, core, hold) {
       this.actions.set(name, { handler, meta });
     },
 
-    registerSlashCommand(
-      name: string,
-      handler: (...args: any[]) => any,
-      meta: any = {},
-    ) {
+    registerSlashCommand(name: string, handler: (...args: any[]) => any, meta: any = {}) {
       if (typeof meta.requiredLevel !== "number") {
         throw new Error(`Command ${name} must set requiredLevel`);
       }
@@ -65,10 +54,7 @@ export async function run(hazel, core, hold) {
         const { handler, meta } = this.actions.get(data.cmd);
 
         // 权限验证
-        if (
-          typeof meta.requiredLevel === "number" &&
-          socket.level < meta.requiredLevel
-        ) {
+        if (typeof meta.requiredLevel === "number" && socket.level < meta.requiredLevel) {
           core.replyMalformedCommand(socket);
           return;
         }
@@ -78,16 +64,12 @@ export async function run(hazel, core, hold) {
           const entries = Object.entries(meta.requiredData);
 
           // 计算必需参数的数量
-          const requiredParamCount = entries.filter(
-            ([paramName, paramInfo]) => {
-              return (paramInfo as any).optional !== true;
-            },
-          ).length;
+          const requiredParamCount = entries.filter(([_paramName, paramInfo]) => {
+            return (paramInfo as any).optional !== true;
+          }).length;
 
           // 数量校验
-          const providedParams = Object.keys(data).filter(
-            (key) => key !== "cmd",
-          );
+          const providedParams = Object.keys(data).filter((key) => key !== "cmd");
           if (providedParams.length < requiredParamCount) {
             core.replyMalformedCommand(socket);
             return;
@@ -143,10 +125,7 @@ export async function run(hazel, core, hold) {
       // 新的 slash 命令
       if (this.slashCommands.has(cmdName)) {
         const { handler, meta } = this.slashCommands.get(cmdName);
-        if (
-          typeof meta.requiredLevel === "number" &&
-          socket.level < meta.requiredLevel
-        ) {
+        if (typeof meta.requiredLevel === "number" && socket.level < meta.requiredLevel) {
           core.replyMalformedCommand?.(socket);
           return;
         }
@@ -213,19 +192,15 @@ export async function run(hazel, core, hold) {
           const entries = Object.entries(meta.requiredData);
 
           // 计算必需参数的数量
-          const requiredParamCount = entries.filter(
-            ([paramName, paramInfo]) => {
-              return (paramInfo as any).optional !== true;
-            },
-          ).length;
+          const requiredParamCount = entries.filter(([_paramName, paramInfo]) => {
+            return (paramInfo as any).optional !== true;
+          }).length;
 
           // 检查必需参数是否都存在
-          const providedRequiredParams = entries.filter(
-            ([paramName, paramInfo]) => {
-              const param = paramInfo as any;
-              return param.optional !== true && paramName in data;
-            },
-          ).length;
+          const providedRequiredParams = entries.filter(([paramName, paramInfo]) => {
+            const param = paramInfo as any;
+            return param.optional !== true && paramName in data;
+          }).length;
 
           if (providedRequiredParams < requiredParamCount) {
             core.replyMalformedCommand?.(socket);

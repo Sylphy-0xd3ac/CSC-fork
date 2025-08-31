@@ -1,12 +1,12 @@
 // 锁定房间，禁止非成员进入
-export async function action(hazel, core, hold, socket, data) {
-  let targetChannel = socket.channel;
+export async function action(_hazel, core, hold, socket, data) {
+  const targetChannel = socket.channel;
   // kick: 锁房后将所有非成员踢出房间
   // no_kick: 锁房后不踢出非成员
-  let lockroomType = data.type;
+  const lockroomType = data.type;
 
   // 如果锁房类型不是 kick 或 no_kick，则报错
-  if (lockroomType != "kick" && lockroomType != "no_kick") {
+  if (lockroomType !== "kick" && lockroomType !== "no_kick") {
     core.replyMalformedCommand(socket);
     return;
   }
@@ -21,7 +21,7 @@ export async function action(hazel, core, hold, socket, data) {
   hold.channel.get(targetChannel).isLocked = true;
 
   // 踢出全部非成员
-  if (lockroomType == "kick") {
+  if (lockroomType === "kick") {
     core
       .findSocket({ level: 1 }, hold.channel.get(targetChannel).socketList)
       .forEach((targetSocket) => {
@@ -45,7 +45,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("LOR", socket, lockroomType);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

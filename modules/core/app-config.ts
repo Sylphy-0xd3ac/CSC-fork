@@ -1,16 +1,15 @@
 // 用于加载和保存应用程序配置
 
 import pkg from "fs-extra";
+
 const { readFileSync, watch, writeFileSync } = pkg;
+
 import { join } from "node:path";
 import yaml from "js-yaml";
 
-export async function run(hazel, core, hold) {
+export async function run(hazel, core, _hold) {
   // 配置文件的路径
-  const configPath = join(
-    hazel.mainConfig.baseDir,
-    hazel.mainConfig.appConfigDir,
-  );
+  const configPath = join(hazel.mainConfig.baseDir, hazel.mainConfig.appConfigDir);
 
   // 从指定的路径加载配置文件
   try {
@@ -23,9 +22,9 @@ export async function run(hazel, core, hold) {
 
   // 监听配置文件的变化
   watch(configPath, { encoding: "utf-8" }, async (eventType) => {
-    if (eventType == "change") {
+    if (eventType === "change") {
       try {
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve, _reject) => {
           setTimeout(resolve, 300);
         });
         const fileContents = readFileSync(configPath, { encoding: "utf-8" });
@@ -38,7 +37,7 @@ export async function run(hazel, core, hold) {
   });
 
   // 保存配置文件
-  core.saveConfig = function () {
+  core.saveConfig = () => {
     try {
       const yamlStr = yaml.dump(core.config);
       writeFileSync(configPath, yamlStr, { encoding: "utf-8" });

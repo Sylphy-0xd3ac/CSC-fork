@@ -2,7 +2,7 @@
 
 export async function run(hazel, core, hold) {
   // 向指定的 socket 发送消息
-  core.reply = function (payload, socket) {
+  core.reply = (payload, socket) => {
     try {
       if (socket.readyState === 1 /* OPEN */) {
         socket.send(JSON.stringify(payload));
@@ -13,8 +13,8 @@ export async function run(hazel, core, hold) {
   };
 
   // 添加 prompt 方法
-  core.prompt = function (socket) {
-    return new Promise((resolve) => {
+  core.prompt = (socket) =>
+    new Promise((resolve) => {
       const messageHandler = (message) => {
         // 处理消息并解析
         const data = JSON.parse(message);
@@ -28,13 +28,12 @@ export async function run(hazel, core, hold) {
       socket.on("message", messageHandler);
       socket.handlePrompt = true;
     });
-  };
 
-  core.extendedFindSockets = function (filter, sockets) {
+  core.extendedFindSockets = (filter, sockets) => {
     const filterAttrs = Object.keys(filter);
     const reqCount = filterAttrs.length;
-    let matches: any = [];
-    let socketList: any = sockets || hold.wsServer.clients;
+    const matches: any = [];
+    const socketList: any = sockets || hold.wsServer.clients;
 
     socketList.forEach((socket) => {
       let curMatch = 0;
@@ -75,8 +74,7 @@ export async function run(hazel, core, hold) {
             default:
               if (
                 socketAttrValue === filterAttrValue ||
-                (typeof filterAttrValue === "number" &&
-                  socketAttrValue > filterAttrValue)
+                (typeof filterAttrValue === "number" && socketAttrValue > filterAttrValue)
               ) {
                 curMatch++;
               }
@@ -95,31 +93,25 @@ export async function run(hazel, core, hold) {
   // 寻找符合条件的 socket
   // 本函数高度来源于 https://github.com/hack-chat/main/blob/master/server/src/serverLib/MainServer.js#L353
   // 功能太强一般用不到，先注释掉
-  core.hackchatFindSockets = function (filter) {
+  core.hackchatFindSockets = (filter) => {
     const filterAttrs = Object.keys(filter);
     const reqCount = filterAttrs.length;
     let curMatch = 0;
-    let matches: any = [];
-    let socketList: any = hold.wsServer.clients;
+    const matches: any = [];
+    const socketList: any = hold.wsServer.clients;
     socketList.forEach((socket) => {
       curMatch = 0;
       for (let loop = 0; loop < reqCount; loop += 1) {
-        let filterAttrValue = filter[filterAttrs[loop]];
+        const filterAttrValue = filter[filterAttrs[loop]];
         if (typeof socket[filterAttrValue] !== "undefined") {
           switch (typeof filter[filterAttrValue]) {
             // 这里暂时删除根据数组匹配的功能
             case "object": {
               if (Array.isArray(filter[filterAttrs[loop]])) {
-                if (
-                  filter[filterAttrs[loop]].indexOf(
-                    socket[filterAttrs[loop]],
-                  ) !== -1
-                ) {
+                if (filter[filterAttrs[loop]].indexOf(socket[filterAttrs[loop]]) !== -1) {
                   curMatch += 1;
                 }
-              } else if (
-                socket[filterAttrs[loop]] === filter[filterAttrs[loop]]
-              ) {
+              } else if (socket[filterAttrs[loop]] === filter[filterAttrs[loop]]) {
                 curMatch += 1;
               }
               break;
@@ -151,18 +143,18 @@ export async function run(hazel, core, hold) {
   };
 
   // 使用属性为字符串的过滤条件查找 socket
-  core.findSocket = function (filter, sockets) {
+  core.findSocket = (filter, sockets) => {
     //检查属性
     if (typeof filter !== "object" || filter === null) {
       return [];
     }
-    let attrCount = Object.keys(filter).length;
+    const attrCount = Object.keys(filter).length;
     let curMatch = 0;
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
+    const matches: any = [];
+    const socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       curMatch = 0;
-      for (let attr in filter) {
+      for (const attr in filter) {
         if (socket[attr] === filter[attr]) {
           curMatch += 1;
         }
@@ -176,8 +168,8 @@ export async function run(hazel, core, hold) {
   };
 
   // 使用一个属性作为过滤条件查找 socket
-  core.findSocketTiny = function (attr, value) {
-    let matches: any = [];
+  core.findSocketTiny = (attr, value) => {
+    const matches: any = [];
     hold.wsServer.clients.forEach((socket: any) => {
       if (socket[attr] === value) {
         matches.push(socket);
@@ -187,9 +179,9 @@ export async function run(hazel, core, hold) {
   };
 
   // 根据给定的用户等级查找 socket
-  core.findSocketByLevel = function (level, sockets) {
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
+  core.findSocketByLevel = (level, sockets) => {
+    const matches: any = [];
+    const socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       if (socket.level >= level) {
         matches.push(socket);
@@ -198,9 +190,9 @@ export async function run(hazel, core, hold) {
     return matches;
   };
 
-  core.findSocketByLevelDown = function (level, sockets) {
-    let matches: any = [];
-    let socketList = sockets || hold.wsServer.clients;
+  core.findSocketByLevelDown = (level, sockets) => {
+    const matches: any = [];
+    const socketList = sockets || hold.wsServer.clients;
     socketList.forEach((socket) => {
       if (socket.level <= level) {
         matches.push(socket);
@@ -210,7 +202,7 @@ export async function run(hazel, core, hold) {
   };
 
   // 向指定的一些 socket 广播消息
-  core.broadcast = function (payload, sockets) {
+  core.broadcast = (payload, sockets) => {
     sockets.forEach((socket) => {
       try {
         if (socket.readyState === 1 /* OPEN */) {

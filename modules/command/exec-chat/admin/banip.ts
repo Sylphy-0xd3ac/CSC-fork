@@ -1,6 +1,6 @@
 // 管理员封禁某个 IP
-export async function action(hazel, core, hold, socket, data) {
-  let IPV4_REGEXP =
+export async function action(_hazel, core, hold, socket, data) {
+  const IPV4_REGEXP =
     /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
   // 检查 IP 是否已经被封禁
@@ -26,7 +26,7 @@ export async function action(hazel, core, hold, socket, data) {
   // 通知全部管理员
   core.broadcastInfo(
     "BAN_IP",
-    socket.nick + " 封禁了 IP 地址 `" + data.ip + "`。",
+    `${socket.nick} 封禁了 IP 地址 \`${data.ip}\`。`,
     core.findSocketByLevel(4),
     { from: socket.nick, ip: data.ip },
   );
@@ -35,7 +35,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("BIP", socket, data.ip);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

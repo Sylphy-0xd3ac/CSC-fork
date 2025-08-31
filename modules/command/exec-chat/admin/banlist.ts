@@ -1,4 +1,4 @@
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, _data) {
   let text = "历史封禁列表：\n";
   hold.bannedIPlist.forEach((ip) => {
     text += `${ip}\n`;
@@ -6,7 +6,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.replyInfo("BAN_LIST", text, socket);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

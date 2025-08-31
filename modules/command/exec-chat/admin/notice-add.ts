@@ -1,4 +1,4 @@
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // push 到公告列表
   data.text = data.text.trim();
   hold.noticeList.push(data.text);
@@ -21,7 +21,7 @@ export async function action(hazel, core, hold, socket, data) {
   );
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

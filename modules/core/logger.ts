@@ -1,7 +1,9 @@
+import pkg from "fs-extra";
 // 用于记录日志
 import { stdout } from "supports-color";
-import pkg from "fs-extra";
+
 const { existsSync, mkdirSync, writeFileSync } = pkg;
+
 import path from "node:path";
 
 export class Time {
@@ -15,23 +17,23 @@ export class Time {
   private static timezoneOffset = new Date().getTimezoneOffset();
 
   static setTimezoneOffset(offset: number) {
-    this.timezoneOffset = offset;
+    Time.timezoneOffset = offset;
   }
 
   static getTimezoneOffset() {
-    return this.timezoneOffset;
+    return Time.timezoneOffset;
   }
 
   static getDateNumber(date: number | Date = new Date(), offset?: number) {
     if (typeof date === "number") date = new Date(date);
-    if (offset === undefined) offset = this.timezoneOffset;
-    return Math.floor((date.valueOf() / this.minute - offset) / 1440);
+    if (offset === undefined) offset = Time.timezoneOffset;
+    return Math.floor((date.valueOf() / Time.minute - offset) / 1440);
   }
 
   static fromDateNumber(value: number, offset?: number) {
-    const date = new Date(value * this.day);
-    if (offset === undefined) offset = this.timezoneOffset;
-    return new Date(+date + offset * this.minute);
+    const date = new Date(value * Time.day);
+    if (offset === undefined) offset = Time.timezoneOffset;
+    return new Date(+date + offset * Time.minute);
   }
 
   private static numeric = /\d+(?:\.\d+)?/.source;
@@ -48,19 +50,19 @@ export class Time {
   );
 
   static parseTime(source: string) {
-    const capture = this.timeRegExp.exec(source);
+    const capture = Time.timeRegExp.exec(source);
     if (!capture) return 0;
     return (
-      (parseFloat(capture[1]) * this.week || 0) +
-      (parseFloat(capture[2]) * this.day || 0) +
-      (parseFloat(capture[3]) * this.hour || 0) +
-      (parseFloat(capture[4]) * this.minute || 0) +
-      (parseFloat(capture[5]) * this.second || 0)
+      (Number.parseFloat(capture[1]) * Time.week || 0) +
+      (Number.parseFloat(capture[2]) * Time.day || 0) +
+      (Number.parseFloat(capture[3]) * Time.hour || 0) +
+      (Number.parseFloat(capture[4]) * Time.minute || 0) +
+      (Number.parseFloat(capture[5]) * Time.second || 0)
     );
   }
 
   static parseDate(date: string) {
-    const parsed = this.parseTime(date);
+    const parsed = Time.parseTime(date);
     if (parsed) {
       date = (Date.now() + parsed) as any;
     } else if (/^\d{1,2}(:\d{1,2}){1,2}$/.test(date)) {
@@ -73,16 +75,19 @@ export class Time {
 
   static format(ms: number) {
     const abs = Math.abs(ms);
-    if (abs >= this.day - this.hour / 2) {
-      return Math.round(ms / this.day) + "d";
-    } else if (abs >= this.hour - this.minute / 2) {
-      return Math.round(ms / this.hour) + "h";
-    } else if (abs >= this.minute - this.second / 2) {
-      return Math.round(ms / this.minute) + "m";
-    } else if (abs >= this.second) {
-      return Math.round(ms / this.second) + "s";
+    if (abs >= Time.day - Time.hour / 2) {
+      return `${Math.round(ms / Time.day)}d`;
     }
-    return ms + "ms";
+    if (abs >= Time.hour - Time.minute / 2) {
+      return `${Math.round(ms / Time.hour)}h`;
+    }
+    if (abs >= Time.minute - Time.second / 2) {
+      return `${Math.round(ms / Time.minute)}m`;
+    }
+    if (abs >= Time.second) {
+      return `${Math.round(ms / Time.second)}s`;
+    }
+    return `${ms}ms`;
   }
 
   static toDigits(source: number, length = 2) {
@@ -104,11 +109,10 @@ export class Time {
 
 const c16 = [6, 2, 3, 4, 5, 1];
 const c256 = [
-  20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68,
-  69, 74, 75, 76, 77, 78, 79, 80, 81, 92, 93, 98, 99, 112, 113, 129, 134, 135,
-  148, 149, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172,
-  173, 178, 179, 184, 185, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205,
-  206, 207, 208, 209, 214, 215, 220, 221,
+  20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68, 69, 74, 75, 76, 77,
+  78, 79, 80, 81, 92, 93, 98, 99, 112, 113, 129, 134, 135, 148, 149, 160, 161, 162, 163, 164, 165,
+  166, 167, 168, 169, 170, 171, 172, 173, 178, 179, 184, 185, 196, 197, 198, 199, 200, 201, 202,
+  203, 204, 205, 206, 207, 208, 209, 214, 215, 220, 221,
 ];
 
 export interface LevelConfig {
@@ -156,7 +160,7 @@ export interface Target {
 }
 
 function isAggregateError(error: any): error is Error & { errors: Error[] } {
-  return error instanceof Error && Array.isArray((error as any)["errors"]);
+  return error instanceof Error && Array.isArray((error as any).errors);
 }
 
 export class Logger {
@@ -187,12 +191,12 @@ export class Logger {
   };
 
   static format(name: string, formatter: Formatter) {
-    this.formatters[name] = formatter;
+    Logger.formatters[name] = formatter;
   }
 
   static color(target: Target, code: number, value: any, decoration = "") {
-    if (!target.colors) return "" + value;
-    return `\u001b[3${code < 8 ? code : "8;5;" + code}${target.colors >= 2 ? decoration : ""}m${value}\u001b[0m`;
+    if (!target.colors) return `${value}`;
+    return `\u001b[3${code < 8 ? code : `8;5;${code}`}${target.colors >= 2 ? decoration : ""}m${value}\u001b[0m`;
   }
 
   static code(name: string, target: Target) {
@@ -208,26 +212,25 @@ export class Logger {
   static render(target: Target, record: Record) {
     const prefix = `[${record.type[0].toUpperCase()}]`;
     const space = " ".repeat(target.label?.margin ?? 1);
-    let indent = 3 + space.length,
-      output = "";
+    let indent = 3 + space.length;
+    let output = "";
     if (target.showTime) {
       indent += target.showTime.length + space.length;
       output += Logger.color(target, 8, Time.template(target.showTime)) + space;
     }
     const code = Logger.code(record.name, target);
     const label = Logger.color(target, code, record.name, ";1");
-    const padLength =
-      (target.label?.width ?? 0) + label.length - record.name.length;
+    const padLength = (target.label?.width ?? 0) + label.length - record.name.length;
     if (target.label?.align === "right") {
       output += label.padStart(padLength) + space + prefix + space;
       indent += (target.label.width ?? 0) + space.length;
     } else {
       output += prefix + space + label.padEnd(padLength) + space;
     }
-    output += record.content.replace(/\n/g, "\n" + " ".repeat(indent));
+    output += record.content.replace(/\n/g, `\n${" ".repeat(indent)}`);
     if (target.showDiff && target.timestamp) {
       const diff = record.timestamp - target.timestamp;
-      output += Logger.color(target, code, " +" + diff);
+      output += Logger.color(target, code, ` +${diff}`);
     }
     return output;
   }
@@ -292,10 +295,7 @@ export class Logger {
     const { maxLength = 10240 } = target;
     return format
       .split(/\r?\n/g)
-      .map(
-        (line) =>
-          line.slice(0, maxLength) + (line.length > maxLength ? "..." : ""),
-      )
+      .map((line) => line.slice(0, maxLength) + (line.length > maxLength ? "..." : ""))
       .join("\n");
   }
 
@@ -303,7 +303,7 @@ export class Logger {
     const paths = this.name.split(":");
     let config: Level = target?.levels || Logger.levels;
     do {
-      config = config[paths.shift()!] ?? config["base"];
+      config = config[paths.shift()!] ?? config.base;
     } while (paths.length && typeof config === "object");
     return config as number;
   }
@@ -319,29 +319,26 @@ Logger.format("C", (value, target) => {
   return Logger.color(target, 15, value, ";1");
 });
 
-export async function run(hazel, core, hold) {
+export async function run(hazel, core, _hold) {
   Logger.targets = [];
   Logger.targets.push({
     showTime: "yyyy-MM-dd hh:mm:ss.SSS",
-    colors: stdout && stdout.level,
+    colors: stdout?.level,
     print(text) {
-      console.log(text + "\n");
+      console.log(`${text}\n`);
     },
   });
   Logger.targets.push({
     showTime: "yyyy-MM-dd hh:mm:ss.SSS",
-    print: function (text) {
+    print: (text) => {
       if (!existsSync(hazel.mainConfig.logDir)) {
         mkdirSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.logDir));
       }
-      let textArray = text.split("\n");
+      const textArray = text.split("\n");
       textArray.forEach((splitText) => {
         writeFileSync(
-          hazel.mainConfig.logDir +
-            "/" +
-            Time.template("yyyy-MM-dd") +
-            "-log.txt",
-          splitText + "\n",
+          `${hazel.mainConfig.logDir}/${Time.template("yyyy-MM-dd")}-log.txt`,
+          `${splitText}\n`,
           { encoding: "utf-8", flag: "a" },
         );
       });

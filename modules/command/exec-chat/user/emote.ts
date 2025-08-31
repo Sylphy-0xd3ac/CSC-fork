@@ -1,5 +1,5 @@
 // 用于处理用户发送的 @nick xxx 消息
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 2);
 
@@ -12,19 +12,19 @@ export async function action(hazel, core, hold, socket, data) {
   data.text = data.text.trim();
 
   // 如果是空消息，不处理
-  if (data.text.length == 0) {
+  if (data.text.length === 0) {
     return;
   }
 
   // 在聊天室广播消息
-  if (typeof socket.trip == "string") {
+  if (typeof socket.trip === "string") {
     core.broadcast(
       {
         cmd: "info",
         code: "EMOTE",
         nick: socket.nick,
         trip: socket.trip,
-        text: "@" + socket.nick + " " + data.text,
+        text: `@${socket.nick} ${data.text}`,
       },
       hold.channel.get(socket.channel).socketList,
     );
@@ -34,7 +34,7 @@ export async function action(hazel, core, hold, socket, data) {
         cmd: "info",
         code: "EMOTE",
         nick: socket.nick,
-        text: "@" + socket.nick + " " + data.text,
+        text: `@${socket.nick} ${data.text}`,
       },
       hold.channel.get(socket.channel).socketList,
     );
@@ -47,7 +47,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("EMO", socket, data.text);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

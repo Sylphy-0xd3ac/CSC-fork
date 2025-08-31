@@ -1,7 +1,7 @@
-export async function action(hazel, core, hold, socket, data) {
-  if (data.find == "all") {
-    let result = hold.noticeList.map(
-      (notice) => notice + `, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
+export async function action(_hazel, core, hold, socket, data) {
+  if (data.find === "all") {
+    const result = hold.noticeList.map(
+      (notice) => `${notice}, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
     );
     core.reply(
       {
@@ -12,13 +12,12 @@ export async function action(hazel, core, hold, socket, data) {
       socket,
     );
   } else {
-    if (data.find == "text") {
-      let result = hold.noticeList.filter(
+    if (data.find === "text") {
+      const result = hold.noticeList.filter(
         (notice) =>
-          notice.includes(data.value) +
-          `, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
+          `${notice.includes(data.value)}, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
       );
-      if (result.length == 0) {
+      if (result.length === 0) {
         core.reply(
           {
             cmd: "info",
@@ -37,8 +36,8 @@ export async function action(hazel, core, hold, socket, data) {
           socket,
         );
       }
-    } else if (data.find == "num") {
-      let result = hold.noticeList[data.value - 1];
+    } else if (data.find === "num") {
+      const result = hold.noticeList[data.value - 1];
       if (typeof result === "undefined") {
         core.reply(
           {
@@ -65,7 +64,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,
@@ -83,6 +82,5 @@ export const requiredData = {
   },
   value: { description: "查找关键字", optional: true },
 };
-export const description =
-  "查看公告列表或搜索公告, 如果未输入参数或输入错误,则显示所有公告";
+export const description = "查看公告列表或搜索公告, 如果未输入参数或输入错误,则显示所有公告";
 export const dependencies = ["command-service", "ws-reply", "data"];

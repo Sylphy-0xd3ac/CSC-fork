@@ -1,6 +1,6 @@
 // 踢人命令
-export async function action(hazel, core, hold, socket, data) {
-  let targetNick = data.nick;
+export async function action(_hazel, core, _hold, socket, data) {
+  const targetNick = data.nick;
   if (!core.verifyNickname(targetNick)) {
     core.replyMalformedCommand(socket);
     return;
@@ -24,11 +24,7 @@ export async function action(hazel, core, hold, socket, data) {
 
   // 如果目标用户不存在
   if (targetSocket.length < 1) {
-    core.replyWarn(
-      "USER_NOT_FOUND",
-      "在这个聊天室找不到您指定的用户。",
-      socket,
-    );
+    core.replyWarn("USER_NOT_FOUND", "在这个聊天室找不到您指定的用户。", socket);
     return;
   }
 
@@ -46,14 +42,7 @@ export async function action(hazel, core, hold, socket, data) {
   // 通知全部管理员
   core.broadcastInfo(
     "KICK_USER",
-    socket.nick +
-      " 在 " +
-      socket.channel +
-      " 踢出了 " +
-      targetSocket.nick +
-      "，目标 IP 地址为 `" +
-      targetSocket.remoteAddress +
-      "`。",
+    `${socket.nick} 在 ${socket.channel} 踢出了 ${targetSocket.nick}，目标 IP 地址为 \`${targetSocket.remoteAddress}\`。`,
     core.findSocketByLevel(4),
     {
       from: socket.nick,
@@ -68,7 +57,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("KCK", socket, data.nick);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,
@@ -81,10 +70,4 @@ export const name = "kick";
 export const requiredLevel = 4;
 export const requiredData = { nick: { description: "用户昵称" } };
 export const description = "踢出聊天室中某人";
-export const dependencies = [
-  "command-service",
-  "ws-reply",
-  "data",
-  "archive",
-  "verify",
-];
+export const dependencies = ["command-service", "ws-reply", "data", "archive", "verify"];

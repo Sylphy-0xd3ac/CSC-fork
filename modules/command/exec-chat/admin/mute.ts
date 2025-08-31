@@ -1,5 +1,5 @@
 // 禁言某用户
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 检查昵称是否正确
   if (!core.verifyNickname(data.nick)) {
     core.replyMalformedCommand(socket);
@@ -10,7 +10,7 @@ export async function action(hazel, core, hold, socket, data) {
     data.mins = "10";
   }
 
-  let muteMins = parseInt(data.mins);
+  const muteMins = Number.parseInt(data.mins, 10);
 
   // 如果 mins 不是整数
   if (muteMins.toString() !== data.mins) {
@@ -35,18 +35,14 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 查找目标用户
-  let [targetSocket] = core.findSocket({
+  const [targetSocket] = core.findSocket({
     channel: socket.channel,
     nick: data.nick,
   });
 
   // 如果目标用户不存在
   if (!targetSocket) {
-    core.replyWarn(
-      "USER_NOT_FOUND",
-      "在这个聊天室找不到您指定的用户。",
-      socket,
-    );
+    core.replyWarn("USER_NOT_FOUND", "在这个聊天室找不到您指定的用户。", socket);
     return;
   }
 
@@ -57,24 +53,12 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 记录禁言时间
-  hold.muteUntil.set(
-    targetSocket.remoteAddress,
-    Date.now() + muteMins * 60 * 1000,
-  );
+  hold.muteUntil.set(targetSocket.remoteAddress, Date.now() + muteMins * 60 * 1000);
 
   // 通知全部成员
   core.broadcastInfo(
     "MUTE_USER",
-    socket.nick +
-      " 在 " +
-      socket.channel +
-      " 禁言了 " +
-      targetSocket.nick +
-      "，时长 " +
-      muteMins +
-      " 分钟，IP 地址 `" +
-      targetSocket.remoteAddress +
-      "`。",
+    `${socket.nick} 在 ${socket.channel} 禁言了 ${targetSocket.nick}，时长 ${muteMins} 分钟，IP 地址 \`${targetSocket.remoteAddress}\`。`,
     core.findSocketByLevel(4),
     {
       from: socket.nick,
@@ -86,7 +70,7 @@ export async function action(hazel, core, hold, socket, data) {
   );
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

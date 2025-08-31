@@ -1,7 +1,7 @@
-import loadModule, { importModule } from "./module-loader.js";
-import EventEmitter2 from "eventemitter2";
-import process from "node:process";
 import path from "node:path";
+import process from "node:process";
+import EventEmitter2 from "eventemitter2";
+import loadModule, { importModule } from "./module-loader.js";
 
 export interface Module {
   name: string;
@@ -32,45 +32,38 @@ export default class Hazel extends EventEmitter2 {
         "|  _  | (_| |/ /  __/ | | |__| (_) | | |  __/\n" +
         "|_| |_|\\____/___\\___|_|  \\____\\___/|_|  \\___|",
     );
-    console.log(
-      `(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(
-        46,
-      ),
-    );
+    console.log(`(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(46));
   }
 
   #core: any = {};
   #hold: any = {};
 
-  version: string = "0.3.6";
+  version = "0.3.6";
 
   randomLoadID() {
     return Math.random().toString(36).slice(4, 10);
   }
 
   async initialize(forceInit) {
-    console.log("Initializing " + this.mainConfig.projectName + "...\n");
+    console.log(`Initializing ${this.mainConfig.projectName}...\n`);
     if (!(await this.loadModules(forceInit))) {
       process.exit();
     }
     this.emit("initialized");
-    console.log(
-      "==" + this.mainConfig.projectName + " Initialize Complete==\n",
-    );
+    console.log(`==${this.mainConfig.projectName} Initialize Complete==\n`);
   }
 
   async getModule(moduleName: string) {
     if (this.loadedModules.has(moduleName)) {
       return this.loadedModules.get(moduleName);
-    } else {
-      return null;
     }
+    return null;
   }
 
   async reloadModule(moduleName: string) {
-    let loadID = this.randomLoadID();
-    let currentModule = await this.getModule(moduleName);
-    let module = await importModule(currentModule.filePath, loadID);
+    const loadID = this.randomLoadID();
+    const currentModule = await this.getModule(moduleName);
+    const module = await importModule(currentModule.filePath, loadID);
     module.loadHistory = currentModule.loadHistory;
     module.loadHistory.push(loadID);
     module.filePath = currentModule.filePath;
@@ -83,8 +76,8 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async reloadModuleByID(moduleName: string, loadID: string) {
-    let currentModule = await this.getModule(moduleName);
-    let module = await importModule(currentModule.filePath, loadID);
+    const currentModule = await this.getModule(moduleName);
+    const module = await importModule(currentModule.filePath, loadID);
     module.loadHistory = currentModule.loadHistory;
     module.loadHistory.push(loadID);
     module.filePath = currentModule.filePath;
@@ -98,10 +91,7 @@ export default class Hazel extends EventEmitter2 {
 
   async reloadModules(forceReload) {
     this.emit("reload-start");
-    if (
-      !forceReload &&
-      (await this.loadModules(forceReload || false)) == false
-    ) {
+    if (!forceReload && (await this.loadModules(forceReload || false)) === false) {
       return false;
     }
     this.emit("reload-complete");
@@ -109,12 +99,12 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async loadModules(forceLoad: boolean) {
-    let result = (await loadModule(
+    const result = (await loadModule(
       this,
       path.join(this.mainConfig.baseDir, this.mainConfig.hazel.modulesDir),
       this.randomLoadID,
     )) as { moduleList: any; existError: boolean };
-    let { moduleList: loadedModules, existError: modulesExistError } = result;
+    const { moduleList: loadedModules, existError: modulesExistError } = result;
     if (!forceLoad && modulesExistError) {
       return false;
     }
@@ -124,12 +114,12 @@ export default class Hazel extends EventEmitter2 {
     this.removeAllListeners();
     this.on("error", () => {});
 
-    for (let property in this.#core) {
+    for (const property in this.#core) {
       delete this.#core[property];
     }
 
     try {
-      this.loadedModules.forEach((moduleFunction, modulePath) => {
+      this.loadedModules.forEach((moduleFunction, _modulePath) => {
         moduleFunction.run(this, this.#core, this.#hold).catch((error) => {
           this.emit("error", error);
           console.error(error);

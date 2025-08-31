@@ -1,10 +1,10 @@
+import { Buffer } from "node:buffer";
 // 加密安全
 import argon2 from "argon2";
-import { Buffer } from "node:buffer";
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   // 生成key, 使用Argon2id算法
-  core.generateKeys = async function (password) {
+  core.generateKeys = async (password) => {
     const argonKey = await argon2.hash(password, {
       type: argon2.argon2id,
       hashLength: 32,
@@ -16,18 +16,18 @@ export async function run(hazel, core, hold) {
     return await argonKey.toString();
   };
   // 验证key, 使用Argon2id算法
-  core.vetifyKeys = async function (password, key) {
+  core.vetifyKeys = async (password, key) => {
     try {
       return await argon2.verify(key, password, {
         secret: Buffer.from(core.config.salts.secret),
       });
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   };
 
   // 生成trip, 使用Argon2id算法
-  core.generateTrips = async function (password) {
+  core.generateTrips = async (password) => {
     const argonTrip = await argon2.hash(password, {
       type: argon2.argon2id,
       timeCost: 3,

@@ -1,5 +1,5 @@
 // 向聊天室内的某个用户发出邀请到某个聊天室
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, _hold, socket, data) {
   // 频率计数器计数
   core.checkAddress(socket.remoteAddress, 5);
 
@@ -17,14 +17,14 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 不能对自己发出邀请
-  if (data.nick == socket.nick) {
+  if (data.nick === socket.nick) {
     core.replyWarn("INVITE_SELF", "您不能对自己发出邀请。", socket);
     return;
   }
 
   // 如果没带 data.channel 就生成一个随机聊天室名
-  if (typeof data.channel != "string") {
-    data.channel = "Pri_" + Math.random().toString(36).slice(2, 10);
+  if (typeof data.channel !== "string") {
+    data.channel = `Pri_${Math.random().toString(36).slice(2, 10)}`;
   }
 
   // 检查聊天室名是否合法
@@ -38,43 +38,34 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 查找目标用户
-  let [targetSocket] = core.findSocket({
+  const [targetSocket] = core.findSocket({
     channel: socket.channel,
     nick: data.nick,
   });
 
   // 如果目标用户不存在
   if (!targetSocket) {
-    core.replyWarn(
-      "USER_NOT_FOUND",
-      "在这个聊天室找不到您指定的用户。",
-      socket,
-    );
+    core.replyWarn("USER_NOT_FOUND", "在这个聊天室找不到您指定的用户。", socket);
     return;
   }
 
   // 发送邀请
-  core.replyInfo(
-    "INVITE",
-    socket.nick + " 邀请您加入 ?" + data.channel + " 聊天室。",
-    targetSocket,
-    { nick: data.nick, channel: data.channel },
-  );
-  core.replyInfo(
-    "INVITE_SENT",
-    "您邀请了 " + data.nick + " 加入 ?" + data.channel + " 聊天室。",
-    socket,
-    { channel: data.channel },
-  );
+  core.replyInfo("INVITE", `${socket.nick} 邀请您加入 ?${data.channel} 聊天室。`, targetSocket, {
+    nick: data.nick,
+    channel: data.channel,
+  });
+  core.replyInfo("INVITE_SENT", `您邀请了 ${data.nick} 加入 ?${data.channel} 聊天室。`, socket, {
+    channel: data.channel,
+  });
 
   // 记录 stats
   core.increaseState("invites-sent");
 
   // 写入存档
-  core.archive("INV", socket, data.nick + " " + data.channel);
+  core.archive("INV", socket, `${data.nick} ${data.channel}`);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,
@@ -88,10 +79,4 @@ export const requiredData = {
   nick: { description: "邀请目标用户" },
   channel: { description: "邀请目标聊天室", optional: true },
 };
-export const dependencies = [
-  "command-service",
-  "stats",
-  "archive",
-  "address-checker",
-  "can-speak",
-];
+export const dependencies = ["command-service", "stats", "archive", "address-checker", "can-speak"];

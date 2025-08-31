@@ -1,5 +1,5 @@
 // 管理员封禁聊天室中某人的 IP
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 检查昵称
   if (!core.verifyNickname(data.nick)) {
     core.replyWarn(
@@ -11,18 +11,14 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 查找目标用户
-  let [targetSocket] = core.findSocket({
+  const [targetSocket] = core.findSocket({
     channel: socket.channel,
     nick: data.nick,
   });
 
   // 如果目标用户不存在
   if (!targetSocket) {
-    core.replyWarn(
-      "USER_NOT_FOUND",
-      "在这个聊天室找不到您指定的用户。",
-      socket,
-    );
+    core.replyWarn("USER_NOT_FOUND", "在这个聊天室找不到您指定的用户。", socket);
     return;
   }
 
@@ -36,23 +32,14 @@ export async function action(hazel, core, hold, socket, data) {
   hold.bannedIPlist.push(targetSocket.remoteAddress);
 
   // 强制退出该用户
-  core
-    .findSocketTiny("remoteAddress", targetSocket.remoteAddress)
-    .forEach((targetSocket) => {
-      targetSocket.terminate();
-    });
+  core.findSocketTiny("remoteAddress", targetSocket.remoteAddress).forEach((targetSocket) => {
+    targetSocket.terminate();
+  });
 
   // 通知全部管理员
   core.broadcastInfo(
     "BAN_USER",
-    socket.nick +
-      " 在 " +
-      socket.channel +
-      " 封禁了 " +
-      targetSocket.nick +
-      "，目标 IP 地址为 `" +
-      targetSocket.remoteAddress +
-      "`。",
+    `${socket.nick} 在 ${socket.channel} 封禁了 ${targetSocket.nick}，目标 IP 地址为 \`${targetSocket.remoteAddress}\`。`,
     core.findSocketByLevel(4),
     {
       from: socket.nick,
@@ -66,7 +53,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("BAN", socket, targetSocket.nick);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,
@@ -79,10 +66,4 @@ export const name = "ban";
 export const requiredLevel = 4;
 export const requiredData = { nick: { description: "用户昵称" } };
 export const description = "封禁聊天室中某人的 IP";
-export const dependencies = [
-  "command-service",
-  "ws-reply",
-  "data",
-  "archive",
-  "verify",
-];
+export const dependencies = ["command-service", "ws-reply", "data", "archive", "verify"];

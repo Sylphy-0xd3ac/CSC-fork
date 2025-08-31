@@ -26,7 +26,7 @@ export class CSCWebSocket extends WebSocket {
   isAlive: boolean;
 }
 
-export async function run(hazel, core, hold) {
+export async function run(hazel, _core, hold) {
   // 在服务器初始化完毕后，替换 ws 包中的 WebSocket 对象
   hazel.on("initialized", () => {
     hold.wsServer.options.WebSocket = CSCWebSocket;

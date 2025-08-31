@@ -1,7 +1,6 @@
 // 用于启动 WebSocket 服务器
 
-import { WebSocketServer } from "ws";
-import { WebSocket } from "ws"; // 引入 WebSocket 以便心跳检测使用
+import { WebSocket, WebSocketServer } from "ws"; // 引入 WebSocket 以便心跳检测使用
 
 export async function run(hazel, core, hold) {
   // 如果 WebSocket 服务器已经启动，则不重新启动

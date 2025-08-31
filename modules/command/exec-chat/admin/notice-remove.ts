@@ -1,4 +1,4 @@
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   if (data.id === "all") {
     // 删除所有公告
     hold.noticeList = [];
@@ -40,7 +40,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

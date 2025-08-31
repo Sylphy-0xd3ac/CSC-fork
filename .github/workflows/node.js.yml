@@ -29,13 +29,9 @@ jobs:
           corepack enable
           echo y | yarn install --immutable
 
-      # Step 4: 运行 lint
-      - name: Run lint
-        run: npm run lint
-
-      # Step 5: 运行 format
-      - name: Run format
-        run: npm run format
+      # Step 4: 运行 Biome 检查
+      - name: Run Biome check
+        run: npm run check
 
       # Step 6: 编译代码
       - name: Compile TypeScript

@@ -1,7 +1,9 @@
 // 用于检查一个 IPv4 地址是否在指定的 CIDR 范围内
 
 import pkg from "fs-extra";
+
 const { readFileSync } = pkg;
+
 import { join } from "node:path";
 
 /** IP 基础属性 */
@@ -16,8 +18,7 @@ const IP = {
     SEPARATOR: ":",
     CIDR_SUBNET_SEPARATOR: "/",
     REGEX: /^([0-9a-f]{1,4}:){7}([0-9a-f]{1,4})$/,
-    REGEX_ABBREVIATED:
-      /^([0-9a-f]{1,4}(:[0-9a-f]{1,4})*)?::([0-9a-f]{1,4}(:[0-9a-f]{1,4})*)?$/,
+    REGEX_ABBREVIATED: /^([0-9a-f]{1,4}(:[0-9a-f]{1,4})*)?::([0-9a-f]{1,4}(:[0-9a-f]{1,4})*)?$/,
     PARTS: 8,
     BITS: 128,
   },
@@ -34,15 +35,15 @@ function IPv6toInteger(address) {
   if (IP.v6.REGEX.test(address)) {
     // Directly convert the address to a BigInt
     return BigInt(
-      "0x" +
-        address
-          .split(IP.v6.SEPARATOR)
-          .map((part) => part.padStart(4, "0"))
-          .join(""),
+      `0x${address
+        .split(IP.v6.SEPARATOR)
+        .map((part) => part.padStart(4, "0"))
+        .join("")}`,
     );
 
     // Or if the address is an abbreviated IPv6 address
-  } else if (IP.v6.REGEX_ABBREVIATED.test(address)) {
+  }
+  if (IP.v6.REGEX_ABBREVIATED.test(address)) {
     // Split the address into left and right parts
     let [left, right] = address.split(IP.v6.SEPARATOR + IP.v6.SEPARATOR);
 
@@ -53,17 +54,16 @@ function IPv6toInteger(address) {
     // Count the number of zero parts
     const zeroCount = IP.v6.PARTS - left.length - right.length;
     if (zeroCount < 0) {
-      throw new Error("Invalid IPv6 address: " + address);
+      throw new Error(`Invalid IPv6 address: ${address}`);
     }
 
     // Create the zero part
     const zeroPart = "0000".repeat(zeroCount);
 
     // Join the parts together
-    return BigInt("0x" + [...left, zeroPart, ...right].join(""));
-  } else {
-    throw new Error("Invalid IPv6 address: " + address);
+    return BigInt(`0x${[...left, zeroPart, ...right].join("")}`);
   }
+  throw new Error(`Invalid IPv6 address: ${address}`);
 }
 
 /**
@@ -79,17 +79,18 @@ function parseIPv6CIDR(cidr) {
 
   // Make sure the mask is a number
   if (Number(mask).toString() !== mask) {
-    throw new Error("Invalid CIDR: " + cidr);
-  } else if (Number(mask) < 0 || Number(mask) > IP.v6.BITS) {
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
+  }
+  if (Number(mask) < 0 || Number(mask) > IP.v6.BITS) {
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   try {
     // Parse the address
     address = IPv6toInteger(address);
-  } catch (error) {
+  } catch (_error) {
     // If the address is invalid, throw an error
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   return { address, mask: Number(mask) };
@@ -104,25 +105,23 @@ function parseIPv6CIDR(cidr) {
 function IPv4toInteger(address) {
   // Check if the address is valid
   if (!IP.v4.REGEX.test(address)) {
-    throw new Error("Invalid IPv4 address: " + address);
+    throw new Error(`Invalid IPv4 address: ${address}`);
   }
 
   // Split the address into its components
   let parts = address.split(IP.v4.SEPARATOR);
-  parts = parts.map((part) => parseInt(part, 10));
+  parts = parts.map((part) => Number.parseInt(part, 10));
 
   // Check if the parts are valid
-  for (let part of parts) {
+  for (const part of parts) {
     if (part < 0 || part > 255) {
-      throw new Error("Invalid IPv4 address: " + address);
+      throw new Error(`Invalid IPv4 address: ${address}`);
     }
   }
 
   // Convert the address to a BigInt
   return (
-    BigInt(
-      parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3],
-    ) | 0xffff00000000n
+    BigInt(parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3]) | 0xffff00000000n
   );
 }
 
@@ -139,17 +138,18 @@ function parseIPv4CIDR(cidr) {
 
   // Make sure the mask is a number
   if (Number(mask).toString() !== mask) {
-    throw new Error("Invalid CIDR: " + cidr);
-  } else if (Number(mask) < 0 || Number(mask) > IP.v4.BITS) {
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
+  }
+  if (Number(mask) < 0 || Number(mask) > IP.v4.BITS) {
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   try {
     // Parse the address
     address = IPv4toInteger(address);
-  } catch (error) {
+  } catch (_error) {
     // If the address is invalid, throw an error
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   return { address, mask: Number(mask) + 96 };
@@ -168,12 +168,12 @@ function parseIPv4MappedIPv6(address) {
 
   // Check if the IPv4 address is valid
   if (!IP.v4.REGEX.test(ipv4)) {
-    throw new Error("Invalid IPv4-mapped IPv6 address: " + address);
+    throw new Error(`Invalid IPv4-mapped IPv6 address: ${address}`);
   }
 
   // Check the IPv6 address equal to 0xffff
   if (IPv6toInteger(ipv6) !== BigInt(0xffff)) {
-    throw new Error("Invalid IPv4-mapped IPv6 address: " + address);
+    throw new Error(`Invalid IPv4-mapped IPv6 address: ${address}`);
   }
 
   // Parse the IPv4 address
@@ -193,17 +193,18 @@ function parseIPv4MappedIPv6CIDR(cidr) {
 
   // Make sure the mask is a number
   if (Number(mask).toString() !== mask) {
-    throw new Error("Invalid CIDR: " + cidr);
-  } else if (Number(mask) < 96 || Number(mask) > IP.v6.BITS) {
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
+  }
+  if (Number(mask) < 96 || Number(mask) > IP.v6.BITS) {
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   try {
     // Parse the address
     address = parseIPv4MappedIPv6(address);
-  } catch (error) {
+  } catch (_error) {
     // If the address is invalid, throw an error
-    throw new Error("Invalid CIDR: " + cidr);
+    throw new Error(`Invalid CIDR: ${cidr}`);
   }
 
   return { address, mask: Number(mask) };
@@ -224,14 +225,14 @@ export function parseAddress(address) {
 
   try {
     return IPv6toInteger(address);
-  } catch (error) {
+  } catch (_error) {
     try {
       return IPv4toInteger(address);
-    } catch (error) {
+    } catch (_error) {
       try {
         return parseIPv4MappedIPv6(address);
-      } catch (error) {
-        throw new Error("Invalid address: " + address);
+      } catch (_error) {
+        throw new Error(`Invalid address: ${address}`);
       }
     }
   }
@@ -254,14 +255,14 @@ export function parseCIDR(cidr) {
 
   try {
     return parseIPv6CIDR(cidr);
-  } catch (error) {
+  } catch (_error) {
     try {
       return parseIPv4CIDR(cidr);
-    } catch (error) {
+    } catch (_error) {
       try {
         return parseIPv4MappedIPv6CIDR(cidr);
-      } catch (error) {
-        throw new Error("Invalid CIDR: " + cidr);
+      } catch (_error) {
+        throw new Error(`Invalid CIDR: ${cidr}`);
       }
     }
   }
@@ -309,7 +310,7 @@ export async function run(hazel, core, hold) {
   /**
    * 加载允许的 CIDR 列表
    */
-  core.loadAllowCIDR = function () {
+  core.loadAllowCIDR = () => {
     let rawCIDRlist;
     try {
       rawCIDRlist = readFileSync(
@@ -322,12 +323,12 @@ export async function run(hazel, core, hold) {
     }
 
     rawCIDRlist = rawCIDRlist.split("\n");
-    for (let item of rawCIDRlist) {
+    for (const item of rawCIDRlist) {
       if (item.startsWith("#") || item.trim() === "") continue; // 跳过注释和空行
       try {
         const { address, mask } = parseCIDR(item);
         hold.allowTree.insertCIDR(address, mask);
-      } catch (error) {
+      } catch (_error) {
         hazel.emit("error", `Invalid CIDR: ${item}`);
       }
     }
@@ -336,25 +337,24 @@ export async function run(hazel, core, hold) {
   /**
    * 加载拒绝的 CIDR 列表
    */
-  core.loadDenyCIDR = function () {
+  core.loadDenyCIDR = () => {
     let rawCIDRlist;
     try {
-      rawCIDRlist = readFileSync(
-        join(hazel.mainConfig.baseDir, hazel.mainConfig.denyCIDRlistDir),
-        { encoding: "utf-8" },
-      );
+      rawCIDRlist = readFileSync(join(hazel.mainConfig.baseDir, hazel.mainConfig.denyCIDRlistDir), {
+        encoding: "utf-8",
+      });
     } catch (error) {
       hazel.emit("error", error);
       return;
     }
 
     rawCIDRlist = rawCIDRlist.split("\n");
-    for (let item of rawCIDRlist) {
+    for (const item of rawCIDRlist) {
       if (item.startsWith("#") || item.trim() === "") continue; // 跳过注释和空行
       try {
         const { address, mask } = parseCIDR(item);
         hold.denyTree.insertCIDR(address, mask);
-      } catch (error) {
+      } catch (_error) {
         hazel.emit("error", `Invalid CIDR: ${item}`);
       }
     }
@@ -365,12 +365,12 @@ export async function run(hazel, core, hold) {
    * @param {string} cidr CIDR 字符串
    * @returns {boolean}
    */
-  core.allowCIDR = function (cidr) {
+  core.allowCIDR = (cidr) => {
     try {
       const { address, mask } = parseCIDR(cidr);
       hold.allowTree.insertCIDR(address, mask);
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   };
@@ -380,12 +380,12 @@ export async function run(hazel, core, hold) {
    * @param {string} cidr CIDR 字符串
    * @returns {boolean}
    */
-  core.denyCIDR = function (cidr) {
+  core.denyCIDR = (cidr) => {
     try {
       const { address, mask } = parseCIDR(cidr);
       hold.denyTree.insertCIDR(address, mask);
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   };
@@ -395,7 +395,7 @@ export async function run(hazel, core, hold) {
    * @param {string} ip IP 地址
    * @returns {[boolean, boolean]} [是否允许, 是否拒绝]
    */
-  core.checkIP = function (ip) {
+  core.checkIP = (ip) => {
     try {
       switch (hazel.mainConfig.cidrPolicy) {
         case "deny":
@@ -411,7 +411,7 @@ export async function run(hazel, core, hold) {
         case "close":
           return [true, false];
       }
-    } catch (error) {
+    } catch (_error) {
       return [false, false];
     }
   };

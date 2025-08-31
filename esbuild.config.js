@@ -1,9 +1,11 @@
 import { build } from "esbuild";
 import pkg from "fs-extra";
+
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
-import { load, dump } from "js-yaml";
+
 import zip from "adm-zip";
 import { sync } from "glob";
+import { dump, load } from "js-yaml";
 
 // 使用glob获取当前目录及子目录下的所有ts文件
 const tsFiles = sync("**/*.ts", {
@@ -21,7 +23,7 @@ const buildOptions = {
   bundle: false,
 };
 
-let buildStartTime = Date.now();
+const buildStartTime = Date.now();
 
 // 执行构建
 build(buildOptions)
@@ -39,9 +41,7 @@ build(buildOptions)
     // 拷贝mainConfig
     await copy("config.yml", "dist/config.yml");
 
-    let config = load(
-      readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
-    );
+    const config = load(readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }));
     config.DevMode = false;
     writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
       encoding: "utf-8",

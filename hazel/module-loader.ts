@@ -1,5 +1,5 @@
-import { globSync } from "glob";
 import path from "node:path";
+import { globSync } from "glob";
 import type { Module } from "./hazel-core.js";
 
 export function recursiveReadDir(baseDir) {
@@ -100,7 +100,7 @@ export default async function loadDir(
         );
       })()
     ) {
-      console.log("* Initializing " + filePath + " ...");
+      console.log(`* Initializing ${filePath} ...`);
       let currentModule;
       try {
         currentModule = await importModule(filePath, loadID());
@@ -112,21 +112,15 @@ export default async function loadDir(
       }
 
       if (typeof currentModule.run !== "function") {
-        hazel.emit(
-          "error",
-          new Error(filePath + ' should export a function named "run".'),
-        );
-        console.error(filePath + ' should export a function named "run".');
+        hazel.emit("error", new Error(`${filePath} should export a function named "run".`));
+        console.error(`${filePath} should export a function named "run".`);
         existError = true;
         continue;
       }
 
-      if (typeof currentModule.name != "string") {
-        hazel.emit(
-          "error",
-          new Error(filePath + ' should export a string named "name".'),
-        );
-        console.error(filePath + ' should export a string named "name".');
+      if (typeof currentModule.name !== "string") {
+        hazel.emit("error", new Error(`${filePath} should export a string named "name".`));
+        console.error(`${filePath} should export a string named "name".`);
         existError = true;
         continue;
       }
@@ -136,13 +130,9 @@ export default async function loadDir(
       ) {
         hazel.emit(
           "error",
-          new Error(
-            filePath + ' should export a string array named "dependencies".',
-          ),
+          new Error(`${filePath} should export a string array named "dependencies".`),
         );
-        console.error(
-          filePath + ' should export a string array named "dependencies".',
-        );
+        console.error(`${filePath} should export a string array named "dependencies".`);
         existError = true;
         continue;
       }

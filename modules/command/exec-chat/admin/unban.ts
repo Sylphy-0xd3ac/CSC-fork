@@ -1,5 +1,5 @@
 // 解封某个 IP 地址
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 如果该 IP 地址不在封禁列表中
   if (!hold.bannedIPlist.includes(data.address)) {
     core.replyMalformedCommand(socket);
@@ -12,7 +12,7 @@ export async function action(hazel, core, hold, socket, data) {
   // 通知全部管理员
   core.broadcastInfo(
     "UNBAN_IP",
-    socket.nick + " 解封了 IP 地址 `" + data.address + "`。",
+    `${socket.nick} 解封了 IP 地址 \`${data.address}\`。`,
     core.findSocketByLevel(4),
     { from: socket.nick, address: data.address },
   );
@@ -21,7 +21,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("UNB", socket, data.address);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,
@@ -36,10 +36,4 @@ export const requiredData = {
   address: { description: "IP 地址" },
 };
 export const description = "解封某个 IP 地址";
-export const dependencies = [
-  "command-service",
-  "ws-reply",
-  "archive",
-  "utility",
-  "data",
-];
+export const dependencies = ["command-service", "ws-reply", "archive", "utility", "data"];

@@ -1,13 +1,11 @@
 // 用于处理消息
 
-export async function run(hazel, core, hold) {
-  core.handleData = async function (socket, data) {
+export async function run(_hazel, core, _hold) {
+  core.handleData = async (socket, data) => {
     // 检查该地址是否请求频率过高
     if (core.checkAddress(socket.remoteAddress, 1)) {
       // 防止在短时间内发送大量数据时程序占用过高，直接回复处理好的警告消息
-      socket.send(
-        '{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}',
-      );
+      socket.send('{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}');
       return;
     }
 
@@ -22,7 +20,7 @@ export async function run(hazel, core, hold) {
     // 将消息转换为 JSON 对象
     try {
       data = JSON.parse(data);
-    } catch (error) {
+    } catch (_error) {
       // 记录在日志中
       const logger = new core.logger("Handle-message");
       logger.info(
@@ -76,19 +74,11 @@ export async function run(hazel, core, hold) {
     }
 
     // 使用核心 commandService 处理命令
-    if (
-      core.commandService &&
-      typeof core.commandService.handle === "function"
-    ) {
+    if (core.commandService && typeof core.commandService.handle === "function") {
       await core.commandService.handle(socket, data);
     }
   };
 }
 
 export const name = "handle-message";
-export const dependencies: string[] = [
-  "ws-reply",
-  "command-service",
-  "logger",
-  "address-checker",
-];
+export const dependencies: string[] = ["ws-reply", "command-service", "logger", "address-checker"];

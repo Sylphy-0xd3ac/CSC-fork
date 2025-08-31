@@ -1,5 +1,5 @@
 // 管理员添加成员
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, _hold, socket, data) {
   // 验证输入的 trip
   if (!core.verifyTrip(data.trip)) {
     core.replyWarn("INVALID_TRIP", "请检查您输入的识别码。", socket);
@@ -25,7 +25,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.saveConfig();
 
   // 查找成员的 socket，如果存在则更新权限
-  let matchSockets = core.findSocketTiny("trip", data.trip);
+  const matchSockets = core.findSocketTiny("trip", data.trip);
   if (matchSockets.length > 0) {
     matchSockets.forEach((matchSocket) => {
       matchSocket.permission = "MEMBER";
@@ -41,7 +41,7 @@ export async function action(hazel, core, hold, socket, data) {
     {
       cmd: "info",
       code: "MEMBER_ADD",
-      text: "已添加新成员：" + data.trip,
+      text: `已添加新成员：${data.trip}`,
       data: { trip: data.trip },
     },
     core.findSocketByLevel(core.config.level.member),
@@ -51,7 +51,7 @@ export async function action(hazel, core, hold, socket, data) {
   core.archive("ADM", socket, data.trip);
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

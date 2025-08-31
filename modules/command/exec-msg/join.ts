@@ -1,11 +1,11 @@
 // 用于处理用户加入房间的请求
 
-export async function action(hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 6);
 
   // 如果用户已经加入了聊天室，则不处理
-  if (typeof socket.channel == "string") {
+  if (typeof socket.channel === "string") {
     if (socket.readyState === WebSocket.OPEN) {
       socket.close();
     }
@@ -13,7 +13,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 如果用户提供了 key，则必须提供 trip，反之亦然
-  if ((typeof data.trip == "string") !== (typeof data.key == "string")) {
+  if ((typeof data.trip === "string") !== (typeof data.key === "string")) {
     if (socket.readyState === WebSocket.OPEN) {
       socket.close();
     }
@@ -72,7 +72,7 @@ export async function action(hazel, core, hold, socket, data) {
   };
 
   // 如果用户提供了 key 和 trip，则使用 key 验证已有的用户信息
-  if (typeof data.trip == "string") {
+  if (typeof data.trip === "string") {
     // 验证 nick、key 和 trip
     if (
       !(await (async () => {
@@ -124,13 +124,13 @@ export async function action(hazel, core, hold, socket, data) {
     userInfo.nick = data.nick;
 
     // 如果用户提供了密码，则使用密码生成 trip
-    if (typeof data.password == "string") {
+    if (typeof data.password === "string") {
       userInfo.trip = await core.generateTrips(data.password);
     }
   }
 
   // 判断用户是否为成员 / 管理员
-  if (typeof userInfo.trip == "string") {
+  if (typeof userInfo.trip === "string") {
     if (core.config.adminList.includes(userInfo.trip)) {
       userInfo.permission = "ADMIN";
       userInfo.level = core.config.level.admin;
@@ -142,7 +142,7 @@ export async function action(hazel, core, hold, socket, data) {
 
   // 验证客户端名称的相关内容
   let cName = "null";
-  if (typeof data.clientName == "string") {
+  if (typeof data.clientName === "string") {
     // 最常用的十字街网页版直接通过，加快速度
     if (data.clientName === "[十字街网页版](https://crosst.chat/)") {
       cName = data.clientName;
@@ -150,10 +150,7 @@ export async function action(hazel, core, hold, socket, data) {
       if (
         await (async () => {
           // 如果客户端名称中存在换行，直接返回 false
-          if (
-            data.clientName.indexOf("\r") !== -1 ||
-            data.clientName.indexOf("\n") !== -1
-          ) {
+          if (data.clientName.indexOf("\r") !== -1 || data.clientName.indexOf("\n") !== -1) {
             return false;
           }
 
@@ -201,7 +198,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 生成用户列表
-  let channelNicks: any[] = [];
+  const channelNicks: any[] = [];
   hold.channel.get(data.channel).socketList.forEach((item: any) => {
     if (!item.isInvisible) {
       channelNicks.push(item.nick);
@@ -228,7 +225,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 返回用户列表等信息
-  if (typeof data.password == "string") {
+  if (typeof data.password === "string") {
     const generatedKey = await core.generateKeys(data.password);
     core.reply(
       {
@@ -268,17 +265,20 @@ export async function action(hazel, core, hold, socket, data) {
   // 如果聊天室历史记录不为空，则发送历史记录
   if (hold.history.get(data.channel)) {
     hold.history.get(data.channel).forEach((item) => {
-      core.reply({
-        cmd: "chat",
-        type: "chat",
-        nick: item.nick,
-        trip: item.trip,
-        level: item.level,
-        utype: item.utype,
-        member: item.member,
-        admin: item.admin,
-        text: item.text,
-      }, socket);
+      core.reply(
+        {
+          cmd: "chat",
+          type: "chat",
+          nick: item.nick,
+          trip: item.trip,
+          level: item.level,
+          utype: item.utype,
+          member: item.member,
+          admin: item.admin,
+          text: item.text,
+        },
+        socket,
+      );
     });
   }
 
@@ -317,32 +317,18 @@ export async function action(hazel, core, hold, socket, data) {
     core.archive(
       "JON",
       null,
-      socket.remoteAddress +
-        " (" +
-        userInfo.permission +
-        ")[" +
-        userInfo.trip +
-        "]" +
-        userInfo.nick +
-        " " +
-        data.channel,
+      `${socket.remoteAddress} (${userInfo.permission})[${userInfo.trip}]${userInfo.nick} ${data.channel}`,
     );
   } else {
     core.archive(
       "JON",
       null,
-      socket.remoteAddress +
-        " (" +
-        userInfo.permission +
-        ")" +
-        userInfo.nick +
-        " " +
-        data.channel,
+      `${socket.remoteAddress} (${userInfo.permission})${userInfo.nick} ${data.channel}`,
     );
   }
 }
 
-export async function run(hazel, core, hold) {
+export async function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,
@@ -359,10 +345,4 @@ export const requiredData = {
   trip: { description: "trip", optional: true },
   clientName: { description: "客户端名称", optional: true },
 };
-export const dependencies = [
-  "command-service",
-  "archive",
-  "address-checker",
-  "verify",
-  "data",
-];
+export const dependencies = ["command-service", "archive", "address-checker", "verify", "data"];
