@@ -34,7 +34,7 @@ function topologicalSort(moduleMap: Map<string, Module>): Map<string, Module> {
     if (state[moduleIndex] === 1) {
       throw new Error("Circular dependency detected!");
     }
-    const module = moduleMap.get(moduleName)!;
+    const module = moduleMap.get(moduleName);
     const dependencies = module.dependencies || [];
     state[moduleIndex] = 1;
     path.push(moduleName);
