@@ -40,7 +40,7 @@
     "@types/ws": "^8.5.14",
     "adm-zip": "^0.5.16",
     "esbuild": "^0.25.9",
-    "tsx": "^4.20.4",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "packageManager": "yarn@4.9.3"
