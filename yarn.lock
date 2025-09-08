@@ -584,7 +584,7 @@ __metadata:
     fs-extra: "npm:^11.3.1"
     glob: "npm:^11.0.2"
     js-yaml: "npm:^4.1.0"
-    supports-color: "npm:^10.2.0"
+    supports-color: "npm:^10.2.1"
     tsx: "npm:^4.20.5"
     typescript: "npm:^5.9.2"
     ws: "npm:^8.12.0"
@@ -1372,10 +1372,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "supports-color@npm:10.2.0"
-  checksum: 10c0/a240dbbc52dbdfc9b727a74e30c9a661cb7dd610ee662ae15de332f4993f172f284e57237e03a44abf48587ee142695aa7b25daee73c93a9c356f89dfba7d492
+"supports-color@npm:^10.2.1":
+  version: 10.2.1
+  resolution: "supports-color@npm:10.2.1"
+  checksum: 10c0/cf99f2487185cbcd86e3720ed6c2e56f50d086bbc008f1c516db2c5ef06890295b979f6a49a4e9bc24012fd56fc6a3627fccb81ae09d95dde5da1e902dcb703a
   languageName: node
   linkType: hard
 
