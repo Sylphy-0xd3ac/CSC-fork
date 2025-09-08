@@ -54,6 +54,7 @@ build(buildOptions)
 
     // 拷贝运行时文件
     await copy("package.json", "dist/package.json");
+    await copy(".yarnrc.yml", "dist/.yarnrc.yml")
     await copy("yarn.lock", "dist/yarn.lock");
     const totalTime = Date.now() - buildStartTime;
     console.log(`✔ Finished in ${totalTime.toFixed(2)} ms`);
