@@ -32,15 +32,15 @@
     "node": ">= 22.x.x"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
+    "@biomejs/biome": "^2.2.3",
     "@types/adm-zip": "^0.5.7",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.3.1",
     "@types/ws": "^8.5.14",
     "adm-zip": "^0.5.16",
-    "esbuild": "^0.25.8",
-    "tsx": "^4.20.4",
+    "esbuild": "^0.25.9",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "packageManager": "yarn@4.9.3"
