@@ -7,6 +7,11 @@ WORKDIR /app
 # 复制预构建的dist目录
 COPY ./dist .
 
+# 安装依赖
+RUN ["corepack", "enable"]
+RUN ["corepack", "install"]
+RUN ["yarn", "install", "--immutable"]
+
 # 暴露端口
 EXPOSE 52764
 
