@@ -1,6 +1,6 @@
 import pkg from "fs-extra";
 // 用于记录日志
-import { stdout } from "supports-color";
+import supportsColor from "supports-color";
 
 const { existsSync, mkdirSync, writeFileSync } = pkg;
 
@@ -323,7 +323,7 @@ export async function run(hazel, core, _hold) {
   Logger.targets = [];
   Logger.targets.push({
     showTime: "yyyy-MM-dd hh:mm:ss.SSS",
-    colors: stdout?.level,
+    colors: supportsColor.stdout ? supportsColor.stdout.level : 0,
     print(text) {
       console.log(`${text}\n`);
     },

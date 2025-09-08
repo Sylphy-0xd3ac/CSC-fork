@@ -109,6 +109,9 @@ export async function run(hazel, core, hold) {
         }
         core.increaseGlobalRate?.();
         return;
+      } else {
+        core.replyMalformedCommand(socket);
+        return;
       }
     },
 
@@ -241,6 +244,9 @@ export async function run(hazel, core, hold) {
         }
 
         core.increaseGlobalRate?.();
+      } else {
+        core.replyMalformedCommand(socket);
+        return;
       }
     },
   };

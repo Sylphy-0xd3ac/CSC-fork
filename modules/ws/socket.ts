@@ -17,7 +17,9 @@ export async function run(hazel, core, hold) {
     new Promise((resolve) => {
       const messageHandler = (message) => {
         // 处理消息并解析
-        const data = JSON.parse(message);
+        let data = JSON.parse(message);
+        // 净化数据防止原型链污染
+        data = core.purifyObject(data);
         // 移除事件监听器
         socket.off("message", messageHandler);
         // 解析并返回数据
@@ -216,4 +218,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "socket";
-export const dependencies: string[] = [];
+export const dependencies: string[] = ["utility"];

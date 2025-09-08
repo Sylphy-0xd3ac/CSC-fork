@@ -23,11 +23,7 @@ export async function run(_hazel, core, _hold) {
     } catch (_error) {
       // 记录在日志中
       const logger = new core.logger("Handle-message");
-      logger.info(
-        core.LOG_LEVEL.WARN,
-        ["Malformed JSON data received from ", socket.remoteAddress, data],
-        "Handle-Message",
-      );
+      logger.warn("Malformed JSON data received from", socket.remoteAddress, data);
       // 按照惯例，如果消息不是 JSON 格式，则关闭连接
       if (socket.readyState === WebSocket.OPEN) {
         socket.terminate();
@@ -39,26 +35,13 @@ export async function run(_hazel, core, _hold) {
       return;
     }
 
+    // 使用 core.purifyObject 净化数据，防止原型链污染攻击
+    data = core.purifyObject(data);
+
     // JSON 对象中每个属性都必须是字符串
-    // 且属性名不应该是 __proto__  prototype constructor
-    // 否则关闭连接
     for (const key in data) {
       if (typeof data[key] !== "string") {
         socket.terminate();
-        return;
-      }
-
-      if (key === "__proto__" || key === "prototype" || key === "constructor") {
-        // 记录攻击行为
-        const logger = new core.logger("Handle-message");
-        logger.info(core.LOG_LEVEL.WARN, [
-          "Malformed JSON data received from ",
-          socket.remoteAddress,
-          JSON.stringify(data),
-        ]);
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.terminate();
-        }
         return;
       }
     }
@@ -81,4 +64,10 @@ export async function run(_hazel, core, _hold) {
 }
 
 export const name = "handle-message";
-export const dependencies: string[] = ["ws-reply", "command-service", "logger", "address-checker"];
+export const dependencies: string[] = [
+  "ws-reply",
+  "command-service",
+  "logger",
+  "address-checker",
+  "utility",
+];

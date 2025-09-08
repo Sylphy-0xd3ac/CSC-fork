@@ -1,6 +1,5 @@
 // 各种不知道在哪能用到的工具函数
 import os from "node:os";
-import chalk from "chalk";
 
 export async function run(_hazel, core, _hold) {
   // 净化对象以防止原型链污染
@@ -21,7 +20,7 @@ export async function run(_hazel, core, _hold) {
     return percent;
   };
 
-  // CPU占用率（本进程，定时采样+缓存，毫秒级同步读取）
+  // CPU占用率
   let lastCpuUsage = "0.00";
   async function sampleCpu() {
     while (true) {
@@ -97,20 +96,6 @@ export async function run(_hazel, core, _hold) {
   core.getDateString = () => {
     const timeNow = new Date();
     return `${timeNow.getFullYear() - 2000}-${timeNow.getMonth() + 1}-${timeNow.getDate()}`;
-  };
-
-  // 随机颜色
-  core.randomColor = () => {
-    core.colors = [
-      chalk.red,
-      chalk.green,
-      chalk.blue,
-      chalk.yellow,
-      chalk.magenta,
-      chalk.cyan,
-      chalk.gray,
-    ];
-    return core.colors[Math.floor(Math.random() * core.colors.length)];
   };
 }
 
