@@ -1,5 +1,6 @@
 import path from "node:path";
 import { globSync } from "glob";
+import supportsColor from "supports-color";
 import type { Module } from "./hazel-core.js";
 import { Logger } from "./logger.js";
 
@@ -14,7 +15,9 @@ let logger: any;
 export async function importModule(filePath: string, loadID: string) {
   const moduleName = path.basename(filePath, path.extname(filePath));
   const module = await import(`${filePath}?loadID=${loadID}`);
-  logger.info(`apply module ${Logger.color({ colors: 2 }, 45, `${moduleName}:${loadID}`)}`);
+  logger.info(
+    `apply module ${Logger.color({ colors: supportsColor.stdout ? supportsColor.stdout.level : 0 }, 45, `${moduleName}:${loadID}`)}`,
+  );
   return Object.assign({}, module);
 }
 
