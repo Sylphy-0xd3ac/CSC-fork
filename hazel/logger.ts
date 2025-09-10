@@ -313,6 +313,3 @@ Logger.format("c", (value, target, logger) => {
 Logger.format("C", (value, target) => {
   return Logger.color(target, 15, value, ";1");
 });
-
-export const name = "logger";
-export const dependencies: string[] = [];
