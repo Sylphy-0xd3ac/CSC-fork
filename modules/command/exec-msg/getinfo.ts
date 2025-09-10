@@ -1,6 +1,6 @@
 // 现在的用途是：在首页显示服务器信息
 // 之后大概率会被废弃
-export async function action(_hazel, core, hold, socket, _data) {
+export async function action(hazel, core, hold, socket, _data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 2);
 
@@ -8,7 +8,7 @@ export async function action(_hazel, core, hold, socket, _data) {
   core.reply(
     {
       cmd: "setinfo",
-      ver: core.config.version,
+      ver: hazel.mainConfig.version,
       online: hold.wsServer.clients.size,
     },
     socket,

@@ -1,6 +1,6 @@
 // 用于处理用户加入房间的请求
 
-export async function action(_hazel, core, hold, socket, data) {
+export async function action(hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 6);
 
@@ -233,7 +233,7 @@ export async function action(_hazel, core, hold, socket, data) {
         nicks: channelNicks,
         trip: userInfo.trip,
         key: generatedKey,
-        ver: core.config.version,
+        ver: hazel.mainConfig.version,
       },
       socket,
     );
@@ -242,7 +242,7 @@ export async function action(_hazel, core, hold, socket, data) {
       {
         cmd: "onlineSet",
         nicks: channelNicks,
-        ver: core.config.version,
+        ver: hazel.mainConfig.version,
       },
       socket,
     );
