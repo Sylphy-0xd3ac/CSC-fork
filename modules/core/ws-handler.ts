@@ -56,13 +56,8 @@ export async function run(hazel, core, hold) {
       core.handleData?.(ws_socket, message);
     });
 
-    // close 事件
-    ws_socket.on("close", () => {
-      // 如果用户加入了聊天室，则从聊天室中移除
-      if (typeof ws_socket.channel !== "undefined") {
-        core.removeSocket?.(ws_socket);
-      }
-    });
+    // close 事件 - 现在由 server 模块处理
+    ws_socket.on("close", () => {});
 
     // error 事件
     ws_socket.on("error", (error: any) => {

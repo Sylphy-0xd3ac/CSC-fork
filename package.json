@@ -9,7 +9,7 @@
     "dev": "tsx main.ts",
     "start": "node main.js",
     "lint": "biome lint --write --unsafe .",
-    "format": "biome format --write --unsafe .",
+    "format": "biome format --write .",
     "check": "biome check --write --unsafe ."
   },
   "license": "GNU General Public License",
