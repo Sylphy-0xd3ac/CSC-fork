@@ -1,6 +1,12 @@
 import path from "node:path";
 import process from "node:process";
 import EventEmitter2 from "eventemitter2";
+import pkg from "fs-extra";
+import supportsColor from "supports-color";
+
+const { existsSync, mkdirSync, writeFileSync } = pkg;
+
+import { Logger, Time } from "./logger.js";
 import loadModule, { importModule } from "./module-loader.js";
 
 export interface Module {
@@ -15,11 +21,14 @@ export interface Module {
 export default class Hazel extends EventEmitter2 {
   mainConfig: any;
   loadedModules: Map<string, Module>;
+  logger: any;
 
   constructor(mainConfig: any) {
     super();
     this.mainConfig = mainConfig;
     this.loadedModules = new Map();
+
+    this.initializeLogger();
 
     process.on("unhandledRejection", (error) => {
       this.emit("error", error);
@@ -33,6 +42,9 @@ export default class Hazel extends EventEmitter2 {
         "|_| |_|\\____/___\\___|_|  \\____\\___/|_|  \\___|",
     );
     console.log(`(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(46));
+    new this.logger("app").info(
+      `\x1b[1m${this.mainConfig.projectName}\x1b[0m ${this.mainConfig.version}`,
+    );
   }
 
   #core: any = {};
@@ -44,13 +56,39 @@ export default class Hazel extends EventEmitter2 {
     return Math.random().toString(36).slice(4, 10);
   }
 
+  initializeLogger() {
+    Logger.targets = [];
+    Logger.targets.push({
+      showTime: "yyyy-MM-dd hh:mm:ss.SSS",
+      colors: supportsColor.stdout ? supportsColor.stdout.level : 0,
+      print(text) {
+        console.log(`${text}`);
+      },
+    });
+    Logger.targets.push({
+      showTime: "yyyy-MM-dd hh:mm:ss.SSS",
+      print: (text) => {
+        if (!existsSync(this.mainConfig.logDir)) {
+          mkdirSync(path.join(this.mainConfig.baseDir, this.mainConfig.logDir));
+        }
+        const textArray = text.split("\n");
+        textArray.forEach((splitText) => {
+          writeFileSync(
+            `${this.mainConfig.logDir}/${Time.template("yyyy-MM-dd")}-log.txt`,
+            `${splitText}\n`,
+            { encoding: "utf-8", flag: "a" },
+          );
+        });
+      },
+    });
+    this.logger = Logger;
+  }
+
   async initialize(forceInit) {
-    console.log(`Initializing ${this.mainConfig.projectName}...\n`);
     if (!(await this.loadModules(forceInit))) {
       process.exit();
     }
     this.emit("initialized");
-    console.log(`==${this.mainConfig.projectName} Initialize Complete==\n`);
   }
 
   async getModule(moduleName: string) {
@@ -71,7 +109,7 @@ export default class Hazel extends EventEmitter2 {
     this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
-      console.error(error);
+      new this.logger("app").error(error);
     });
   }
 
@@ -85,7 +123,7 @@ export default class Hazel extends EventEmitter2 {
     this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
-      console.error(error);
+      new this.logger("app").error(error);
     });
   }
 
@@ -122,7 +160,7 @@ export default class Hazel extends EventEmitter2 {
       this.loadedModules.forEach((moduleFunction, _modulePath) => {
         moduleFunction.run(this, this.#core, this.#hold).catch((error) => {
           this.emit("error", error);
-          console.error(error);
+          new this.logger("app").error(error);
           if (!forceLoad) {
             return false;
           }
@@ -130,13 +168,11 @@ export default class Hazel extends EventEmitter2 {
       });
     } catch (error) {
       this.emit("error", error);
-      console.error(`Error running module function:`, error);
+      new this.logger("app").error(`Error running module function: ${error}`);
       if (!forceLoad) {
         return false;
       }
     }
-
-    console.log(`√ Initialize modules ${this.loadedModules.size} complete!\n`);
 
     return !modulesExistError;
   }

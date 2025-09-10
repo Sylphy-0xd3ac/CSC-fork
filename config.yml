@@ -1,5 +1,6 @@
 # Project Name
-projectName: "Crosst-Chat-TypeScript"
+projectName: "Crosst-NeXt"
+version: "2.0.0-beta"
 
 # Port
 port: 52764
@@ -37,3 +38,6 @@ denyCIDRlistDir: "config/deny.txt"
 
 # CIDR Policy(allow or deny or close)
 cidrPolicy: "close"
+
+# Log Level
+logLevel: 0

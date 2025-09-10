@@ -1,6 +1,6 @@
 // 用于处理消息
 
-export async function run(_hazel, core, _hold) {
+export async function run(hazel, core, _hold) {
   core.handleData = async (socket, data) => {
     // 检查该地址是否请求频率过高
     if (core.checkAddress(socket.remoteAddress, 1)) {
@@ -22,7 +22,7 @@ export async function run(_hazel, core, _hold) {
       data = JSON.parse(data);
     } catch (_error) {
       // 记录在日志中
-      const logger = new core.logger("Handle-message");
+      const logger = new hazel.logger("Handle-message");
       logger.warn("Malformed JSON data received from", socket.remoteAddress, data);
       // 按照惯例，如果消息不是 JSON 格式，则关闭连接
       if (socket.readyState === WebSocket.OPEN) {

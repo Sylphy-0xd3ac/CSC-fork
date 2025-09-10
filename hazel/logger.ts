@@ -1,11 +1,4 @@
-import pkg from "fs-extra";
 // 用于记录日志
-import supportsColor from "supports-color";
-
-const { existsSync, mkdirSync, writeFileSync } = pkg;
-
-import path from "node:path";
-
 export class Time {
   static readonly millisecond = 1;
   static readonly second = 1000;
@@ -167,6 +160,7 @@ export class Logger {
   constructor(
     public name: string,
     public meta?: any,
+    private namespace?: string,
   ) {
     this.createMethod("success", Logger.SUCCESS);
     this.createMethod("error", Logger.ERROR);
@@ -218,9 +212,10 @@ export class Logger {
       indent += target.showTime.length + space.length;
       output += Logger.color(target, 8, Time.template(target.showTime)) + space;
     }
-    const code = Logger.code(record.name, target);
-    const label = Logger.color(target, code, record.name, ";1");
-    const padLength = (target.label?.width ?? 0) + label.length - record.name.length;
+    const displayName = record.meta?.namespace || record.name;
+    const code = Logger.code(displayName, target);
+    const label = Logger.color(target, code, displayName, ";1");
+    const padLength = (target.label?.width ?? 0) + label.length - displayName.length;
     if (target.label?.align === "right") {
       output += label.padStart(padLength) + space + prefix + space;
       indent += (target.label.width ?? 0) + space.length;
@@ -259,7 +254,7 @@ export class Logger {
           type,
           level,
           name: this.name,
-          meta: this.meta,
+          meta: { ...this.meta, namespace: this.namespace },
           content,
           timestamp,
         };
@@ -319,32 +314,5 @@ Logger.format("C", (value, target) => {
   return Logger.color(target, 15, value, ";1");
 });
 
-export async function run(hazel, core, _hold) {
-  Logger.targets = [];
-  Logger.targets.push({
-    showTime: "yyyy-MM-dd hh:mm:ss.SSS",
-    colors: supportsColor.stdout ? supportsColor.stdout.level : 0,
-    print(text) {
-      console.log(`${text}\n`);
-    },
-  });
-  Logger.targets.push({
-    showTime: "yyyy-MM-dd hh:mm:ss.SSS",
-    print: (text) => {
-      if (!existsSync(hazel.mainConfig.logDir)) {
-        mkdirSync(path.join(hazel.mainConfig.baseDir, hazel.mainConfig.logDir));
-      }
-      const textArray = text.split("\n");
-      textArray.forEach((splitText) => {
-        writeFileSync(
-          `${hazel.mainConfig.logDir}/${Time.template("yyyy-MM-dd")}-log.txt`,
-          `${splitText}\n`,
-          { encoding: "utf-8", flag: "a" },
-        );
-      });
-    },
-  });
-  core.logger = Logger;
-}
 export const name = "logger";
 export const dependencies: string[] = [];

@@ -1,5 +1,5 @@
 // 存档记录器
-export async function run(_hazel, core, _hold) {
+export async function run(hazel, core, _hold) {
   // 记录聊天和操作记录存档
   core.archive = (logType, socket, ...logText: string[]) => {
     // 生成日志内容
@@ -20,7 +20,7 @@ export async function run(_hazel, core, _hold) {
     content += "\n";
 
     // 输出到控制台和文件
-    const logger = new core.logger("ARCHIVE");
+    const logger = new hazel.logger("archive");
     logger.info(`${content.trim()}`);
   };
 }

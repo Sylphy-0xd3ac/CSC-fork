@@ -1,6 +1,7 @@
 import path from "node:path";
 import { globSync } from "glob";
 import type { Module } from "./hazel-core.js";
+import { Logger } from "./logger.js";
 
 export function recursiveReadDir(baseDir) {
   return globSync(path.join(baseDir, "**/*")).filter(
@@ -8,8 +9,12 @@ export function recursiveReadDir(baseDir) {
   );
 }
 
+let logger: any;
+
 export async function importModule(filePath: string, loadID: string) {
+  const moduleName = path.basename(filePath, path.extname(filePath));
   const module = await import(`${filePath}?loadID=${loadID}`);
+  logger.info(`apply module ${Logger.color({ colors: 2 }, 45, `${moduleName}:${loadID}`)}`);
   return Object.assign({}, module);
 }
 
@@ -87,7 +92,7 @@ export default async function loadDir(
 ) {
   let existError = false;
   let moduleList = new Map();
-
+  logger = new hazel.logger("loader");
   for (const filePath of recursiveReadDir(dirName)) {
     if (
       await (async () => {
@@ -100,27 +105,27 @@ export default async function loadDir(
         );
       })()
     ) {
-      console.log(`* Initializing ${filePath} ...`);
+      const currentLoadID = loadID();
       let currentModule;
       try {
-        currentModule = await importModule(filePath, loadID());
+        currentModule = await importModule(filePath, currentLoadID);
       } catch (error) {
         hazel.emit("error", error);
-        console.error(error);
+        logger.error(`${error}`);
         existError = true;
         continue;
       }
 
       if (typeof currentModule.run !== "function") {
         hazel.emit("error", new Error(`${filePath} should export a function named "run".`));
-        console.error(`${filePath} should export a function named "run".`);
+        logger.error(`${filePath} should export a function named "run".`);
         existError = true;
         continue;
       }
 
       if (typeof currentModule.name !== "string") {
         hazel.emit("error", new Error(`${filePath} should export a string named "name".`));
-        console.error(`${filePath} should export a string named "name".`);
+        logger.error(`${filePath} should export a string named "name".`);
         existError = true;
         continue;
       }
@@ -132,14 +137,14 @@ export default async function loadDir(
           "error",
           new Error(`${filePath} should export a string array named "dependencies".`),
         );
-        console.error(`${filePath} should export a string array named "dependencies".`);
+        logger.error(`${filePath} should export a string array named "dependencies".`);
         existError = true;
         continue;
       }
 
       moduleList.set(currentModule.name, currentModule);
       currentModule.filePath = filePath;
-      currentModule.loadHistory = [loadID()];
+      currentModule.loadHistory = [currentLoadID];
     }
   }
 
@@ -147,6 +152,7 @@ export default async function loadDir(
     moduleList = topologicalSort(moduleList);
   } catch (error) {
     hazel.emit("error", error);
+    logger.error(error);
     existError = true;
     throw error;
   }

@@ -1,5 +1,5 @@
 // 处理服务器遇到的所有错误
-export async function run(hazel, core, _hold) {
+export async function run(hazel, _core, _hold) {
   // 移除 error 事件的默认监听器
   hazel.removeAllListeners("error");
 
@@ -20,18 +20,18 @@ export async function run(hazel, core, _hold) {
             arg1.send(
               `{"cmd":"warn","code":"SERVER_ERROR","text":"# dx_xb\\n服务器遇到了一个错误，无法执行其应有的功能。\\n您可以将错误 ID \`#${id}\` 提交给管理员帮助我们查明情况。","data":{"id": "${id}"}}`,
             );
-            const logger = new core.logger("HandleError");
+            const logger = new hazel.logger("catcher");
             logger.error(`SERVER ERROR #${id}\n${error.stack}\n${JSON.stringify(arg1, null, 2)}`);
           }
         }
       } else {
         // 记日志
-        const logger = new core.logger("HandleError");
+        const logger = new hazel.logger("catcher");
         logger.error(`SERVER ERROR #${id}\n${error.stack}`);
       }
     } catch (error) {
       // 错误处理程序自身发生错误，打印错误内容
-      const logger = new core.logger("HandleError");
+      const logger = new hazel.logger("catcher");
       logger.error(`ERROR HANDLER ERROR\n${error.stack}`);
     }
   });

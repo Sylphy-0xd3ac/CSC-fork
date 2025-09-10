@@ -1,7 +1,4 @@
 # Crosst-Chat Config v1
-# Version: 2.0.0-ts-beta
-version: "2.0.0-ts-beta"
-
 # Root Passcode
 rootPasscode: "root"
 
@@ -17,17 +14,14 @@ level:
 adminList:
   - "ckxPQQ"
 
-# Bot List
-botList: []
-
 # Member List
 memberList: []
 
 # Data Maximum Length
 dataMaximumLength: 32768
 
-# History Maximum Length
-historyMaximumLength: 20
+# History Maximum Length (0 means no limit)
+historyMaximumLength: 0
 
 # Rate Limiter
 rateLimiter:
@@ -45,6 +39,3 @@ sitePolicy: {}
 salts:
   auth: "TEMPORARYSALT"
   secret: "TEMPORARYSECRET"
-
-# Log Level
-logLevel: 0

@@ -93,7 +93,11 @@ export async function action(_hazel, core, hold, socket, data) {
     hold.history.set(socket.channel, []);
   }
   const history = hold.history.get(socket.channel);
-  if (history.length >= core.config.historyMaximumLength) {
+  // 如果历史记录长度大于等于配置的最大长度且最大长度不为 0(不限制历史记录长度)，则移除最早的一条记录
+  if (
+    history.length >= core.config.historyMaximumLength &&
+    core.config.historyMaximumLength !== 0
+  ) {
     history.shift();
   }
   if (typeof socket.trip === "string") {
