@@ -34,6 +34,11 @@ export default class Hazel extends EventEmitter2 {
       this.emit("error", error);
     });
 
+    process.on("SIGINT", () => {
+      new this.logger("app").info("terminated by SIGINT");
+      process.exit(0);
+    });
+
     console.log(
       " _   _               _    ____               \n" +
         "| | | | __ _ _______| |  / ___|___  _ __ ___ \n" +
