@@ -24,6 +24,9 @@ behindReverseProxy: false
 # WebSocket Heartbeat Interval
 wsHeartbeatInterval: 16000
 
+# WebSocket Clean Interval
+wsCleanInterval: 5000
+
 # WebSocket Heartbeat Timeout
 wsHeartbeatTimeout: 10000
 

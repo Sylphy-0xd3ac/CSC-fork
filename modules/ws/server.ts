@@ -7,11 +7,11 @@ function startClientMonitor(hazel: any, core: any, hold: any) {
   // 定期检查客户端状态并清理断开的连接
   const cleanupInterval = setInterval(() => {
     // 获取当前服务器的活跃客户端
-    const currentClients = new Set(hold.wsServer.clients);
+    const currentClients = new Set(hold.wsServer?.clients);
 
     // 找出已经断开的客户端
     const disconnectedClients = [];
-    for (const client of hold.activeClients) {
+    for (const client of hold.wsServer.activeClients) {
       if (!currentClients.has(client) || client.readyState !== WebSocket.OPEN) {
         disconnectedClients.push(client);
       }
@@ -19,17 +19,17 @@ function startClientMonitor(hazel: any, core: any, hold: any) {
 
     // 清理断开的客户端
     for (const client of disconnectedClients) {
-      hold.activeClients.delete(client);
+      hold.wsServer.activeClients.delete(client);
 
       // 执行清理
       cleanupDisconnectedClient(hazel, core, hold, client);
     }
-  }, 5000); // 每5秒检查一次
+  }, hazel.mainConfig.wsCleanInterval); // 每检查一次
 
   // 监听服务器关闭事件，清理定时器
   hold.wsServer.on("close", () => {
     clearInterval(cleanupInterval);
-    hold.activeClients.clear();
+    hold.wsServer.activeClients.clear();
   });
 }
 
@@ -62,11 +62,10 @@ export async function run(hazel, core, hold) {
     return;
   }
 
-  // 初始化客户端跟踪集合
-  hold.activeClients = new Set();
-
   // 尽可能简单地创建一个 WebSocket 服务器
   hold.wsServer = new WebSocketServer({ port: hazel.mainConfig.port });
+
+  hold.wsServer.activeClients = new Set();
 
   // 绑定 WebSocket 服务器的事件
   hold.wsServer.on("error", (error) => {
@@ -75,7 +74,7 @@ export async function run(hazel, core, hold) {
 
   hold.wsServer.on("connection", (ws, request) => {
     // 添加到活动客户端集合
-    hold.activeClients.add(ws);
+    hold.wsServer.activeClients.add(ws);
 
     if (typeof core.handle_connection === "function") {
       core.handle_connection(ws, request);

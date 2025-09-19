@@ -57,7 +57,12 @@ export async function run(hazel, core, hold) {
     });
 
     // close 事件 - 现在由 server 模块处理
-    ws_socket.on("close", () => {});
+    ws_socket.on("close", () => {
+      hold.wsServer.activeClients.delete(ws_socket);
+      if (typeof ws_socket.channel !== "undefined") {
+        core.removeSocket?.(ws_socket);
+      }
+    });
 
     // error 事件
     ws_socket.on("error", (error: any) => {
