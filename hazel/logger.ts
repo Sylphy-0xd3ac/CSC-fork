@@ -1,48 +1,50 @@
 // 用于记录日志
-export class Time {
-  static readonly millisecond = 1;
-  static readonly second = 1000;
-  static readonly minute = Time.second * 60;
-  static readonly hour = Time.minute * 60;
-  static readonly day = Time.hour * 24;
-  static readonly week = Time.day * 7;
+export const Time = {
+  millisecond: 1,
+  second: 1000,
+  minute: 1000 * 60,
+  hour: 1000 * 60 * 60,
+  day: 1000 * 60 * 60 * 24,
+  week: 1000 * 60 * 60 * 24 * 7,
 
-  private static timezoneOffset = new Date().getTimezoneOffset();
+  timezoneOffset: new Date().getTimezoneOffset(),
 
-  static setTimezoneOffset(offset: number) {
+  setTimezoneOffset(offset: number) {
     Time.timezoneOffset = offset;
-  }
+  },
 
-  static getTimezoneOffset() {
+  getTimezoneOffset() {
     return Time.timezoneOffset;
-  }
+  },
 
-  static getDateNumber(date: number | Date = new Date(), offset?: number) {
+  getDateNumber(date: number | Date = new Date(), offset?: number) {
     if (typeof date === "number") date = new Date(date);
     if (offset === undefined) offset = Time.timezoneOffset;
     return Math.floor((date.valueOf() / Time.minute - offset) / 1440);
-  }
+  },
 
-  static fromDateNumber(value: number, offset?: number) {
+  fromDateNumber(value: number, offset?: number) {
     const date = new Date(value * Time.day);
     if (offset === undefined) offset = Time.timezoneOffset;
     return new Date(+date + offset * Time.minute);
-  }
+  },
 
-  private static numeric = /\d+(?:\.\d+)?/.source;
-  private static timeRegExp = new RegExp(
-    `^${[
-      "w(?:eek(?:s)?)?",
-      "d(?:ay(?:s)?)?",
-      "h(?:our(?:s)?)?",
-      "m(?:in(?:ute)?(?:s)?)?",
-      "s(?:ec(?:ond)?(?:s)?)?",
-    ]
-      .map((unit) => `(${this.numeric}${unit})?`)
-      .join("")}$`,
-  );
+  numeric: /\d+(?:\.\d+)?/.source,
+  get timeRegExp() {
+    return new RegExp(
+      `^${[
+        "w(?:eek(?:s)?)?",
+        "d(?:ay(?:s)?)?",
+        "h(?:our(?:s)?)?",
+        "m(?:in(?:ute)?(?:s)?)?",
+        "s(?:ec(?:ond)?(?:s)?)?",
+      ]
+        .map((unit) => `(${this.numeric}${unit})?`)
+        .join("")}$`,
+    );
+  },
 
-  static parseTime(source: string) {
+  parseTime(source: string) {
     const capture = Time.timeRegExp.exec(source);
     if (!capture) return 0;
     return (
@@ -52,9 +54,9 @@ export class Time {
       (Number.parseFloat(capture[4]) * Time.minute || 0) +
       (Number.parseFloat(capture[5]) * Time.second || 0)
     );
-  }
+  },
 
-  static parseDate(date: string) {
+  parseDate(date: string) {
     const parsed = Time.parseTime(date);
     if (parsed) {
       date = (Date.now() + parsed) as any;
@@ -64,9 +66,9 @@ export class Time {
       date = `${new Date().getFullYear()}-${date}`;
     }
     return date ? new Date(date) : new Date();
-  }
+  },
 
-  static format(ms: number) {
+  format(ms: number) {
     const abs = Math.abs(ms);
     if (abs >= Time.day - Time.hour / 2) {
       return `${Math.round(ms / Time.day)}d`;
@@ -81,13 +83,13 @@ export class Time {
       return `${Math.round(ms / Time.second)}s`;
     }
     return `${ms}ms`;
-  }
+  },
 
-  static toDigits(source: number, length = 2) {
+  toDigits(source: number, length = 2) {
     return source.toString().padStart(length, "0");
-  }
+  },
 
-  static template(template: string, time = new Date()) {
+  template(template: string, time = new Date()) {
     return template
       .replace("yyyy", time.getFullYear().toString())
       .replace("yy", time.getFullYear().toString().slice(2))
@@ -97,8 +99,8 @@ export class Time {
       .replace("mm", Time.toDigits(time.getMinutes()))
       .replace("ss", Time.toDigits(time.getSeconds()))
       .replace("SSS", Time.toDigits(time.getMilliseconds(), 3));
-  }
-}
+  },
+};
 
 const c16 = [6, 2, 3, 4, 5, 1];
 const c256 = [
@@ -298,7 +300,7 @@ export class Logger {
     const paths = this.name.split(":");
     let config: Level = target?.levels || Logger.levels;
     do {
-      config = config[paths.shift()!] ?? config.base;
+      config = config[paths.shift()] ?? config.base;
     } while (paths.length && typeof config === "object");
     return config as number;
   }

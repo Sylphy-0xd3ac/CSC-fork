@@ -23,12 +23,6 @@
         "noImplicitAnyLet": "off",
         "useIterableCallbackReturn": "off",
         "useAdjacentOverloadSignatures": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off"
-      },
-      "complexity": {
-        "noStaticOnlyClass": "off"
       }
     }
   },
