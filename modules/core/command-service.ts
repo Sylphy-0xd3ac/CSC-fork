@@ -35,6 +35,7 @@ export async function run(hazel, core, hold) {
       if (typeof meta.requiredData !== "object" || meta.requiredData === null) {
         throw new Error(`Command ${name} must set requiredData`);
       }
+      this.actions.set(name, { handler, meta });
       this.slashCommands.set(name, { handler, meta });
     },
 
