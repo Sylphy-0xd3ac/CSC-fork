@@ -18,7 +18,7 @@ export async function run(hazel, _core, _hold) {
           data: { id },
         });
         const logger = new hazel.logger("catcher");
-        logger.error(`SERVER ERROR #${id}\n${error.stack}\n${JSON.stringify(arg1, null, 2)}`);
+        logger.error(`SERVER ERROR #${id}\n${error.stack}\n`);
       } else {
         // 仅记录日志
         const logger = new hazel.logger("catcher");

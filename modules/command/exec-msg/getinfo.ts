@@ -7,19 +7,15 @@ export async function action(hazel, core, hold, socket, _data) {
   // 回复客户端简易的服务器信息
   let online = 0;
   try {
-    online = hold.io?.of("/")?.sockets?.size || 0;
+    online = hold.io.of("/").sockets.size || 0;
   } catch (_e) {}
-  core.reply(
-    {
-      cmd: "setinfo",
-      ver: hazel.mainConfig.version,
-      online,
-    },
-    socket,
-  );
+  socket.emit("setinfo", {
+    ver: hazel.mainConfig.version,
+    online,
+  });
 
   // 之后断开连接
-  socket.disconnect?.(true);
+  socket.disconnect(true);
 
   // 因为访问一次首页就会触发一次 getinfo
   // 所以使用这个命令的数量约等于首页访问量

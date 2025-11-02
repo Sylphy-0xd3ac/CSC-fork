@@ -7,7 +7,7 @@ export async function action(hazel, core, hold, socket, _data) {
   // 准备数据
   let statsText = `### 十字街 ${hazel.mainConfig.version}\nPowered by Hazel Core ${hazel.version}`;
   statsText += "\n#### --- 运行状态 ---";
-  statsText += `\n在线连接：${hold.wsServer.clients.size}`;
+  statsText += `\n在线连接：${hold.io.of("/").sockets.size}`;
   statsText += `\n聊天室数：${hold.channel.size}`;
   statsText += `\n请求频率：${core.getFrequency().toFixed(3)} RPM`;
   statsText += `\n运行时间总计：${core.formatTime(Date.now() - hold.startTime)}`;
@@ -28,7 +28,7 @@ export async function action(hazel, core, hold, socket, _data) {
     uptime: Date.now() - hold.startTime,
     lastReload: Date.now() - hold.lastReloadTime,
     frequency: core.getFrequency(),
-    online: hold.wsServer.clients.size,
+    online: hold.io.of("/").sockets.size,
     channels: hold.channel.size,
     usersJoined: hold.stats["users-joined"] || 0,
     messagesSent: hold.stats["messages-sent"] || 0,

@@ -22,7 +22,7 @@ export async function action(_hazel, core, hold, socket, data) {
   // 如果消息以 / 开头，视为命令
   if (data.text[0] === "/") {
     // 检查是否存在命令服务
-    if (core.commandService && typeof core.commandService.handle === "function") {
+    if (core.commandService && typeof core.commandService.handleSlash === "function") {
       // 处理命令
       await core.commandService.handleSlash(socket, data.text);
     }
@@ -46,8 +46,8 @@ export async function action(_hazel, core, hold, socket, data) {
   const timeNow = Date.now();
   if (hold.channel.get(socket.channel).lastActive + 180000 < timeNow) {
     core.broadcast(
+      "info",
       {
-        cmd: "info",
         code: "CHAT_TIME",
         trip: "/Time/",
         text: getChatTimeStr(),
@@ -61,8 +61,8 @@ export async function action(_hazel, core, hold, socket, data) {
   // 在聊天室广播消息
   if (typeof socket.trip === "string") {
     core.broadcast(
+      "chat",
       {
-        cmd: "chat",
         type: "chat",
         nick: socket.nick,
         trip: socket.trip,
@@ -76,8 +76,8 @@ export async function action(_hazel, core, hold, socket, data) {
     );
   } else {
     core.broadcast(
+      "chat",
       {
-        cmd: "chat",
         type: "chat",
         nick: socket.nick,
         level: socket.level,

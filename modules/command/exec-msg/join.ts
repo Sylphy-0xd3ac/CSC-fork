@@ -80,12 +80,7 @@ export async function action(hazel, core, hold, socket, data) {
       })())
     ) {
       // 如果验证失败，则返回错误信息
-      core.reply(
-        {
-          cmd: "infoInvalid",
-        },
-        socket,
-      );
+      socket.emit("INFO_INVALID", {});
       socket.disconnect?.(true);
       return;
     }
@@ -209,66 +204,47 @@ export async function action(hazel, core, hold, socket, data) {
   // 返回用户列表等信息
   if (typeof data.password === "string") {
     const generatedKey = await core.generateKeys(data.password);
-    core.reply(
-      {
-        cmd: "onlineSet",
-        nicks: channelNicks,
-        trip: userInfo.trip,
-        key: generatedKey,
-        ver: hazel.mainConfig.version,
-      },
-      socket,
-    );
+    socket.emit("onlineSet", {
+      nicks: channelNicks,
+      trip: userInfo.trip,
+      key: generatedKey,
+      ver: hazel.mainConfig.version,
+    });
   } else {
-    core.reply(
-      {
-        cmd: "onlineSet",
-        nicks: channelNicks,
-        ver: hazel.mainConfig.version,
-      },
-      socket,
-    );
+    socket.emit("onlineSet", {
+      nicks: channelNicks,
+      ver: hazel.mainConfig.version,
+    });
   }
 
   // 如果公告列表不为空，则发送公告
   if (hold.noticeList.length > 0) {
     hold.noticeList.forEach((notice) => {
-      core.reply(
-        {
-          cmd: "info",
-          code: "NOTICE",
-          text: notice,
-        },
-        socket,
-      );
+      core.replyInfo("NOTICE", notice, socket);
     });
   }
 
   // 如果聊天室历史记录不为空，则发送历史记录
   if (hold.history.get(data.channel)) {
     hold.history.get(data.channel).forEach((item) => {
-      core.reply(
-        {
-          cmd: "chat",
-          type: "chat",
-          nick: item.nick,
-          trip: item.trip,
-          level: item.level,
-          utype: item.utype,
-          member: item.member,
-          admin: item.admin,
-          text: item.text,
-        },
-        socket,
-      );
+      socket.emit("chat", {
+        type: "chat",
+        nick: item.nick,
+        trip: item.trip,
+        level: item.level,
+        utype: item.utype,
+        member: item.member,
+        admin: item.admin,
+        text: item.text,
+      });
     });
   }
 
   // 广播用户上线信息
   if (!userInfo.isInvisible) {
     core.broadcast(
+      "onlineAdd",
       {
-        cmd: "onlineAdd",
         nick: userInfo.nick,
         trip: userInfo.trip || " ",
         utype: userInfo.permission,

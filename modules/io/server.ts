@@ -1,4 +1,4 @@
-// 用于启动 Socket.IO 服务器（替换原 WebSocket 服务器）
+// 用于启动 Socket.IO 服务器
 
 import { Server } from "socket.io";
 
@@ -10,10 +10,10 @@ export async function run(hazel, core, hold) {
 
   // 创建 Socket.IO 服务器
   hold.io = new Server(hazel.mainConfig.port, {
-    // 允许跨域，方便本地直接打开前端页面
+    // 允许跨域
     cors: { origin: "*" },
-    path: "/socket.io",
-    // 复用原配置的心跳参数
+    path: hazel.mainConfig.path,
+    // 心跳参数
     pingInterval: hazel.mainConfig.wsHeartbeatInterval,
     pingTimeout: hazel.mainConfig.wsHeartbeatTimeout,
   });
@@ -30,19 +30,19 @@ export async function run(hazel, core, hold) {
         core.handle_connection(socket, socket.handshake);
       }
 
-      // 绑定断开事件，统一清理
+      // 绑定断开事件
       socket.on("disconnect", () => {
         if (typeof core.removeSocket === "function") {
           core.removeSocket(socket);
         }
       });
 
-      // 将命令服务绑定到此 socket（事件化处理）
+      // 将命令服务绑定到 socket
       if (core.commandService && typeof core.commandService.bindSocket === "function") {
         core.commandService.bindSocket(socket);
       }
 
-      // 连接级错误
+      // 连接错误
       socket.on("error", (error) => {
         hazel.emit("error", error, socket);
       });
@@ -56,5 +56,5 @@ export async function run(hazel, core, hold) {
   });
 }
 
-export const name = "ws-server"; // 保持模块名不变以满足依赖
-export const dependencies = ["ws-handler"]; // 仍依赖连接前置处理
+export const name = "ws-server";
+export const dependencies = ["ws-handler"]; 

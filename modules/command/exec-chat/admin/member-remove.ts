@@ -38,8 +38,8 @@ export async function action(_hazel, core, _hold, socket, data) {
 
   // 向全部成员广播消息
   core.broadcast(
+    "info",
     {
-      cmd: "info",
       code: "MEMBER_REMOVE",
       text: `已删除成员：${data.trip}`,
       data: { trip: data.trip },

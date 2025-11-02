@@ -16,7 +16,7 @@ export async function run(_hazel, core, _hold) {
 }
 
 export const name = "banlist";
-export const requiredLevel = 0;
+export const requiredLevel = 4;
 export const requiredData = {};
 export const description = "查看历史封禁列表";
 export const dependencies = ["command-service", "ws-reply", "data"];

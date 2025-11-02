@@ -249,4 +249,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "command-service";
-export const dependencies: string[] = ["ws-reply", "stats", "ws-reply", "data"];
+export const dependencies: string[] = ["ws-reply", "stats", "data"];

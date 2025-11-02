@@ -24,11 +24,7 @@ export async function run(hazel, core, hold) {
 
     // 检查该地址是否请求频率过高
     if (core.checkAddress?.(socket.remoteAddress, 3)) {
-      socket.emit("warn", {
-        cmd: "warn",
-        code: "RATE_LIMITED",
-        text: "您的操作过于频繁，请稍后再试。",
-      });
+      core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
       socket.disconnect(true);
       return;
     }
@@ -40,11 +36,11 @@ export async function run(hazel, core, hold) {
 
     // 检查该地址是否在封禁列表中
     if (hold.bannedIPlist?.includes(socket.remoteAddress) || !allowed || denied) {
-      socket.emit("warn", {
-        cmd: "warn",
-        code: "BANNED",
-        text: "您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。",
-      });
+      core.replyWarn(
+        "BANNED",
+        "您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。",
+        socket,
+      );
       socket.disconnect(true);
       return;
     }
