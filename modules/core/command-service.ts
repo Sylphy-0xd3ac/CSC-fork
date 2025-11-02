@@ -112,7 +112,8 @@ export async function run(hazel, core, hold) {
       if (typeof meta.requiredData !== "object" || meta.requiredData === null) {
         throw new Error(`Command ${name} must set requiredData`);
       }
-      slashCommands.set(name, { handler, meta });
+      this.actions.set(name, { handler, meta });
+      this.slashCommands.set(name, { handler, meta });
     },
 
     // 为一个 socket 绑定所有 action 事件处理器
