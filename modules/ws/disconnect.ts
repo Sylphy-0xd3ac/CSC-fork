@@ -1,12 +1,11 @@
-// 用于处理用户断开连接
+// 用于处理用户断开连接（Socket.IO 版本）
 export async function run(_hazel, core, hold) {
   core.removeSocket = (socket) => {
-    // 断开连接
-    socket.terminate();
+    // 不在此处主动断开连接，由上层或事件回调触发
 
     // 向所有用户广播用户退出的消息
     if (!socket.isInvisible) {
-      if (typeof socket.channel === "string") {
+      if (typeof socket.channel === "string" && hold.channel.has(socket.channel)) {
         core.broadcast(
           {
             cmd: "onlineRemove",

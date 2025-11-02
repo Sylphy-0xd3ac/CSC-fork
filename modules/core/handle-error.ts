@@ -9,30 +9,25 @@ export async function run(hazel, _core, _hold) {
       // 生成 8 位随机十六进制字符串作为错误 ID
       const id = Math.random().toString(16).slice(2, 10);
 
-      // 打印错误内容
-      // console.error('----------\nSERVER ERROR #' + id + ' CATCHED AT ' + new Date().toTimeString());
-      // console.error(error.stack.split('\n').slice(0, 4).join('\n'));
-
-      if (typeof arg1 !== "undefined") {
-        // 如果 arg1 是一个 socket 对象，将错误信息发送给客户端
-        if (arg1.constructor.name === "CSCWebSocket") {
-          if (arg1.readyState === 1) {
-            arg1.send(
-              `{"cmd":"warn","code":"SERVER_ERROR","text":"# dx_xb\\n服务器遇到了一个错误，无法执行其应有的功能。\\n您可以将错误 ID \`#${id}\` 提交给管理员帮助我们查明情况。","data":{"id": "${id}"}}`,
-            );
-            const logger = new hazel.logger("catcher");
-            logger.error(`SERVER ERROR #${id}\n${error.stack}\n${JSON.stringify(arg1, null, 2)}`);
-          }
-        }
+      if (arg1 && typeof arg1.emit === "function") {
+        // 如果 arg1 看起来像一个 Socket.IO socket，对客户端发送错误提示
+        arg1.emit("warn", {
+          cmd: "warn",
+          code: "SERVER_ERROR",
+          text: `# dx_xb\n服务器遇到了一个错误，无法执行其应有的功能。\n您可以将错误 ID \`#${id}\` 提交给管理员帮助我们查明情况。`,
+          data: { id },
+        });
+        const logger = new hazel.logger("catcher");
+        logger.error(`SERVER ERROR #${id}\n${error.stack}\n${JSON.stringify(arg1, null, 2)}`);
       } else {
-        // 记日志
+        // 仅记录日志
         const logger = new hazel.logger("catcher");
         logger.error(`SERVER ERROR #${id}\n${error.stack}`);
       }
-    } catch (error) {
+    } catch (err) {
       // 错误处理程序自身发生错误，打印错误内容
       const logger = new hazel.logger("catcher");
-      logger.error(`ERROR HANDLER ERROR\n${error.stack}`);
+      logger.error(`ERROR HANDLER ERROR\n${err.stack}`);
     }
   });
 }
