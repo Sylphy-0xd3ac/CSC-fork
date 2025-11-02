@@ -1,76 +1,51 @@
-import { WebSocket } from "ws";
-
 export async function run(hazel, core, hold) {
   /**
-   * 处理新的 WebSocket 连接，原逻辑来自 src/ws/handle-connection.ts
-   * @param ws_socket WebSocket
-   * @param request   HTTP 请求
+   * 处理新的 Socket.IO 连接（替换原 WebSocket 版本）
+   * @param socket   Socket.IO Socket
+   * @param handshake HTTP 握手对象
    */
-  core.handle_connection = async (ws_socket: any, request: any) => {
+  core.handle_connection = async (socket: any, handshake: any) => {
     /* 前置检查 */
     // 获取客户端地址
+    let remote;
     if (hazel.mainConfig.behindReverseProxy) {
-      ws_socket.remoteAddress = request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+      remote = handshake?.headers?.["x-forwarded-for"] || socket.handshake.address;
+      if (Array.isArray(remote)) remote = remote[0];
     } else {
-      ws_socket.remoteAddress = request.socket.remoteAddress;
+      remote = socket.handshake.address;
     }
 
-    if (ws_socket.remoteAddress !== undefined) {
-      ws_socket.remoteAddress = ws_socket.remoteAddress.slice(7);
+    // 统一移除 IPv6 映射前缀 ::ffff:
+    if (typeof remote === "string" && remote.startsWith("::ffff:")) {
+      remote = remote.slice(7);
     }
+
+    socket.remoteAddress = remote;
 
     // 检查该地址是否请求频率过高
-    if (core.checkAddress?.(ws_socket.remoteAddress, 3)) {
-      ws_socket.send(
-        '{"cmd":"warn","code":"RATE_LIMITED","text":"您的操作过于频繁，请稍后再试。"}',
-      );
-      if (ws_socket.readyState === WebSocket.OPEN) {
-        // 关闭连接
-        ws_socket.terminate();
-      }
+    if (core.checkAddress?.(socket.remoteAddress, 3)) {
+      core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
+      socket.disconnect(true);
       return;
     }
 
     // 检查该地址的 CIDR 是否在允许 / 禁止列表中
-    ws_socket.isAllowedIP = core.checkIP?.(ws_socket.remoteAddress)[0];
-    ws_socket.isDeniedIP = core.checkIP?.(ws_socket.remoteAddress)[1];
+    const [allowed, denied] = core.checkIP?.(socket.remoteAddress) || [true, false];
+    socket.isAllowedIP = allowed;
+    socket.isDeniedIP = denied;
 
     // 检查该地址是否在封禁列表中
-    if (
-      hold.bannedIPlist?.includes(ws_socket.remoteAddress) ||
-      !ws_socket.isAllowedIP ||
-      ws_socket.isDeniedIP
-    ) {
-      ws_socket.send(
-        '{"cmd":"warn","code":"BANNED","text":"您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。"}',
+    if (hold.bannedIPlist?.includes(socket.remoteAddress) || !allowed || denied) {
+      core.replyWarn(
+        "BANNED",
+        "您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。",
+        socket,
       );
-      if (ws_socket.readyState === WebSocket.OPEN) {
-        ws_socket.terminate();
-      }
+      socket.disconnect(true);
       return;
     }
 
-    /* 绑定 WebSocket 事件 */
-    // message 事件
-    ws_socket.on("message", (message: any) => {
-      core.handleData?.(ws_socket, message);
-    });
-
-    // close 事件 - 现在由 server 模块处理
-    ws_socket.on("close", () => {
-      hold.wsServer.activeClients.delete(ws_socket);
-      if (typeof ws_socket.channel !== "undefined") {
-        core.removeSocket?.(ws_socket);
-      }
-    });
-
-    // error 事件
-    ws_socket.on("error", (error: any) => {
-      hazel.emit("error", error, ws_socket);
-    });
-
-    /* 结束部分 */
-    // 计入全局频率
+    // 结束部分：计入全局频率
     core.increaseGlobalRate?.();
   };
 }

@@ -3,14 +3,7 @@ export async function action(_hazel, core, hold, socket, data) {
     const result = hold.noticeList.map(
       (notice) => `${notice}, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
     );
-    core.reply(
-      {
-        cmd: "info",
-        code: "NOTICE_LIST",
-        text: `当前公告列表为: ${result.join(", \n")}`,
-      },
-      socket,
-    );
+    core.replyInfo("NOTICE_LIST", `当前公告列表为: ${result.join(", \n")}`, socket);
   } else {
     if (data.find === "text") {
       const result = hold.noticeList.filter(
@@ -18,44 +11,20 @@ export async function action(_hazel, core, hold, socket, data) {
           `${notice.includes(data.value)}, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
       );
       if (result.length === 0) {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE_NOT_FOUND",
-            text: `没有找到任何包含 ${data.value} 的公告。`,
-          },
-          socket,
-        );
+        core.replyWarn("NOTICE_NOT_FOUND", `没有找到任何包含 ${data.value} 的公告。`, socket);
       } else {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE_FIND",
-            text: `搜索结果: ${result.join(", \n")}, 共 ${result.length} 条。`,
-          },
+        core.replyInfo(
+          "NOTICE_FIND",
+          `搜索结果: ${result.join(", \n")}, 共 ${result.length} 条。`,
           socket,
         );
       }
     } else if (data.find === "num") {
       const result = hold.noticeList[data.value - 1];
       if (typeof result === "undefined") {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE_NOT_FOUND",
-            text: `没有找到编号为 ${data.value} 的公告。`,
-          },
-          socket,
-        );
+        core.replyWarn("NOTICE_NOT_FOUND", `没有找到编号为 ${data.value} 的公告。`, socket);
       } else {
-        core.reply(
-          {
-            cmd: "info",
-            code: "NOTICE_FIND",
-            text: `搜索结果: ${result}`,
-          },
-          socket,
-        );
+        core.replyInfo("NOTICE_FIND", `搜索结果: ${result}`, socket);
       }
     } else {
       core.replyMalformedCommand(socket);

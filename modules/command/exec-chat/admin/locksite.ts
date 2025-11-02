@@ -23,7 +23,7 @@ export async function action(_hazel, core, hold, socket, data) {
   if (lockType === "kick") {
     core.findSocketTiny("level", 1).forEach((targetSocket) => {
       core.replyWarn("CHANNEL_LOCKED", "该聊天室暂时不可用，请尝试加入其他聊天室。", targetSocket);
-      targetSocket.close();
+      targetSocket.disconnect?.(true);
     });
   }
 

@@ -33,7 +33,7 @@ export async function action(_hazel, core, hold, socket, data) {
 
   // 强制退出该用户
   core.findSocketTiny("remoteAddress", targetSocket.remoteAddress).forEach((targetSocket) => {
-    targetSocket.terminate();
+    targetSocket.disconnect?.(true);
   });
 
   // 通知全部管理员

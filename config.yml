@@ -5,6 +5,9 @@ version: "2.0.0-beta"
 # Port
 port: 52764
 
+# Path
+path: "/socket.io"
+
 # Base Directory
 baseDir: ""
 

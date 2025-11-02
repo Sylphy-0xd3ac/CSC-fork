@@ -51,7 +51,7 @@ export async function action(_hazel, core, _hold, socket, data) {
       ip: targetSocket.remoteAddress,
     },
   );
-  targetSocket.close();
+  targetSocket.disconnect?.(true);
 
   // 写入存档
   core.archive("KCK", socket, data.nick);

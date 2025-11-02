@@ -6,8 +6,8 @@ export async function action(_hazel, core, _hold, socket, data) {
   }
 
   core.broadcast(
+    "info",
     {
-      cmd: "info",
       code: "BROADCAST",
       trip: "BODCST",
       text: data.text,

@@ -19,8 +19,8 @@ export async function action(_hazel, core, hold, socket, data) {
   // 在聊天室广播消息
   if (typeof socket.trip === "string") {
     core.broadcast(
+      "info",
       {
-        cmd: "info",
         code: "EMOTE",
         nick: socket.nick,
         trip: socket.trip,
@@ -30,8 +30,8 @@ export async function action(_hazel, core, hold, socket, data) {
     );
   } else {
     core.broadcast(
+      "info",
       {
-        cmd: "info",
         code: "EMOTE",
         nick: socket.nick,
         text: `@${socket.nick} ${data.text}`,

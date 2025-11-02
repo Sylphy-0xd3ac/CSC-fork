@@ -32,8 +32,8 @@ export async function action(_hazel, core, _hold, socket, data) {
 
   // 向全部成员广播消息
   core.broadcast(
+    "info",
     {
-      cmd: "info",
       code: "ADMIN_REMOVE",
       text: `已删除管理员：${data.trip}`,
       data: { trip: data.trip },

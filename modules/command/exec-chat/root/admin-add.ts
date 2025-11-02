@@ -38,8 +38,8 @@ export async function action(_hazel, core, _hold, socket, data) {
 
   // 向全部成员广播消息
   core.broadcast(
+    "info",
     {
-      cmd: "info",
       code: "ADMIN_ADD",
       text: `已添加新管理员：${data.trip}`,
       data: { trip: data.trip },

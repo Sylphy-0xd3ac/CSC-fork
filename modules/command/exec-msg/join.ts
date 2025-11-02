@@ -6,17 +6,13 @@ export async function action(hazel, core, hold, socket, data) {
 
   // 如果用户已经加入了聊天室，则不处理
   if (typeof socket.channel === "string") {
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close();
-    }
+    socket.disconnect?.(true);
     return;
   }
 
   // 如果用户提供了 key，则必须提供 trip，反之亦然
   if ((typeof data.trip === "string") !== (typeof data.key === "string")) {
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close();
-    }
+    socket.disconnect?.(true);
     return;
   }
 
@@ -27,9 +23,7 @@ export async function action(hazel, core, hold, socket, data) {
       "聊天室名称应当仅由汉字、字母和数字组成，并不超过 20 个字符。",
       socket,
     );
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close();
-    }
+    socket.disconnect?.(true);
     return;
   }
 
@@ -42,9 +36,7 @@ export async function action(hazel, core, hold, socket, data) {
           "## 訪問被拒絕\n\n非常抱歉，基於您的IP地址，您現在暫時不允許加入這個頻道。 您現在可以嘗試：\n\n一、十字街禁止某區域的使用通常是暫時性的，稍後再來這個聊天室。\n\n二、聯繫電郵： mail@henrize.kim 詢問可能的解封時間或將您暫時加入白名單的方法。\n\n現時十字街對IP的檢查和處理方法還不成熟，感謝您的耐心和支持。\n\n-----\n\n## Access Denied\n\nBased on your IP address, it is not allowed to join this channel right now. Please try again later.",
           socket,
         );
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.close();
-        }
+        socket.disconnect?.(true);
         return;
       }
     } else {
@@ -54,9 +46,7 @@ export async function action(hazel, core, hold, socket, data) {
           "## 訪問被拒絕\n\n非常抱歉，基於您的IP地址，您現在暫時不允許加入這個頻道。 您現在可以嘗試：\n\n一、十字街禁止某區域的使用通常是暫時性的，稍後再來這個聊天室。\n\n二、聯繫電郵： mail@henrize.kim 詢問可能的解封時間或將您暫時加入白名單的方法。\n\n現時十字街對IP的檢查和處理方法還不成熟，感謝您的耐心和支持。\n\n-----\n\n## Access Denied\n\nBased on your IP address, it is not allowed to join this channel right now. Please try again later.",
           socket,
         );
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.close();
-        }
+        socket.disconnect?.(true);
         return;
       }
     }
@@ -90,15 +80,8 @@ export async function action(hazel, core, hold, socket, data) {
       })())
     ) {
       // 如果验证失败，则返回错误信息
-      core.reply(
-        {
-          cmd: "infoInvalid",
-        },
-        socket,
-      );
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
+      socket.emit("INFO_INVALID", {});
+      socket.disconnect?.(true);
       return;
     }
 
@@ -114,9 +97,7 @@ export async function action(hazel, core, hold, socket, data) {
         "昵称应当仅由汉字、字母、数字和不超过 3 个的特殊字符（_-+.:;）组成，而且不能太长。",
         socket,
       );
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
+      socket.disconnect?.(true);
       return;
     }
 
@@ -190,9 +171,7 @@ export async function action(hazel, core, hold, socket, data) {
         "## 非常抱歉，该聊天室已锁定，即暂时禁止非成员进入。\n**可能的原因：**\n\\* 为提供更好的服务体验，十字街的 ?公共聊天室 一般会在深夜（北京时间）锁定。\n\\* 这个聊天室出现了大量且难以控制的违规行为，暂时锁定以维持秩序。\n**您可以尝试：**\n\\* 如果您是成员，请使用您的密码重新加入这个聊天室。\n\\* 暂时使用十字街的其它聊天室。\n\\* 一段时间后再来尝试加入本聊天室。",
         socket,
       );
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
+      socket.disconnect?.(true);
       return;
     }
   }
@@ -218,75 +197,54 @@ export async function action(hazel, core, hold, socket, data) {
       "已经有人在这个聊天室使用这个昵称，请换一个昵称再试。",
       socket,
     );
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close();
-    }
+    socket.disconnect?.(true);
     return;
   }
 
   // 返回用户列表等信息
   if (typeof data.password === "string") {
     const generatedKey = await core.generateKeys(data.password);
-    core.reply(
-      {
-        cmd: "onlineSet",
-        nicks: channelNicks,
-        trip: userInfo.trip,
-        key: generatedKey,
-        ver: hazel.mainConfig.version,
-      },
-      socket,
-    );
+    socket.emit("onlineSet", {
+      nicks: channelNicks,
+      trip: userInfo.trip,
+      key: generatedKey,
+      ver: hazel.mainConfig.version,
+    });
   } else {
-    core.reply(
-      {
-        cmd: "onlineSet",
-        nicks: channelNicks,
-        ver: hazel.mainConfig.version,
-      },
-      socket,
-    );
+    socket.emit("onlineSet", {
+      nicks: channelNicks,
+      ver: hazel.mainConfig.version,
+    });
   }
 
   // 如果公告列表不为空，则发送公告
   if (hold.noticeList.length > 0) {
     hold.noticeList.forEach((notice) => {
-      core.reply(
-        {
-          cmd: "info",
-          code: "NOTICE",
-          text: notice,
-        },
-        socket,
-      );
+      core.replyInfo("NOTICE", notice, socket);
     });
   }
 
   // 如果聊天室历史记录不为空，则发送历史记录
   if (hold.history.get(data.channel)) {
     hold.history.get(data.channel).forEach((item) => {
-      core.reply(
-        {
-          cmd: "chat",
-          type: "chat",
-          nick: item.nick,
-          trip: item.trip,
-          level: item.level,
-          utype: item.utype,
-          member: item.member,
-          admin: item.admin,
-          text: item.text,
-        },
-        socket,
-      );
+      socket.emit("chat", {
+        type: "chat",
+        nick: item.nick,
+        trip: item.trip,
+        level: item.level,
+        utype: item.utype,
+        member: item.member,
+        admin: item.admin,
+        text: item.text,
+      });
     });
   }
 
   // 广播用户上线信息
   if (!userInfo.isInvisible) {
     core.broadcast(
+      "onlineAdd",
       {
-        cmd: "onlineAdd",
         nick: userInfo.nick,
         trip: userInfo.trip || " ",
         utype: userInfo.permission,

@@ -67,34 +67,26 @@ export async function action(_hazel, core, _hold, socket, data) {
   }
 
   // 发送私聊消息
-  core.reply(
-    {
-      cmd: "chat",
-      type: "whisper",
-      from: socket.nick,
-      level: socket.level,
-      utype: socket.permission,
-      nick: `【收到私聊】 ${socket.nick}`,
-      trip: socket.trip || " ",
-      text: text,
-    },
-    targetSocket,
-  );
+  targetSocket.emit("chat", {
+    type: "whisper",
+    from: socket.nick,
+    level: socket.level,
+    utype: socket.permission,
+    nick: `【收到私聊】 ${socket.nick}`,
+    trip: socket.trip || " ",
+    text: text,
+  });
 
   // 保存到"上一次私聊"中
   targetSocket.lastWhisperFrom = socket.nick;
 
   // 回复发送成功
-  core.reply(
-    {
-      cmd: "chat",
-      type: "whisper",
-      nick: `【发送私聊】 ${targetSocket.nick}`,
-      trip: targetSocket.trip || " ",
-      text: text,
-    },
-    socket,
-  );
+  socket.emit("chat", {
+    type: "whisper",
+    nick: `【发送私聊】 ${targetSocket.nick}`,
+    trip: targetSocket.trip || " ",
+    text: text,
+  });
 
   // 保存到"上一次私聊"中
   socket.lastWhisperFrom = targetSocket.nick;

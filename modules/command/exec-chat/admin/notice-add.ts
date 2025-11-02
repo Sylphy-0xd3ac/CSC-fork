@@ -2,18 +2,11 @@ export async function action(_hazel, core, hold, socket, data) {
   // push 到公告列表
   data.text = data.text.trim();
   hold.noticeList.push(data.text);
-  core.reply(
-    {
-      cmd: "info",
-      code: "NOTICE_ADDED",
-      text: `公告已添加, 编号为 ${hold.noticeList.length}。`,
-    },
-    socket,
-  );
+  core.replyInfo("NOTICE_ADDED", `公告已添加, 编号为 ${hold.noticeList.length}。`, socket);
 
   core.broadcast(
+    "info",
     {
-      cmd: "info",
       code: "NOTICE_ADDED",
       text: `${socket.nick} 添加了一个公告, 编号为 ${hold.noticeList.length}, 内容为: ${data.text}。`,
     },
