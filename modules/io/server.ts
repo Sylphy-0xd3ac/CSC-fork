@@ -57,4 +57,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "ws-server";
-export const dependencies = ["ws-handler"]; 
+export const dependencies = ["ws-handler"];
