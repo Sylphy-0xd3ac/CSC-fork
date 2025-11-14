@@ -3,8 +3,8 @@
 // /whisper --nick 张三 --text 你好  - 命名参数
 // /whisper 你好  - 回复上次私聊
 export async function action(_hazel, core, _hold, socket, data) {
-  let nick;
-  let text;
+  let nick: string;
+  let text: string;
 
   if (data.nick) {
     // 有nick参数：指定用户私聊

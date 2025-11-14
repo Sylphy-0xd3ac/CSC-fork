@@ -59,7 +59,7 @@ export const Time = {
   parseDate(date: string) {
     const parsed = Time.parseTime(date);
     if (parsed) {
-      date = (Date.now() + parsed) as any;
+      date = (Date.now() + parsed).toString();
     } else if (/^\d{1,2}(:\d{1,2}){1,2}$/.test(date)) {
       date = `${new Date().toLocaleDateString()}-${date}`;
     } else if (/^\d{1,2}-\d{1,2}-\d{1,2}(:\d{1,2}){1,2}$/.test(date)) {
@@ -116,9 +116,8 @@ export interface LevelConfig {
 }
 
 export type Level = number | LevelConfig;
-export type LogFunction = (format: any, ...param: any[]) => void;
 export type LogType = "success" | "error" | "info" | "warn" | "debug";
-export type Formatter = (value: any, target: Target, logger: Logger) => any;
+export type Formatter = (value: string, target: Target, logger: Logger) => unknown;
 
 export interface LabelStyle {
   width?: number;
@@ -128,7 +127,7 @@ export interface LabelStyle {
 
 export interface Record {
   id: number;
-  meta: any;
+  meta: { namespace: string };
   name: string;
   type: LogType;
   level: number;
@@ -154,14 +153,25 @@ export interface Target {
   timestamp?: number;
 }
 
-function isAggregateError(error: any): error is Error & { errors: Error[] } {
-  return error instanceof Error && Array.isArray((error as any).errors);
+function isAggregateError(
+  error: unknown | (Error & { errors: Error[] }),
+): error is Error & { errors: Error[] } {
+  return error instanceof Error && "errors" in error && Array.isArray(error.errors);
 }
+
+export type LoggerType = Logger &
+  typeof Logger & {
+    info: (...args) => void;
+    warn: (...args) => void;
+    debug: (...args) => void;
+    error: (...args) => void;
+    success: (...args) => void;
+  };
 
 export class Logger {
   constructor(
     public name: string,
-    public meta?: any,
+    public meta?: [],
     private namespace?: string,
   ) {
     this.createMethod("success", Logger.SUCCESS);
@@ -190,7 +200,7 @@ export class Logger {
     Logger.formatters[name] = formatter;
   }
 
-  static color(target: Target, code: number, value: any, decoration = "") {
+  static color(target: Target, code: number, value: string, decoration = "") {
     if (!target.colors) return `${value}`;
     return `\u001b[3${code < 8 ? code : `8;5;${code}`}${target.colors >= 2 ? decoration : ""}m${value}\u001b[0m`;
   }
@@ -242,7 +252,9 @@ export class Logger {
         if (args[0].cause) {
           this[type](args[0].cause);
         } else if (isAggregateError(args[0])) {
-          args[0].errors.forEach((error) => this[type](error));
+          args[0].errors.forEach((error) => {
+            this[type](error);
+          });
           return;
         }
       }
@@ -250,7 +262,7 @@ export class Logger {
       const timestamp = Date.now();
       for (const target of Logger.targets) {
         if (this.getLevel(target) < level) continue;
-        const content = this.format(target, ...args);
+        const content = this.formatMessage(target, ...args);
         const record: Record = {
           id,
           type,
@@ -270,7 +282,7 @@ export class Logger {
     };
   }
 
-  private format(target: Target, ...args: any[]) {
+  private formatMessage(target: Target, ...args: unknown[]) {
     if (args[0] instanceof Error) {
       args[0] = args[0].stack || args[0].message;
       args.unshift("%s");
@@ -278,12 +290,12 @@ export class Logger {
       args.unshift("%o");
     }
 
-    let format: string = args.shift();
+    let format: string = args.shift() as string;
     format = format.replace(/%([a-zA-Z%])/g, (match, char) => {
       if (match === "%%") return "%";
       const formatter = Logger.formatters[char];
       if (typeof formatter === "function") {
-        const value = args.shift();
+        const value = args.shift() as string;
         return formatter(value, target, this);
       }
       return match;

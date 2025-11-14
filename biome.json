@@ -17,13 +17,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "useIterableCallbackReturn": "off",
-        "useAdjacentOverloadSignatures": "off"
-      }
+      "recommended": true
     }
   },
   "javascript": {

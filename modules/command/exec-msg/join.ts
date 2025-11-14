@@ -177,16 +177,18 @@ export async function action(hazel, core, hold, socket, data) {
   }
 
   // 生成用户列表
-  const channelNicks: any[] = [];
-  hold.channel.get(data.channel).socketList.forEach((item: any) => {
-    if (!item.isInvisible) {
-      channelNicks.push(item.nick);
-    }
-  });
+  const channelNicks: string[] = [];
+  hold.channel
+    .get(data.channel)
+    .socketList.forEach((item: { isInvisible: string; nick: string }) => {
+      if (!item.isInvisible) {
+        channelNicks.push(item.nick);
+      }
+    });
 
   // 检查用户昵称是否和其他用户重复
   let nickDuplicate = false;
-  channelNicks.forEach((item: any) => {
+  channelNicks.forEach((item: string) => {
     if (item.toLowerCase() === data.nick.toLowerCase()) {
       nickDuplicate = true;
     }

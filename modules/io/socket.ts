@@ -1,11 +1,23 @@
 // 负责查找 socket、对 socket 发送消息、广播消息等操作（基于 Socket.IO）
 
 export async function run(hazel, core, hold) {
+  type Socket = { level: number } & Record<string, unknown> & {
+      _boundActions?: Set<string>;
+      on: (name: string, handler: (data) => unknown) => unknown;
+      emit: (event: string, payload: unknown) => void;
+      handshake: { address: string };
+      disconnect: (...args: [true, ...unknown[]]) => void;
+    } & {
+      listeners: (arg0: string) => ((...args: unknown[]) => void)[];
+      off: (arg0: string, arg1: (payload: string) => void) => void;
+      on: (arg0: string, arg1: (payload: string) => void) => void;
+      removeAllListeners: (arg0: string) => void;
+    };
   /* 
     向指定的 socket 发送消息（事件名即 payload.cmd）
     @deprecated 使用 socket.emit 替代
   */
-  core.reply = (event: string, payload: any, socket: any) => {
+  core.reply = (event: string, payload: Record<string, unknown>, socket: Socket) => {
     try {
       if (payload) {
         socket.emit(event, payload);
@@ -16,11 +28,11 @@ export async function run(hazel, core, hold) {
   };
 
   // 添加 prompt 方法（保留占位，未使用）
-  core.prompt = (socket: any) =>
+  core.prompt = (socket: Socket) =>
     new Promise((resolve) => {
       // 获取原事件监听器
       const listeners = socket.listeners("chat");
-      const messageHandler = (payload: any) => {
+      const messageHandler = (payload: string) => {
         // 处理消息并解析
         let data = JSON.parse(payload);
         // 净化数据防止原型链污染
@@ -38,75 +50,16 @@ export async function run(hazel, core, hold) {
       socket.removeAllListeners("chat");
       socket.on("chat", messageHandler);
     });
-  const iterateAllSockets = (sourceSockets?: any) => {
+  const iterateAllSockets = (sourceSockets?: Set<Socket>): Socket[] => {
     if (sourceSockets) {
       // 传入特定集合（Set）
       return Array.from(sourceSockets);
     }
     // 全部在线 socket
-    return Array.from(hold.io?.of("/")?.sockets?.values?.() || []);
-  };
-
-  core.extendedFindSockets = (filter, sockets) => {
-    const filterAttrs = Object.keys(filter);
-    const reqCount = filterAttrs.length;
-    const matches: any = [];
-    const socketList: any = iterateAllSockets(sockets);
-
-    socketList.forEach((socket) => {
-      let curMatch = 0;
-
-      for (let loop = 0; loop < reqCount; loop += 1) {
-        const filterAttr = filterAttrs[loop];
-        const filterAttrValue = filter[filterAttr];
-        let socketAttrValue = socket;
-
-        // 支持深层属性
-        const attrs = filterAttr.split(".");
-        for (const attr of attrs) {
-          if (socketAttrValue[attr] !== undefined) {
-            socketAttrValue = socketAttrValue[attr];
-          } else {
-            socketAttrValue = undefined;
-            break;
-          }
-        }
-
-        if (socketAttrValue !== undefined) {
-          // 区分值的类型进行比较
-          switch (typeof filterAttrValue) {
-            case "object":
-              if (Array.isArray(filterAttrValue)) {
-                if (filterAttrValue.includes(socketAttrValue)) {
-                  curMatch++;
-                }
-              } else if (socketAttrValue === filterAttrValue) {
-                curMatch++;
-              }
-              break;
-            case "function":
-              if (filterAttrValue(socketAttrValue)) {
-                curMatch++;
-              }
-              break;
-            default:
-              if (
-                socketAttrValue === filterAttrValue ||
-                (typeof filterAttrValue === "number" && socketAttrValue > filterAttrValue)
-              ) {
-                curMatch++;
-              }
-              break;
-          }
-        }
-      }
-
-      if (curMatch === reqCount) {
-        matches.push(socket);
-      }
-    });
-
-    return matches;
+    const allSockets = hold.io?.of("/")?.sockets?.values?.();
+    return allSockets
+      ? Array.from(allSockets).map((socket: Socket) => ({ ...socket, level: socket.level || 0 }))
+      : [];
   };
 
   // 寻找符合条件的 socket
@@ -115,8 +68,8 @@ export async function run(hazel, core, hold) {
       return [];
     }
     const attrCount = Object.keys(filter).length;
-    const matches: any = [];
-    const socketList: any = iterateAllSockets(sockets);
+    const matches: Socket[] = [];
+    const socketList: Socket[] = iterateAllSockets(sockets);
 
     socketList.forEach((socket) => {
       let curMatch = 0;
@@ -133,9 +86,9 @@ export async function run(hazel, core, hold) {
   };
 
   // 使用一个属性作为过滤条件查找 socket
-  core.findSocketTiny = (attr: string, value: any): Array<Record<string, any>> => {
-    const matches: Array<Record<string, any>> = [];
-    iterateAllSockets().forEach((socket: Record<string, any>) => {
+  core.findSocketTiny = (attr: string, value: unknown): Array<Record<string, unknown>> => {
+    const matches: Array<Record<string, unknown>> = [];
+    iterateAllSockets().forEach((socket: Record<string, unknown>) => {
       if (socket[attr] === value) {
         matches.push(socket);
       }
@@ -144,7 +97,7 @@ export async function run(hazel, core, hold) {
   };
 
   // 根据给定的用户等级查找 socket
-  core.findSocketByLevel = (level: number, sockets?: any): Array<{ level: number }> => {
+  core.findSocketByLevel = (level: number, sockets?: Set<Socket>): Array<{ level: number }> => {
     const matches: Array<{ level: number }> = [];
     const socketList = iterateAllSockets(sockets);
     socketList.forEach((socket: { level: number }) => {
@@ -155,7 +108,7 @@ export async function run(hazel, core, hold) {
     return matches;
   };
 
-  core.findSocketByLevelDown = (level: number, sockets?: any): Array<{ level: number }> => {
+  core.findSocketByLevelDown = (level: number, sockets?: Set<Socket>): Array<{ level: number }> => {
     const matches: Array<{ level: number }> = [];
     const socketList = iterateAllSockets(sockets);
     socketList.forEach((socket: { level: number }) => {
@@ -167,16 +120,18 @@ export async function run(hazel, core, hold) {
   };
 
   // 向指定的一些 socket 广播消息
-  core.broadcast = (event: string, payload: any, sockets?: any) => {
-    iterateAllSockets(sockets).forEach((socket: { emit: (cmd: string, payload: any) => void }) => {
-      try {
-        if (payload) {
-          socket.emit(event, payload);
+  core.broadcast = (event: string, payload: unknown, sockets?: Set<Socket>) => {
+    iterateAllSockets(sockets).forEach(
+      (socket: { emit: (cmd: string, payload: unknown) => void }) => {
+        try {
+          if (payload) {
+            socket.emit(event, payload);
+          }
+        } catch (error) {
+          hazel.emit("error", error, socket);
         }
-      } catch (error) {
-        hazel.emit("error", error, socket);
-      }
-    });
+      },
+    );
   };
 }
 

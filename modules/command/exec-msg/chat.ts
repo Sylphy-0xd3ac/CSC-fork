@@ -7,7 +7,10 @@ function getChatTimeStr() {
 }
 export async function action(_hazel, core, hold, socket, data) {
   // 频率限制器计数
-  core.checkAddress(socket.remoteAddress, 3);
+  if (core.checkAddress(socket.remoteAddress, 3)) {
+    core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
+    return;
+  }
 
   // 检查用户是否可以发送消息
   if (!core.canSpeak(socket)) {

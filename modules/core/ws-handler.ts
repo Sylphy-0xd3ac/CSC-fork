@@ -1,13 +1,28 @@
 export async function run(hazel, core, hold) {
+  type Socket = { level: number } & Record<string, unknown> & {
+      _boundActions?: Set<string>;
+      on: (name: string, handler: (data) => unknown) => unknown;
+      emit: (event: string, payload: unknown) => void;
+      handshake: { address: string };
+      disconnect: (...args: [true, ...unknown[]]) => void;
+    } & {
+      listeners: (arg0: string) => ((...args: unknown[]) => void)[];
+      off: (arg0: string, arg1: (payload: string) => void) => void;
+      on: (arg0: string, arg1: (payload: string) => void) => void;
+      removeAllListeners: (arg0: string) => void;
+    };
   /**
-   * 处理新的 Socket.IO 连接（替换原 WebSocket 版本）
+   * 处理新的 Socket.IO 连接
    * @param socket   Socket.IO Socket
    * @param handshake HTTP 握手对象
    */
-  core.handle_connection = async (socket: any, handshake: any) => {
+  core.handle_connection = async (
+    socket: Socket,
+    handshake: { headers?: Record<string, string> } | null,
+  ) => {
     /* 前置检查 */
     // 获取客户端地址
-    let remote;
+    let remote: string;
     if (hazel.mainConfig.behindReverseProxy) {
       remote = handshake?.headers?.["x-forwarded-for"] || socket.handshake.address;
       if (Array.isArray(remote)) remote = remote[0];
@@ -36,11 +51,7 @@ export async function run(hazel, core, hold) {
 
     // 检查该地址是否在封禁列表中
     if (hold.bannedIPlist?.includes(socket.remoteAddress) || !allowed || denied) {
-      core.replyWarn(
-        "BANNED",
-        "您已经被全域封禁，如果您对此有任何疑问，请联系 mail@henrize.kim 。",
-        socket,
-      );
+      core.replyWarn("BANNED", "您已经被全域封禁，如果您对此有任何疑问，请联系站长邮箱。", socket);
       socket.disconnect(true);
       return;
     }

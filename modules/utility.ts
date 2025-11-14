@@ -63,8 +63,8 @@ export async function run(_hazel, core, _hold) {
   };
 
   // 拆分字符串中以空格分段的参数
-  core.splitArgs = (line) => {
-    const args: any[] = [];
+  core.splitArgs = (line: string) => {
+    const args: string[] = [];
     line.split(" ").forEach((arg) => {
       if (arg !== "") args.push(arg);
     });

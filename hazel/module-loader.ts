@@ -1,8 +1,9 @@
 import path from "node:path";
 import { globSync } from "glob";
 import supportsColor from "supports-color";
+import type Hazel from "./hazel-core.js";
 import type { Module } from "./hazel-core.js";
-import { Logger } from "./logger.js";
+import { Logger, type LoggerType } from "./logger.js";
 
 export function recursiveReadDir(baseDir) {
   return globSync(path.join(baseDir, "**/*")).filter(
@@ -10,7 +11,11 @@ export function recursiveReadDir(baseDir) {
   );
 }
 
-let logger: any;
+let logger: LoggerType;
+
+export function randomLoadID() {
+  return Math.random().toString(36).slice(4, 10);
+}
 
 export async function importModule(filePath: string, loadID: string) {
   const moduleName = path.basename(filePath, path.extname(filePath));
@@ -88,14 +93,10 @@ function topologicalSort(moduleMap: Map<string, Module>): Map<string, Module> {
   );
 }
 
-export default async function loadDir(
-  hazel: any,
-  dirName: string,
-  loadID: (...args: any[]) => string,
-) {
+export default async function loadDir(hazel: Hazel, dirName: string) {
   let existError = false;
   let moduleList = new Map();
-  logger = new hazel.logger("loader");
+  logger = new hazel.logger("loader") as LoggerType;
   for (const filePath of recursiveReadDir(dirName)) {
     if (
       await (async () => {
@@ -108,8 +109,8 @@ export default async function loadDir(
         );
       })()
     ) {
-      const currentLoadID = loadID();
-      let currentModule;
+      const currentLoadID = randomLoadID();
+      let currentModule: Module;
       try {
         currentModule = await importModule(filePath, currentLoadID);
       } catch (error) {

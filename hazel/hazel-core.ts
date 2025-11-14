@@ -6,24 +6,48 @@ import supportsColor from "supports-color";
 
 const { existsSync, mkdirSync, writeFileSync } = pkg;
 
-import { Logger, Time } from "./logger.js";
-import loadModule, { importModule } from "./module-loader.js";
+import { Logger, type LoggerType, Time } from "./logger.js";
+import loadModule, { importModule, randomLoadID } from "./module-loader.js";
 
 export interface Module {
   name: string;
   priority?: number;
   dependencies?: string[];
-  run: (...args: any[]) => any;
+  run: (...args: [Hazel, Data, Data]) => Promise<unknown>;
   filePath: string;
   loadHistory: string[];
 }
 
-export default class Hazel extends EventEmitter2 {
-  mainConfig: any;
-  loadedModules: Map<string, Module>;
-  logger: any;
+export interface MainConfig {
+  [key: string]: unknown;
+  projectName: string;
+  version: string;
+  port: number;
+  path: string;
+  baseDir: string;
+  DevMode: boolean;
+  hazel: {
+    modulesDir: string;
+  };
+  logDir: string;
+  behindReverseProxy: boolean;
+  wsHeartbeatInterval: number;
+  wsCleanInterval: number;
+  wsHeartbeatTimeout: number;
+  appConfigDir: string;
+  allowCIDRlistDir: string;
+  denyCIDRlistDir: string;
+  cidrPolicy: string;
+  logLevel: number;
+}
+type Data = Record<string, unknown>;
 
-  constructor(mainConfig: any) {
+export default class Hazel extends EventEmitter2 {
+  mainConfig: MainConfig;
+  loadedModules: Map<string, Module>;
+  logger: LoggerType;
+
+  constructor(mainConfig: MainConfig) {
     super();
     this.mainConfig = mainConfig;
     this.loadedModules = new Map();
@@ -35,7 +59,7 @@ export default class Hazel extends EventEmitter2 {
     });
 
     process.on("SIGINT", () => {
-      new this.logger("app").info("terminated by SIGINT");
+      (new this.logger("app") as LoggerType).info("terminated by SIGINT");
       process.exit(0);
     });
 
@@ -47,19 +71,15 @@ export default class Hazel extends EventEmitter2 {
         "|_| |_|\\____/___\\___|_|  \\____\\___/|_|  \\___|",
     );
     console.log(`(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(46));
-    new this.logger("app").info(
+    (new this.logger("app") as LoggerType).info(
       `\x1b[1m${this.mainConfig.projectName}\x1b[0m ${this.mainConfig.version}`,
     );
   }
 
-  #core: any = {};
-  #hold: any = {};
+  #core: Data = {};
+  #hold: Data = {};
 
   version = "0.3.6";
-
-  randomLoadID() {
-    return Math.random().toString(36).slice(4, 10);
-  }
 
   initializeLogger() {
     Logger.targets = [];
@@ -77,16 +97,16 @@ export default class Hazel extends EventEmitter2 {
           mkdirSync(path.join(this.mainConfig.baseDir, this.mainConfig.logDir));
         }
         const textArray = text.split("\n");
-        textArray.forEach((splitText) => {
+        for (const splitText of textArray) {
           writeFileSync(
             `${this.mainConfig.logDir}/${Time.template("yyyy-MM-dd")}-log.txt`,
             `${splitText}\n`,
             { encoding: "utf-8", flag: "a" },
           );
-        });
+        }
       },
     });
-    this.logger = Logger;
+    this.logger = Logger as LoggerType;
   }
 
   async initialize(forceInit) {
@@ -104,7 +124,7 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async reloadModule(moduleName: string) {
-    const loadID = this.randomLoadID();
+    const loadID = randomLoadID();
     const currentModule = await this.getModule(moduleName);
     const module = await importModule(currentModule.filePath, loadID);
     module.loadHistory = currentModule.loadHistory;
@@ -114,7 +134,7 @@ export default class Hazel extends EventEmitter2 {
     this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
-      new this.logger("app").error(error);
+      (new this.logger("app") as LoggerType).error(error);
     });
   }
 
@@ -128,7 +148,7 @@ export default class Hazel extends EventEmitter2 {
     this.loadedModules.set(moduleName, module);
     module.run(this, this.#core, this.#hold).catch((error) => {
       this.emit("error", error);
-      new this.logger("app").error(error);
+      (new this.logger("app") as LoggerType).error(error);
     });
   }
 
@@ -145,8 +165,7 @@ export default class Hazel extends EventEmitter2 {
     const result = (await loadModule(
       this,
       path.join(this.mainConfig.baseDir, this.mainConfig.hazel.modulesDir),
-      this.randomLoadID,
-    )) as { moduleList: any; existError: boolean };
+    )) as { moduleList: Map<string, Module>; existError: boolean };
     const { moduleList: loadedModules, existError: modulesExistError } = result;
     if (!forceLoad && modulesExistError) {
       return false;
@@ -165,7 +184,7 @@ export default class Hazel extends EventEmitter2 {
       this.loadedModules.forEach((moduleFunction, _modulePath) => {
         moduleFunction.run(this, this.#core, this.#hold).catch((error) => {
           this.emit("error", error);
-          new this.logger("app").error(error);
+          (new this.logger("app") as LoggerType).error(error);
           if (!forceLoad) {
             return false;
           }
@@ -173,7 +192,7 @@ export default class Hazel extends EventEmitter2 {
       });
     } catch (error) {
       this.emit("error", error);
-      new this.logger("app").error(`Error running module function: ${error}`);
+      (new this.logger("app") as LoggerType).error(`Error running module function: ${error}`);
       if (!forceLoad) {
         return false;
       }

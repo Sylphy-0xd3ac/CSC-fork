@@ -1,7 +1,14 @@
 // 用于查看当前可用的指令
-
 export async function action(_hazel, core, _hold, socket, data) {
   const noList = ["elevate", "help"];
+
+  type RequireData = {
+    [key: string]: {
+      optional: boolean;
+      description: string;
+      value: Array<{ [key: string]: string }>;
+    };
+  } | null;
 
   if (data.command) {
     // 查找指令
@@ -23,29 +30,30 @@ export async function action(_hazel, core, _hold, socket, data) {
       const description = recommand.description;
       let options = [];
       if (recommand.requiredData && typeof recommand.requiredData === "object") {
-        options = Object.entries(recommand.requiredData).map(([option_name, paramInfo]) => {
-          const param = paramInfo as any;
-          // 获取选项描述
-          let option_description = param.description;
-          // 检查是否为可选参数
-          const is_optional = param.optional === true;
-          // 如果是可选参数，在描述中添加标注
-          if (is_optional) {
-            option_description += " (可选)";
-          }
-          // 获取选项值
-          const option_value = param.value // 如果选项有值
-            ? param.value.map(
-                (
-                  value, // 遍历选项值
-                ) => [
-                  Object.keys(value)[0], // 返回选项值的键
-                  Object.values(value)[0], // 返回选项值的值
-                ],
-              )
-            : ""; // 如果选项没有值,则返回空字符串
-          return [option_name, option_description, option_value]; // 返回选项名, 选项描述, 选项值
-        });
+        options = Object.entries(recommand.requiredData as RequireData).map(
+          ([option_name, paramInfo]) => {
+            // 获取选项描述
+            let option_description = paramInfo.description;
+            // 检查是否为可选参数
+            const is_optional = paramInfo.optional === true;
+            // 如果是可选参数，在描述中添加标注
+            if (is_optional) {
+              option_description += " (可选)";
+            }
+            // 获取选项值
+            const option_value = paramInfo.value // 如果选项有值
+              ? (paramInfo.value as Array<{ [key: string]: string }>).map(
+                  (
+                    value, // 遍历选项值
+                  ) => [
+                    Object.keys(value)[0], // 返回选项值的键
+                    Object.values(value)[0], // 返回选项值的值
+                  ],
+                )
+              : ""; // 如果选项没有值,则返回空字符串
+            return [option_name, option_description, option_value]; // 返回选项名, 选项描述, 选项值
+          },
+        );
       }
 
       let return_text = `指令: ${recommand.name} - ${description}`;

@@ -311,7 +311,7 @@ export async function run(hazel, core, hold) {
    * 加载允许的 CIDR 列表
    */
   core.loadAllowCIDR = () => {
-    let rawCIDRlist;
+    let rawCIDRlist: string | string[];
     try {
       rawCIDRlist = readFileSync(
         join(hazel.mainConfig.baseDir, hazel.mainConfig.allowCIDRlistDir),
@@ -338,7 +338,7 @@ export async function run(hazel, core, hold) {
    * 加载拒绝的 CIDR 列表
    */
   core.loadDenyCIDR = () => {
-    let rawCIDRlist;
+    let rawCIDRlist: string | string[];
     try {
       rawCIDRlist = readFileSync(join(hazel.mainConfig.baseDir, hazel.mainConfig.denyCIDRlistDir), {
         encoding: "utf-8",

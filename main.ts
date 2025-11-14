@@ -1,4 +1,5 @@
 import pkg from "fs-extra";
+import type { MainConfig } from "./hazel/hazel-core.js";
 import HazelCore from "./hazel/hazel-core.js";
 
 const { readFileSync } = pkg;
@@ -8,10 +9,12 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import yml from "js-yaml";
 
-let mainConfig: any;
 async function main() {
+  let mainConfig: MainConfig;
   try {
-    mainConfig = yml.load(readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }));
+    mainConfig = yml.load(
+      readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
+    ) as MainConfig;
   } catch (error) {
     console.error("Failed to parse config.yml.");
     console.error(error);

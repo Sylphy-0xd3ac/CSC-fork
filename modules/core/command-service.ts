@@ -1,17 +1,42 @@
-// 初始化命令服务（Socket.IO 事件化）
+// 初始化命令服务
 export async function run(hazel, core, hold) {
   // 保存现有的 actions 和 slashCommands
   const existingActions = core.commandService?.actions;
   const existingSlashCommands = core.commandService?.slashCommands;
+  type MetaType = {
+    requiredLevel: number;
+    requiredData: Record<string, { optional?: boolean; value?: Array<Record<string, string>> }>;
+  };
+  type Socket = { level: number } & Record<string, unknown> & {
+      _boundActions?: Set<string>;
+      on: (name: string, handler: (data) => unknown) => unknown;
+      handshake: { address: string };
+      disconnect: (...args: [true, ...unknown[]]) => void;
+    };
+  type RequireData = {
+    [key: string]: {
+      optional: boolean;
+      description: string;
+      value: Array<{ [key: string]: string }>;
+    };
+  } | null;
 
   const actions =
-    existingActions && existingActions.size > 0 ? existingActions : new Map<string, any>();
+    existingActions && existingActions.size > 0
+      ? existingActions
+      : new Map<string, { handler: (...args: unknown[]) => unknown; meta: MetaType }>();
   const slashCommands =
     existingSlashCommands && existingSlashCommands.size > 0
       ? existingSlashCommands
-      : new Map<string, any>();
+      : new Map<string, { handler: (...args: unknown[]) => unknown; meta: MetaType }>();
 
-  function validateAndHandle(name: string, socket: any, data: any) {
+  function validateAndHandle(name: string, socket: Socket, data: Record<string, string>) {
+    // 检查该地址是否请求频率过高
+    if (core.checkAddress?.(socket.remoteAddress, 1)) {
+      core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
+      return;
+    }
+
     // 找到 action
     if (!actions.has(name)) {
       core.replyMalformedCommand(socket);
@@ -27,17 +52,16 @@ export async function run(hazel, core, hold) {
 
     // requiredData 参数校验
     if (meta.requiredData && typeof meta.requiredData === "object") {
-      const entries = Object.entries(meta.requiredData);
+      const entries = Object.entries(meta.requiredData as RequireData);
 
       // 计算必需参数的数量
       const requiredParamCount = entries.filter(([_paramName, paramInfo]) => {
-        return (paramInfo as any).optional !== true;
+        return paramInfo.optional !== true;
       }).length;
 
       // 检查必需参数是否都存在
       const providedRequiredParams = entries.filter(([paramName, paramInfo]) => {
-        const param = paramInfo as any;
-        return param.optional !== true && paramName in data;
+        return paramInfo.optional !== true && paramName in data;
       }).length;
 
       if (providedRequiredParams < requiredParamCount) {
@@ -47,9 +71,8 @@ export async function run(hazel, core, hold) {
 
       // 值校验
       for (const [paramName, paramInfo] of entries) {
-        const param = paramInfo as any;
         // 如果参数有 optional 属性且为 true，则跳过
-        if (param.optional === true) {
+        if (paramInfo.optional === true) {
           continue;
         }
 
@@ -59,8 +82,8 @@ export async function run(hazel, core, hold) {
           return;
         }
 
-        const allowed = Array.isArray(param.value)
-          ? param.value.map((v) => Object.keys(v)[0])
+        const allowed = Array.isArray(paramInfo.value)
+          ? paramInfo.value.map((v) => Object.keys(v)[0])
           : null;
 
         if (allowed && allowed.length > 0) {
@@ -83,7 +106,9 @@ export async function run(hazel, core, hold) {
     actions,
     slashCommands,
 
-    registerAction(name: string, handler: (...args: any[]) => any, meta: any = {}) {
+    registerAction(name: string, handler: (...args: unknown[]) => unknown, meta: MetaType = null) {
+      if (!meta) throw new Error(`Command ${name} must provide meta object`);
+
       if (typeof meta.requiredLevel !== "number") {
         throw new Error(`Command ${name} must set requiredLevel`);
       }
@@ -105,7 +130,13 @@ export async function run(hazel, core, hold) {
       }
     },
 
-    registerSlashCommand(name: string, handler: (...args: any[]) => any, meta: any = {}) {
+    registerSlashCommand(
+      name: string,
+      handler: (...args: unknown[]) => unknown,
+      meta: MetaType = null,
+    ) {
+      if (!meta) throw new Error(`Command ${name} must provide meta object`);
+
       if (typeof meta.requiredLevel !== "number") {
         throw new Error(`Command ${name} must set requiredLevel`);
       }
@@ -117,7 +148,7 @@ export async function run(hazel, core, hold) {
     },
 
     // 为一个 socket 绑定所有 action 事件处理器
-    bindSocket(socket: any) {
+    bindSocket(socket: Socket) {
       for (const [name] of actions.entries()) {
         if (!socket._boundActions) socket._boundActions = new Set<string>();
         if (!socket._boundActions.has(name)) {
@@ -130,7 +161,7 @@ export async function run(hazel, core, hold) {
     /**
      * 处理聊天框中的 /slash 命令
      */
-    async handleSlash(socket: any, line: string) {
+    async handleSlash(socket: Socket, line: string) {
       if (!line.startsWith("/")) return;
 
       const cmdName = line.slice(1).split(" ")[0];
@@ -169,12 +200,11 @@ export async function run(hazel, core, hold) {
 
         // 按参数定义顺序匹配位置参数，支持 - 跳过可选参数
         if (meta.requiredData && typeof meta.requiredData === "object") {
-          const entries = Object.entries(meta.requiredData);
+          const entries = Object.entries(meta.requiredData as RequireData);
           let pos = 0;
 
           for (let i = 0; i < entries.length; i++) {
             const [paramName, paramInfo] = entries[i];
-            const param = paramInfo as any;
 
             if (paramName in data) {
               continue;
@@ -182,7 +212,7 @@ export async function run(hazel, core, hold) {
 
             if (pos < positionalArgs.length) {
               const currentArg = positionalArgs[pos];
-              if (currentArg === "-" && param.optional) {
+              if (currentArg === "-" && paramInfo.optional) {
                 pos++;
                 continue;
               }
@@ -194,17 +224,16 @@ export async function run(hazel, core, hold) {
 
         // requiredData 参数校验
         if (meta.requiredData && typeof meta.requiredData === "object") {
-          const entries = Object.entries(meta.requiredData);
+          const entries = Object.entries(meta.requiredData as RequireData);
 
           // 计算必需参数的数量
           const requiredParamCount = entries.filter(([_paramName, paramInfo]) => {
-            return (paramInfo as any).optional !== true;
+            return paramInfo.optional !== true;
           }).length;
 
           // 检查必需参数是否都存在
           const providedRequiredParams = entries.filter(([paramName, paramInfo]) => {
-            const param = paramInfo as any;
-            return param.optional !== true && paramName in data;
+            return paramInfo.optional !== true && paramName in data;
           }).length;
 
           if (providedRequiredParams < requiredParamCount) {
@@ -214,16 +243,15 @@ export async function run(hazel, core, hold) {
 
           // 值校验
           for (const [paramName, paramInfo] of entries) {
-            const param = paramInfo as any;
-            if (param.optional === true) {
+            if (paramInfo.optional === true) {
               continue;
             }
             if (!(paramName in data)) {
               core.replyMalformedCommand?.(socket);
               return;
             }
-            const allowed = Array.isArray(param.value)
-              ? param.value.map((v) => Object.keys(v)[0])
+            const allowed = Array.isArray(paramInfo.value)
+              ? paramInfo.value.map((v) => Object.keys(v)[0])
               : null;
             if (allowed && allowed.length > 0) {
               if (!allowed.includes(data[paramName])) {
