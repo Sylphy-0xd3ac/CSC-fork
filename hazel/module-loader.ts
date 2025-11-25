@@ -1,14 +1,18 @@
+import { glob } from "node:fs";
 import path from "node:path";
-import { globSync } from "glob";
 import supportsColor from "supports-color";
 import type Hazel from "./hazel-core.js";
 import type { Module } from "./hazel-core.js";
 import { Logger, type LoggerType } from "./logger.js";
 
 export function recursiveReadDir(baseDir) {
-  return globSync(path.join(baseDir, "**/*")).filter(
-    (file) => !file.includes("dist") && !file.includes("node_modules"),
-  );
+  let matches: string[] = [];
+  glob(path.join(baseDir, "**/*"), (_, files) => {
+    matches = (files ?? []).filter(
+      (file) => !file.includes("dist") && !file.includes("node_modules"),
+    );
+  });
+  return matches;
 }
 
 let logger: LoggerType;

@@ -117,10 +117,7 @@ export default class Hazel extends EventEmitter2 {
   }
 
   async getModule(moduleName: string) {
-    if (this.loadedModules.has(moduleName)) {
-      return this.loadedModules.get(moduleName);
-    }
-    return null;
+    return this.loadedModules.get(moduleName);
   }
 
   async reloadModule(moduleName: string) {

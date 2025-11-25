@@ -21,7 +21,7 @@ export async function action(hazel, core, hold, socket, _data) {
   statsText += `\nV8 引擎版本：${process.versions.v8}`;
   statsText += "\n#### --- 运行环境 ---";
   statsText += `\n内存使用：${await core.getMemoryUsage()} MB`;
-  statsText += `\nCPU 使用：${await core.getCpuUsage()}%`;
+  statsText += `\nCPU 使用：${await core.getCpuUsage()}% 🦌`;
 
   // 发送数据
   core.replyInfo("STATS", statsText, socket, {
