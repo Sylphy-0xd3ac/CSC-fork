@@ -3,13 +3,15 @@ import pkg from "fs-extra";
 
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 
+import { glob } from "node:fs";
 import zip from "adm-zip";
-import { sync } from "glob";
 import { dump, load } from "js-yaml";
 
 // 使用glob获取当前目录及子目录下的所有ts文件
-const tsFiles = sync("**/*.ts", {
-  ignore: ["node_modules/**", "dist/**"], // 忽略node_modules和dist目录
+const tsFiles = await new Promise((resolve) => {
+  glob("**/*.ts", (_, files) =>
+    resolve((files ?? []).filter((file) => !file.includes("dist") && !file.includes("node_modules"))),
+  );
 });
 
 // 构建配置

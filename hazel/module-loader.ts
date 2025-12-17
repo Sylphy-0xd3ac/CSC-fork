@@ -5,12 +5,11 @@ import type Hazel from "./hazel-core.js";
 import type { Module } from "./hazel-core.js";
 import { Logger, type LoggerType } from "./logger.js";
 
-export function recursiveReadDir(baseDir) {
-  let matches: string[] = [];
-  glob(path.join(baseDir, "**/*"), (_, files) => {
-    matches = (files ?? []).filter(
-      (file) => !file.includes("dist") && !file.includes("node_modules"),
-    );
+export async function recursiveReadDir(baseDir: string) {
+  const matches: string[] = await new Promise((resolve) => {
+    glob(path.join(baseDir, "**/*"), (_, files) => {
+      resolve((files ?? []).filter((file) => !file.includes("node_modules")));
+    });
   });
   return matches;
 }
@@ -101,7 +100,7 @@ export default async function loadDir(hazel: Hazel, dirName: string) {
   let existError = false;
   let moduleList = new Map();
   logger = new hazel.logger("loader") as LoggerType;
-  for (const filePath of recursiveReadDir(dirName)) {
+  for (const filePath of await recursiveReadDir(dirName)) {
     if (
       await (async () => {
         return (
