@@ -10,7 +10,9 @@ import { dump, load } from "js-yaml";
 // 使用glob获取当前目录及子目录下的所有ts文件
 const tsFiles = await new Promise((resolve) => {
   glob("**/*.ts", (_, files) =>
-    resolve((files ?? []).filter((file) => !file.includes("dist") && !file.includes("node_modules"))),
+    resolve(
+      (files ?? []).filter((file) => !file.includes("dist") && !file.includes("node_modules")),
+    ),
   );
 });
 

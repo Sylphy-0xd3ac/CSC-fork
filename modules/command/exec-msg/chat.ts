@@ -5,7 +5,7 @@ function getChatTimeStr() {
   const min = now.getMinutes();
   return `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}`;
 }
-export async function action(_hazel, core, hold, socket, data) {
+export async function action(_hazel, core, hold, socket, data: { text: string }) {
   // 频率限制器计数
   if (core.checkAddress(socket.remoteAddress, 3)) {
     core.replyWarn("RATE_LIMITED", "您的操作过于频繁，请稍后再试。", socket);
@@ -25,9 +25,13 @@ export async function action(_hazel, core, hold, socket, data) {
   // 如果消息以 / 开头，视为命令
   if (data.text[0] === "/") {
     // 检查是否存在命令服务
-    if (core.commandService && typeof core.commandService.handleSlash === "function") {
+    if (core.commandService && typeof core.commandService.validateAndHandle === "function") {
       // 处理命令
-      await core.commandService.handleSlash(socket, data.text);
+      await core.commandService.validateAndHandle(
+        data.text.split(" ")[0].slice(1),
+        socket,
+        data.text.split(" ").slice(1),
+      );
     }
     return;
   }
