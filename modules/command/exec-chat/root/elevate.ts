@@ -1,5 +1,5 @@
 // 提权至 root 权限
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   // 验证输入的 root 密码
   if (data.passcode !== core.config.rootPasscode) {
     // 进行严格的频率限制
@@ -19,7 +19,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("ERT", socket, "");
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

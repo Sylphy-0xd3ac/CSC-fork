@@ -1,5 +1,5 @@
 // 初始化命令服务
-export async function run(hazel, core, hold) {
+export function run(hazel, core, hold) {
   // 保存现有的 actions 和 slashCommands
   const existingActions = core.commandService?.actions;
   const existingSlashCommands = core.commandService?.slashCommands;

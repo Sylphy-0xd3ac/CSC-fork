@@ -1,5 +1,5 @@
 // 踢人命令
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   const targetNick = data.nick;
   if (!core.verifyNickname(targetNick)) {
     core.replyMalformedCommand(socket);
@@ -57,7 +57,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("KCK", socket, data.nick);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

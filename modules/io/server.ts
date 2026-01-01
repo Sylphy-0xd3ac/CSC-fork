@@ -2,7 +2,7 @@
 
 import { Server } from "socket.io";
 
-export async function run(hazel, core, hold) {
+export function run(hazel, core, hold) {
   // 如果服务器已经启动，则不重新启动
   if (hold.io) {
     return;

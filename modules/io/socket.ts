@@ -1,16 +1,16 @@
 // 负责查找 socket、对 socket 发送消息、广播消息等操作（基于 Socket.IO）
 
-export async function run(hazel, core, hold) {
+export function run(hazel, core, hold) {
   type Socket = { level: number } & Record<string, unknown> & {
       _boundActions?: Set<string>;
-      on: (name: string, handler: (data) => unknown) => unknown;
+      on: (name: string, handler: (data: unknown) => unknown) => unknown;
       emit: (event: string, payload: unknown) => void;
       handshake: { address: string };
       disconnect: (...args: [true, ...unknown[]]) => void;
     } & {
       listeners: (arg0: string) => ((...args: unknown[]) => void)[];
-      off: (arg0: string, arg1: (payload: string) => void) => void;
-      on: (arg0: string, arg1: (payload: string) => void) => void;
+      off: (arg0: string, arg1: (payload: unknown) => void) => void;
+      on: (arg0: string, arg1: (payload: unknown) => void) => void;
       removeAllListeners: (arg0: string) => void;
     };
   /* 
@@ -32,9 +32,9 @@ export async function run(hazel, core, hold) {
     new Promise((resolve) => {
       // 获取原事件监听器
       const listeners = socket.listeners("chat");
-      const messageHandler = (payload: string) => {
+      const messageHandler = (payload: unknown) => {
         // 处理消息并解析
-        let data = JSON.parse(payload);
+        let data = JSON.parse(payload as string);
         // 净化数据防止原型链污染
         data = core.purifyObject(data);
         // 移除事件监听器

@@ -1,5 +1,5 @@
 // 返回房间以及房间内的用户列表
-export async function action(_hazel, core, hold, socket, _data) {
+export function action(_hazel, core, hold, socket, _data) {
   let result = "";
 
   // 遍历 hold.channel
@@ -26,7 +26,7 @@ export async function action(_hazel, core, hold, socket, _data) {
   core.replyInfo("ROOMLIST", result, socket);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

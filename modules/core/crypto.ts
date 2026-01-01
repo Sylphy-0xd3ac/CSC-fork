@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 // 加密安全
 import argon2 from "argon2";
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   // 生成key, 使用Argon2id算法
   core.generateKeys = async (password) => {
     const argonKey = await argon2.hash(password, {

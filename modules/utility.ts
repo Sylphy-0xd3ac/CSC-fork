@@ -1,7 +1,7 @@
 // 各种不知道在哪能用到的工具函数
 import os from "node:os";
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   // 净化对象以防止原型链污染
   core.purifyObject = (input) => {
     const output = Object.create(null);

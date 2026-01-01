@@ -15,9 +15,7 @@ async function main() {
     mainConfig = yml.load(
       readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }),
     ) as MainConfig;
-  } catch (error) {
-    console.error("Failed to parse config.yml.");
-    console.error(error);
+  } catch (_error) {
     process.exit(1);
   }
 

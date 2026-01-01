@@ -1,5 +1,5 @@
 // 锁定全站，禁止非成员进入
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   // kick: 锁站后将所有非成员踢出站
   // no_kick: 锁站后不踢出非成员
   const lockType = data.type;
@@ -34,7 +34,7 @@ export async function action(_hazel, core, hold, socket, data) {
   core.archive("LOS", socket, lockType);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

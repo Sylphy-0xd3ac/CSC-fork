@@ -1,5 +1,5 @@
 // 判断一个 socket 现在是否可以发言
-export async function run(_hazel, core, hold) {
+export function run(_hazel, core, hold) {
   core.canSpeak = (socket) => {
     // 检查用户是否在聊天室内
     if (typeof socket.channel === "undefined") {

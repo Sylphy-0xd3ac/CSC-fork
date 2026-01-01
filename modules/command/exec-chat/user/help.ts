@@ -1,5 +1,5 @@
 // 用于查看当前可用的指令
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   const noList = ["elevate", "help"];
 
   type RequireData = {
@@ -12,7 +12,18 @@ export async function action(_hazel, core, _hold, socket, data) {
 
   if (data.command) {
     // 查找指令
-    let recommand = null;
+    let recommand: {
+      name: string;
+      description: string;
+      requiredData: RequireData;
+      requiredLevel: number;
+      handler: (...args: unknown[]) => void;
+      meta: {
+        name: string;
+        description: string;
+        requiredLevel: number;
+      };
+    } | null = null;
 
     // 检查 slashCommands
     if (core.commandService?.slashCommands?.has(data.command)) {
@@ -28,7 +39,7 @@ export async function action(_hazel, core, _hold, socket, data) {
     // 如果找到了指令
     if (recommand !== null) {
       const description = recommand.description;
-      let options = [];
+      let options: [string, string, string | string[] | string[][]][] = [];
       if (recommand.requiredData && typeof recommand.requiredData === "object") {
         options = Object.entries(recommand.requiredData as RequireData).map(
           ([option_name, paramInfo]) => {
@@ -58,7 +69,22 @@ export async function action(_hazel, core, _hold, socket, data) {
 
       let return_text = `指令: ${recommand.name} - ${description}`;
       if (options.length > 0) {
-        return_text += `\n      可用的选项有:\n      ${options.map((option) => `  ${option[0]}: ${option[1]} ${option[2] ? ` - 可用的值有: ${option[2].map((value) => `  ${value[0]}: ${value[1]}`).join(",")}` : ""}`).join("\n")}`;
+        return_text += `\n      可用的选项有:\n      ${options
+          .map((option) => {
+            const optionValues = Array.isArray(option[2])
+              ? option[2]
+                  .map(
+                    (value) =>
+                      Array.isArray(value)
+                        ? `  ${value[0]}: ${value[1]}` // 处理 string[][]
+                        : `  ${value}`, // 处理 string[]
+                  )
+                  .join(",")
+              : option[2] || ""; // 处理 string 或 undefined
+
+            return `  ${option[0]}: ${option[1]}${optionValues ? ` - 可用的值有: ${optionValues}` : ""}`;
+          })
+          .join("\n")}`;
       }
 
       // 回复用户
@@ -70,7 +96,7 @@ export async function action(_hazel, core, _hold, socket, data) {
     return;
   }
 
-  let commandList = []; // 存放所有可用的指令
+  let commandList: string[] = []; // 存放所有可用的指令
 
   // 遍历 slashCommands
   if (core.commandService?.slashCommands) {
@@ -97,7 +123,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   );
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
 
   core.commandService.registerSlashCommand?.(name, action, {

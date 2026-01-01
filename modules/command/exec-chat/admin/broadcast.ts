@@ -1,5 +1,5 @@
 // 向在线的所有用户广播消息
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   if (data.text.length === 0) {
     core.replyMalformedCommand(socket);
     return;
@@ -19,7 +19,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("BOD", socket, data.text);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

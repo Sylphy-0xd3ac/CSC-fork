@@ -1,5 +1,5 @@
 // 处理服务器遇到的所有错误
-export async function run(hazel, _core, _hold) {
+export function run(hazel, _core, _hold) {
   // 移除 error 事件的默认监听器
   hazel.removeAllListeners("error");
 

@@ -133,7 +133,7 @@ export async function action(_hazel, core, hold, socket, data: { text: string })
   core.archive("MSG", socket, data.text);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,

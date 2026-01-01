@@ -1,5 +1,5 @@
 // 管理员封禁聊天室中某人的 IP
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   // 检查昵称
   if (!core.verifyNickname(data.nick)) {
     core.replyWarn(
@@ -53,7 +53,7 @@ export async function action(_hazel, core, hold, socket, data) {
   core.archive("BAN", socket, targetSocket.nick);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

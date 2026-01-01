@@ -1,4 +1,4 @@
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   if (data.find === "all") {
     const result = hold.noticeList.map(
       (notice) => `${notice}, 编号为: ${hold.noticeList.indexOf(notice) + 1}`,
@@ -33,7 +33,7 @@ export async function action(_hazel, core, hold, socket, data) {
   }
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

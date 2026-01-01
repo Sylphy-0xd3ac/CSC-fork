@@ -1,5 +1,5 @@
 // 锁定房间，禁止非成员进入
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   const targetChannel = socket.channel;
   // kick: 锁房后将所有非成员踢出房间
   // no_kick: 锁房后不踢出非成员
@@ -45,7 +45,7 @@ export async function action(_hazel, core, hold, socket, data) {
   core.archive("LOR", socket, lockroomType);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

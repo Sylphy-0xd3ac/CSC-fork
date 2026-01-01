@@ -35,7 +35,7 @@ function topologicalSort(moduleMap: Map<string, Module>): Map<string, Module> {
   const added = new Set<string>();
 
   const moduleNames = new Set<string>();
-  const modules = [];
+  const modules: Module[] = [];
   for (const module of moduleMap.values()) {
     if (moduleNames.has(module.name)) {
       throw new Error(`Duplicate module name detected: ${module.name}`);
@@ -102,7 +102,7 @@ export default async function loadDir(hazel: Hazel, dirName: string) {
   logger = new hazel.logger("loader") as LoggerType;
   for (const filePath of await recursiveReadDir(dirName)) {
     if (
-      await (async () => {
+      (() => {
         return (
           !filePath.includes("/_") &&
           (filePath.endsWith(".js") ||

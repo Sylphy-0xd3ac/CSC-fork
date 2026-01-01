@@ -120,9 +120,9 @@ function IPv4toInteger(address) {
   }
 
   // Convert the address to a BigInt
-  return (
-    BigInt(parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3]) | 0xffff00000000n
-  );
+  const ipv4Value = BigInt(parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3]);
+  // Equivalent to (ipv4Value << 32n) | ipv4Value
+  return ipv4Value * 0x100000001n;
 }
 
 /**
@@ -281,7 +281,7 @@ export class AddressTree {
   insertCIDR(address, mask) {
     let node = this.#root;
     for (let i = 0; i < mask; i++) {
-      const bit = (address >> BigInt(IP.v6.BITS - i - 1)) & 1n;
+      const bit = (address / 2n ** BigInt(IP.v6.BITS - i - 1)) % 2n;
       if (!node.has(bit)) {
         node.set(bit, new Map());
       }
@@ -293,7 +293,7 @@ export class AddressTree {
   contains(address) {
     let node = this.#root;
     for (let i = 0; i < IP.v6.BITS; i++) {
-      const bit = (address >> BigInt(IP.v6.BITS - i - 1)) & 1n;
+      const bit = (address / 2n ** BigInt(IP.v6.BITS - i - 1)) % 2n;
       if (!node.has(bit)) {
         return false;
       }
@@ -306,7 +306,7 @@ export class AddressTree {
   }
 }
 
-export async function run(hazel, core, hold) {
+export function run(hazel, core, hold) {
   /**
    * 加载允许的 CIDR 列表
    */

@@ -1,5 +1,5 @@
 // 站长添加管理员
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   // 验证输入的 trip
   if (!core.verifyTrip(data.trip)) {
     core.replyWarn("INVALID_TRIP", "请检查您输入的识别码。", socket);
@@ -51,7 +51,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("ADA", socket, data.trip);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

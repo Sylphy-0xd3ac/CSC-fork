@@ -208,8 +208,8 @@ export class Logger {
   static code(name: string, target: Target) {
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
-      hash = (hash << 3) - hash + name.charCodeAt(i) + 13;
-      hash |= 0;
+      hash = hash * 8 - hash + name.charCodeAt(i) + 13;
+      hash = Math.trunc(hash);
     }
     const colors = !target.colors ? [] : target.colors >= 2 ? c256 : c16;
     return colors[Math.abs(hash) % colors.length];

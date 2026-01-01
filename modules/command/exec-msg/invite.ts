@@ -1,5 +1,5 @@
 // 向聊天室内的某个用户发出邀请到某个聊天室
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   // 频率计数器计数
   core.checkAddress(socket.remoteAddress, 5);
 
@@ -65,7 +65,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("INV", socket, `${data.nick} ${data.channel}`);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,

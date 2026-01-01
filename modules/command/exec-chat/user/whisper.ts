@@ -1,8 +1,7 @@
 // 统一的私聊命令
-// /whisper text [nick]  - 按顺序：消息内容 [用户昵称]
-// /whisper --nick 张三 --text 你好  - 命名参数
+// /whisper text [nick]
 // /whisper 你好  - 回复上次私聊
-export async function action(_hazel, core, _hold, socket, data) {
+export function action(_hazel, core, _hold, socket, data) {
   let nick: string;
   let text: string;
 
@@ -95,7 +94,7 @@ export async function action(_hazel, core, _hold, socket, data) {
   core.archive("WHI", socket, `-> ${targetSocket.nick} ${text}`);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

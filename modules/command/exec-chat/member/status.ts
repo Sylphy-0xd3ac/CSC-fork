@@ -39,7 +39,7 @@ export async function action(hazel, core, hold, socket, _data) {
   core.archive("SAS", socket, "");
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

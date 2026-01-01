@@ -1,5 +1,5 @@
 // 存档记录器
-export async function run(hazel, core, _hold) {
+export function run(hazel, core, _hold) {
   // 记录聊天和操作记录存档
   core.archive = (logType, socket, ...logText: string[]) => {
     // 生成日志内容

@@ -129,7 +129,7 @@ export async function action(hazel, core, hold, socket, data) {
       cName = data.clientName;
     } else {
       if (
-        await (async () => {
+        (() => {
           // 如果客户端名称中存在换行，直接返回 false
           if (data.clientName.indexOf("\r") !== -1 || data.clientName.indexOf("\n") !== -1) {
             return false;
@@ -288,7 +288,7 @@ export async function action(hazel, core, hold, socket, data) {
   }
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerAction?.(name, action, {
     requiredLevel,

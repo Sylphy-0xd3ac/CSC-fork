@@ -1,5 +1,5 @@
 // 解锁全站
-export async function action(_hazel, core, hold, socket, _data) {
+export function action(_hazel, core, hold, socket, _data) {
   // 检查全站是否已经被锁定
   if (!hold.lockAllChannels) {
     core.replyWarn("SITE_ALREADY_UNLOCKED", "全部房间未被锁定", socket);
@@ -13,7 +13,7 @@ export async function action(_hazel, core, hold, socket, _data) {
   core.archive("ULS", socket, "");
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

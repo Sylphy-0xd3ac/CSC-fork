@@ -1,5 +1,5 @@
 // 解封全部 IP 地址
-export async function action(_hazel, core, hold, socket, _data) {
+export function action(_hazel, core, hold, socket, _data) {
   // 清空封禁列表
   hold.bannedIPlist = [];
 
@@ -15,7 +15,7 @@ export async function action(_hazel, core, hold, socket, _data) {
   core.archive("UBA", socket, "");
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

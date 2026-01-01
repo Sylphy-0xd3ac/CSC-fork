@@ -1,4 +1,4 @@
-export async function run(hazel, core, hold) {
+export function run(hazel, core, hold) {
   type Socket = { level: number } & Record<string, unknown> & {
       _boundActions?: Set<string>;
       on: (name: string, handler: (data) => unknown) => unknown;
@@ -16,7 +16,7 @@ export async function run(hazel, core, hold) {
    * @param socket   Socket.IO Socket
    * @param handshake HTTP 握手对象
    */
-  core.handle_connection = async (
+  core.handle_connection = (
     socket: Socket,
     handshake: { headers?: Record<string, string> } | null,
   ) => {

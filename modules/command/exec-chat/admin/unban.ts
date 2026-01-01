@@ -1,5 +1,5 @@
 // 解封某个 IP 地址
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   // 如果该 IP 地址不在封禁列表中
   if (!hold.bannedIPlist.includes(data.address)) {
     core.replyMalformedCommand(socket);
@@ -21,7 +21,7 @@ export async function action(_hazel, core, hold, socket, data) {
   core.archive("UNB", socket, data.address);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

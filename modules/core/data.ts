@@ -49,4 +49,4 @@ export async function run(hazel, core, hold) {
 }
 
 export const name = "data";
-export const dependencies = [];
+export const dependencies: [] = [];

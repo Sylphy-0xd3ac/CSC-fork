@@ -52,6 +52,15 @@ export default class Hazel extends EventEmitter2 {
     this.mainConfig = mainConfig;
     this.loadedModules = new Map();
 
+    console.log(
+      " _   _               _    ____               \n" +
+        "| | | | __ _ _______| |  / ___|___  _ __ ___ \n" +
+        "| |_| |/ _` |_  / _ \\ | | |   / _ \\| '__/ _ \\\n" +
+        "|  _  | (_| |/ /  __/ | | |__| (_) | | |  __/\n" +
+        "|_| |_|\\____/___\\___|_|  \\____\\___/|_|  \\___|",
+    );
+    console.log(`(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(46));
+
     this.initializeLogger();
 
     process.on("unhandledRejection", (error) => {
@@ -62,15 +71,6 @@ export default class Hazel extends EventEmitter2 {
       (new this.logger("app") as LoggerType).info("terminated by SIGINT");
       process.exit(0);
     });
-
-    console.log(
-      " _   _               _    ____               \n" +
-        "| | | | __ _ _______| |  / ___|___  _ __ ___ \n" +
-        "| |_| |/ _` |_  / _ \\ | | |   / _ \\| '__/ _ \\\n" +
-        "|  _  | (_| |/ /  __/ | | |__| (_) | | |  __/\n" +
-        "|_| |_|\\____/___\\___|_|  \\____\\___/|_|  \\___|",
-    );
-    console.log(`(v${this.version} ${this.mainConfig.DevMode ? "Dev" : "Prod"})\n`.padStart(46));
     (new this.logger("app") as LoggerType).info(
       `\x1b[1m${this.mainConfig.projectName}\x1b[0m ${this.mainConfig.version}`,
     );
@@ -86,8 +86,8 @@ export default class Hazel extends EventEmitter2 {
     Logger.targets.push({
       showTime: "yyyy-MM-dd hh:mm:ss.SSS",
       colors: supportsColor.stdout ? supportsColor.stdout.level : 0,
-      print(text) {
-        console.log(`${text}`);
+      print(_text) {
+        /* ignore */
       },
     });
     Logger.targets.push({
@@ -116,7 +116,7 @@ export default class Hazel extends EventEmitter2 {
     this.emit("initialized");
   }
 
-  async getModule(moduleName: string) {
+  getModule(moduleName: string) {
     return this.loadedModules.get(moduleName);
   }
 
@@ -171,10 +171,14 @@ export default class Hazel extends EventEmitter2 {
     this.loadedModules = new Map(loadedModules);
 
     this.removeAllListeners();
-    this.on("error", () => {});
+    this.on("error", () => {
+      /* ignore */
+    });
 
     for (const property in this.#core) {
-      delete this.#core[property];
+      if (Object.hasOwn(this.#core, property)) {
+        delete this.#core[property];
+      }
     }
 
     try {

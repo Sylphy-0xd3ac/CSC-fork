@@ -1,5 +1,5 @@
 // 用于处理用户发送的 @nick xxx 消息
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   // 频率限制器计数
   core.checkAddress(socket.remoteAddress, 2);
 
@@ -47,7 +47,7 @@ export async function action(_hazel, core, hold, socket, data) {
   core.archive("EMO", socket, data.text);
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

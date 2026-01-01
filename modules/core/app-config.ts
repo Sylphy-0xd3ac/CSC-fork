@@ -7,7 +7,7 @@ const { readFileSync, watch, writeFileSync } = pkg;
 import { join } from "node:path";
 import yaml from "js-yaml";
 
-export async function run(hazel, core, _hold) {
+export function run(hazel, core, _hold) {
   // 配置文件的路径
   const configPath = join(hazel.mainConfig.baseDir, hazel.mainConfig.appConfigDir);
 

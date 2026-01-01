@@ -1,5 +1,5 @@
 // 用于处理用户断开连接（Socket.IO 版本）
-export async function run(_hazel, core, hold) {
+export function run(_hazel, core, hold) {
   core.removeSocket = (socket) => {
     // 向所有用户广播用户退出的消息
     if (!socket.isInvisible) {

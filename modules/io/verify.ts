@@ -1,5 +1,5 @@
 // 验证昵称、聊天室名、trip 等
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   // 昵称目前的判断标准如下：
   // 昵称可以包含数字、字母、汉字和 _-+.:; 这些特殊字符
   // 总计不能超过 16 个字符

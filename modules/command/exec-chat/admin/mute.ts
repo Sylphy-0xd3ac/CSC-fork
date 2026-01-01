@@ -1,5 +1,5 @@
 // 禁言某用户
-export async function action(_hazel, core, hold, socket, data) {
+export function action(_hazel, core, hold, socket, data) {
   // 检查昵称是否正确
   if (!core.verifyNickname(data.nick)) {
     core.replyMalformedCommand(socket);
@@ -70,7 +70,7 @@ export async function action(_hazel, core, hold, socket, data) {
   );
 }
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   if (!core.commandService) return;
   core.commandService.registerSlashCommand?.(name, action, {
     requiredLevel,

@@ -3,7 +3,7 @@
 
 let lastRateTime = 0;
 
-export async function run(_hazel, core, hold) {
+export function run(_hazel, core, hold) {
   // 检查一个 IP 的状态
   core.checkAddress = (remoteAddress, score) => {
     if (typeof hold.rateRecords[remoteAddress] === "undefined") {

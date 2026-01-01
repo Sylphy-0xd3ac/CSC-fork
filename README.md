@@ -1,3 +1,5 @@
+元旦快乐, 祝福屏幕前的你在新的一年天天开心, 顺顺利利！
+
 [十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)
 
 [EN](./README_EN.md)

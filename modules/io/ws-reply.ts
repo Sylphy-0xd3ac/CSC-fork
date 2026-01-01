@@ -1,6 +1,6 @@
 // 便捷地回复客户端各种消息
 
-export async function run(_hazel, core, _hold) {
+export function run(_hazel, core, _hold) {
   // 回复提示消息
   core.replyInfo = (code, text, socket, extraData) => {
     if (typeof extraData === "object") {

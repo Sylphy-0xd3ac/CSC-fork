@@ -1,4 +1,3 @@
-import { build } from "esbuild";
 import pkg from "fs-extra";
 
 const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
@@ -32,8 +31,6 @@ const buildStartTime = Date.now();
 // 执行构建
 build(buildOptions)
   .then(async () => {
-    console.log("开始后处理...");
-
     // 创建dist/config目录
     mkdirSync("dist/config", { recursive: true });
 
@@ -47,23 +44,20 @@ build(buildOptions)
 
     const config = load(readFileSync("./config.yml", { encoding: "utf-8", flag: "r" }));
     config.DevMode = false;
-    writeFileSync("./dist/config.yml", dump(config, "dist/config.yml"), {
+    writeFileSync("./dist/config.yml", dump(config, { lineWidth: -1 }), {
       encoding: "utf-8",
     });
 
     // 解压客户端文件
     const client = new zip("client.zip");
     client.extractAllTo("dist/client", true, true);
-    console.log("客户端文件解压完成");
 
     // 拷贝运行时文件
     await copy("package.json", "dist/package.json");
     await copy(".yarnrc.yml", "dist/.yarnrc.yml");
     await copy("yarn.lock", "dist/yarn.lock");
-    const totalTime = Date.now() - buildStartTime;
-    console.log(`✔ Finished in ${totalTime.toFixed(2)} ms`);
+    const _totalTime = Date.now() - buildStartTime;
   })
-  .catch((err) => {
-    console.error(err);
+  .catch((_err) => {
     process.exit(1);
   });
