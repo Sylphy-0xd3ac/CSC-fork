@@ -86,8 +86,8 @@ export default class Hazel extends EventEmitter2 {
     Logger.targets.push({
       showTime: "yyyy-MM-dd hh:mm:ss.SSS",
       colors: supportsColor.stdout ? supportsColor.stdout.level : 0,
-      print(_text) {
-        /* ignore */
+      print(text) {
+        console.log(text);
       },
     });
     Logger.targets.push({
@@ -183,13 +183,16 @@ export default class Hazel extends EventEmitter2 {
 
     try {
       this.loadedModules.forEach((moduleFunction, _modulePath) => {
-        moduleFunction.run(this, this.#core, this.#hold).catch((error) => {
-          this.emit("error", error);
-          (new this.logger("app") as LoggerType).error(error);
-          if (!forceLoad) {
-            return false;
-          }
-        });
+        const result = moduleFunction.run(this, this.#core, this.#hold);
+        if (result && typeof result.catch === "function") {
+          result.catch((error) => {
+            this.emit("error", error);
+            (new this.logger("app") as LoggerType).error(error);
+            if (!forceLoad) {
+              return false;
+            }
+          });
+        }
       });
     } catch (error) {
       this.emit("error", error);
