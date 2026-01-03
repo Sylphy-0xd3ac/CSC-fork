@@ -4,6 +4,7 @@ const { copy, mkdirSync, readFileSync, writeFileSync } = pkg;
 
 import { glob } from "node:fs";
 import zip from "adm-zip";
+import { build } from "esbuild";
 import { dump, load } from "js-yaml";
 
 // 使用glob获取当前目录及子目录下的所有ts文件
