@@ -51,4 +51,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/sylphy-0xd3ac/csc-fork:latest
+          tags: |
+            ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]'):latest
