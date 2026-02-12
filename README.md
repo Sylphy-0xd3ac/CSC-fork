@@ -1,10 +1,4 @@
-# CSC-fork（TypeScript 版本）
-
-> 目的：为上游十字街后端做贡献/维护的 fork，主要方向是 **JavaScript → TypeScript**。
->
-> - 上游：CrosSt-Chat/CSC-main
-> - 我做的事情：TS 化、类型补全、一些工程化调整（具体差异建议看 commit/PR）
-> - 说明：本仓库 README 主要面向“怎么跑起来”，上游逻辑/协议以官方仓库为准
+# CSC-fork
 
 ---
 
@@ -14,7 +8,7 @@
 
 [EN](./README_EN.md)
 
-# 十字街聊天室 - TypeScript
+# 十字街聊天室
 
 十字街TS版本是[十字街官方版本](https://github.com/CrosSt-Chat/CSC-main/)的一个Fork,主要将源项目JavaScript改为TypeScript.
 
@@ -24,7 +18,7 @@
 
 ### 编译版本准备
 
-[Node.js](https://nodejs.org/) 18.0 或更高版本（十字街TS后端一般在 Node.js 最新 LTS 版本上测试，推荐您使用 Node.js 最新 LTS 版本运行）。
+[Node.js](https://nodejs.org/) 18.0 或更高版本（十字街NeXt后端一般在 Node.js 最新 LTS 版本上测试，推荐您使用 Node.js 最新 LTS 版本运行）。
 
 ### 安装
 
